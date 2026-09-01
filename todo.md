@@ -71,3 +71,15 @@
 - [x] Remove CONTENT CONTROL from the public Solutions header.
 - [x] Keep the direct `/admin` route available for content management.
 - [x] Verify the public Solutions header on desktop and phone widths.
+
+## Support Page
+
+- [x] Use SUPPORT terminology instead of Contact Us throughout the new support experience.
+- [x] Add a user support message form and storage workflow.
+- [x] Add Admin controls for WhatsApp, TikTok, Telegram, Facebook, Instagram, and YouTube links.
+- [x] Show configured support icons above the Support form and verify the responsive flow.
+
+## Support Channel Verification Follow-up
+
+- [x] Configure at least one support channel in Admin and verify its icon renders above the Support form.
+- [x] Exercise the Admin support-channel save flow and confirm the configured channel appears on desktop and phone layouts.

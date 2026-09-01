@@ -55,3 +55,27 @@ export const projects = mysqlTable("projects", {
 
 export type Project = typeof projects.$inferSelect;
 export type InsertProject = typeof projects.$inferInsert;
+
+export const supportChannels = mysqlTable("supportChannels", {
+  id: int("id").autoincrement().primaryKey(),
+  platform: mysqlEnum("platform", ["whatsapp", "tiktok", "telegram", "facebook", "instagram", "youtube"]).notNull().unique(),
+  label: varchar("label", { length: 120 }).notNull(),
+  value: varchar("value", { length: 512 }).notNull(),
+  sortOrder: int("sortOrder").default(0).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SupportChannel = typeof supportChannels.$inferSelect;
+export type InsertSupportChannel = typeof supportChannels.$inferInsert;
+
+export const supportMessages = mysqlTable("supportMessages", {
+  id: int("id").autoincrement().primaryKey(),
+  name: varchar("name", { length: 120 }).notNull(),
+  email: varchar("email", { length: 320 }).notNull(),
+  message: text("message").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SupportMessage = typeof supportMessages.$inferSelect;
+export type InsertSupportMessage = typeof supportMessages.$inferInsert;

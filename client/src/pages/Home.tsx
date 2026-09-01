@@ -5,18 +5,11 @@
  */
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Crosshair, Menu, MoveDown, Sparkles, X } from "lucide-react";
-import { toast } from "sonner";
 
 const heroArtwork = "/manus-storage/firebox-hero-tech-city_a9b6b884.png";
 const logoGlyph = "/manus-storage/firebox-ember-glyph_1302f74c.png";
 const headlineLines = ["MAKE THE", "SIGNAL", "UNMISSABLE."] as const;
 const totalHeadlineLength = headlineLines.reduce((total, line) => total + line.length, 0);
-
-function notifyChannel() {
-  toast("Studio channel is standing by", {
-    description: "Contact details can be connected here when they are ready.",
-  });
-}
 
 export default function Home() {
   const [typedCharacters, setTypedCharacters] = useState(0);
@@ -117,14 +110,13 @@ export default function Home() {
             <span className="hidden font-[IBM_Plex_Mono] text-[10px] tracking-[0.16em] text-[#aeb7c5] lg:block">
               SYS // ONLINE
             </span>
-            <button
-              type="button"
-              onClick={notifyChannel}
+            <a
+              href="/support"
               className="group hidden h-10 items-center gap-2 border border-white/20 bg-white/[0.06] px-3.5 font-[IBM_Plex_Mono] text-[10px] font-medium tracking-[0.14em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b] sm:inline-flex sm:h-11 sm:px-4"
             >
               OPEN CHANNEL
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
-            </button>
+            </a>
             <button
               type="button"
               aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -141,10 +133,10 @@ export default function Home() {
                 SOLUTIONS
                 <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
               </a>
-              <button type="button" onClick={() => { notifyChannel(); setMenuOpen(false); }} className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-[IBM_Plex_Mono] text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]">
+              <a href="/support" onClick={() => setMenuOpen(false)} className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-[IBM_Plex_Mono] text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]">
                 OPEN CHANNEL
                 <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
-              </button>
+              </a>
             </div>
           )}
         </header>
@@ -182,16 +174,15 @@ export default function Home() {
               <p className="max-w-[23rem] border-l border-[#6ae4ff]/55 pl-4 font-[IBM_Plex_Mono] text-[12px] leading-6 text-[#c7ced8] sm:text-[13px]">
                 We turn creative ambition into high-voltage digital worlds, identities, and interactive experiences.
               </p>
-              <button
-                type="button"
-                onClick={notifyChannel}
+              <a
+                href="/support"
                 className="group inline-flex w-fit items-center gap-4 border-b border-[#ff5a1f] pb-2 font-[IBM_Plex_Mono] text-[11px] font-semibold tracking-[0.16em] text-[#fff7f2] outline-none transition duration-200 hover:border-[#6ae4ff] hover:text-[#6ae4ff] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b]"
               >
                 START A TRANSMISSION
                 <span className="grid h-7 w-7 place-items-center bg-[#ff5a1f] text-[#07090d] transition duration-200 group-hover:translate-x-1 group-hover:bg-[#6ae4ff]">
                   <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                 </span>
-              </button>
+              </a>
             </div>
           </div>
         </div>

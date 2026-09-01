@@ -1,0 +1,91 @@
+import { FormEvent, useState } from "react";
+import { ArrowLeft, Camera, Facebook, Instagram, MessageCircle, Music2, Play, Send } from "lucide-react";
+import { Link } from "wouter";
+import { toast } from "sonner";
+import { trpc } from "@/lib/trpc";
+
+type SupportPlatform = "whatsapp" | "tiktok" | "telegram" | "facebook" | "instagram" | "youtube";
+
+const platformLabels: Record<SupportPlatform, string> = {
+  whatsapp: "WhatsApp",
+  tiktok: "TikTok",
+  telegram: "Telegram",
+  facebook: "Facebook",
+  instagram: "Instagram",
+  youtube: "YouTube",
+};
+
+function platformIcon(platform: SupportPlatform) {
+  const icons = { whatsapp: MessageCircle, tiktok: Music2, telegram: Send, facebook: Facebook, instagram: Instagram, youtube: Play };
+  const Icon = icons[platform];
+  return <Icon className="h-5 w-5" strokeWidth={1.8} />;
+}
+
+function channelHref(platform: SupportPlatform, value: string) {
+  if (platform === "whatsapp" && !value.startsWith("http")) {
+    return `https://wa.me/${value.replace(/\\D/g, "")}`;
+  }
+  return value;
+}
+
+export default function Support() {
+  const { data: channels, isLoading: channelsLoading, isError: channelsError } = trpc.support.channels.useQuery();
+  const submitMessage = trpc.support.submitMessage.useMutation({
+    onSuccess: () => toast.success("Support signal received"),
+    onError: error => toast.error(error.message),
+  });
+  const [sent, setSent] = useState(false);
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    submitMessage.mutate({
+      name: String(form.get("name") ?? ""),
+      email: String(form.get("email") ?? ""),
+      message: String(form.get("message") ?? ""),
+    }, {
+      onSuccess: () => {
+        event.currentTarget.reset();
+        setSent(true);
+      },
+    });
+  };
+
+  const configuredChannels = channels?.filter(channel => channel.value) ?? [];
+
+  return (
+    <main className="min-h-screen bg-[#05070b] text-[#f5f1eb]">
+      <header className="sticky top-0 z-20 border-b border-white/10 bg-[#05070b]/90 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-7xl items-center justify-between">
+          <Link href="/" className="inline-flex items-center gap-3 font-[Space_Grotesk] text-sm font-bold tracking-[0.13em] text-white transition hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f]">
+            <span className="grid h-9 w-9 place-items-center border border-[#ff5a1f]/60 text-[#ff5a1f]">F//</span>
+            FIREBOX<span className="text-[#ff5a1f]">//</span>STUDIOS
+          </Link>
+          <Link href="/" className="inline-flex items-center gap-2 font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f]"><ArrowLeft className="h-3.5 w-3.5" /> RETURN TO HERO</Link>
+        </div>
+      </header>
+
+      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
+        <div className="max-w-4xl">
+          <span className="font-[IBM_Plex_Mono] text-[10px] tracking-[0.2em] text-[#6ae4ff]">FIREBOX TECH / SUPPORT</span>
+          <h1 className="mt-5 font-[Space_Grotesk] text-6xl font-bold leading-[0.88] tracking-[-0.07em] sm:text-8xl">OPEN A <span className="text-[#ff5a1f]">SUPPORT</span> CHANNEL.</h1>
+          <p className="mt-7 max-w-2xl font-[IBM_Plex_Mono] text-xs leading-6 text-[#aab5c4] sm:text-sm">Send a support signal to the Firebox team, or reach the channel that fits your workflow.</p>
+        </div>
+
+        <section className="mt-14" aria-labelledby="support-channels-heading">
+          <div className="flex items-end justify-between gap-5 border-b border-white/10 pb-5"><div><span className="font-[IBM_Plex_Mono] text-[10px] tracking-[0.18em] text-[#ff5a1f]">01 / DIRECT CHANNELS</span><h2 id="support-channels-heading" className="mt-3 font-[Space_Grotesk] text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">FIND SUPPORT</h2></div><MessageCircle className="h-7 w-7 text-[#6ae4ff]" /></div>
+          {channelsLoading && <p className="mt-7 font-[IBM_Plex_Mono] text-xs text-[#9eabbc]">SYNCING SUPPORT CHANNELS...</p>}
+          {channelsError && <p className="mt-7 border border-[#ff5a1f]/30 bg-[#ff5a1f]/5 px-4 py-3 font-[IBM_Plex_Mono] text-[10px] tracking-[0.12em] text-[#ffae8c]">SUPPORT CHANNEL NODE OFFLINE</p>}
+          {!channelsLoading && !channelsError && configuredChannels.length === 0 && <p className="mt-7 border border-white/10 bg-[#090d14] px-4 py-5 font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#768397]">NO SUPPORT CHANNELS CONFIGURED / USE ADMIN TO ADD THEM</p>}
+          {configuredChannels.length > 0 && <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">{configuredChannels.map(channel => { const platform = channel.platform as SupportPlatform; return <a key={channel.id} href={channelHref(platform, channel.value)} target="_blank" rel="noreferrer" title={`Open ${channel.label}`} aria-label={`Open ${channel.label}`} className="group flex min-h-28 flex-col justify-between border border-white/10 bg-[#090d14] p-4 transition hover:border-[#ff5a1f]/70 hover:bg-[#0d141d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6ae4ff]"><span className="text-[#ff5a1f] transition group-hover:text-[#6ae4ff]">{platformIcon(platform)}</span><span className="font-[IBM_Plex_Mono] text-[10px] tracking-[0.12em] text-[#d5dce6]">{channel.label || platformLabels[platform]}</span></a>; })}</div>}
+        </section>
+
+        <section className="mt-16 grid gap-10 border-t border-white/10 pt-12 lg:grid-cols-[0.7fr_1.3fr]" aria-labelledby="support-form-heading">
+          <div><span className="font-[IBM_Plex_Mono] text-[10px] tracking-[0.18em] text-[#6ae4ff]">02 / MESSAGE INTAKE</span><h2 id="support-form-heading" className="mt-3 font-[Space_Grotesk] text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">SEND A SIGNAL.</h2><p className="mt-5 max-w-md font-[IBM_Plex_Mono] text-xs leading-6 text-[#9eabbc]">Tell us what needs attention. The Firebox team will receive your support request in the Admin message inbox.</p>{sent && <p className="mt-6 border border-[#6ae4ff]/30 bg-[#6ae4ff]/5 px-4 py-3 font-[IBM_Plex_Mono] text-[10px] tracking-[0.12em] text-[#a9f2ff]">MESSAGE RECEIVED / CHANNEL OPEN</p>}</div>
+          <form onSubmit={handleSubmit} className="border border-white/10 bg-[#090d14] p-6 sm:p-8"><div className="grid gap-5 sm:grid-cols-2"><label className="block"><span className="field-label">Name</span><input required name="name" maxLength={120} className="field-input" placeholder="Your name" /></label><label className="block"><span className="field-label">Email</span><input required name="email" type="email" maxLength={320} className="field-input" placeholder="you@example.com" /></label></div><label className="mt-5 block"><span className="field-label">Support message</span><textarea required name="message" maxLength={5000} rows={7} className="field-input resize-none" placeholder="Describe what you need help with..." /></label><button disabled={submitMessage.isPending} className="action-button mt-6">{submitMessage.isPending ? "TRANSMITTING..." : "SEND SUPPORT SIGNAL"}<Send className="h-4 w-4" /></button></form>
+        </section>
+      </div>
+      <footer className="border-t border-white/10 px-5 py-8 sm:px-8 lg:px-12"><div className="mx-auto flex max-w-7xl items-center justify-between font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#768397]"><span>FIREBOX TECH / SUPPORT NODE</span><span>CHANNEL OPEN</span></div></footer>
+    </main>
+  );
+}

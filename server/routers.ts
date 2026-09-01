@@ -12,6 +12,10 @@ import {
   updateService,
   getProjects,
   getServices,
+  getSupportChannels,
+  getSupportMessages,
+  addSupportMessage,
+  upsertSupportChannel,
 } from "./db";
 
 const serviceInput = z.object({
@@ -21,6 +25,21 @@ const serviceInput = z.object({
   liveUrl: z.string().trim().url().or(z.literal("")).optional(),
   githubUrl: z.string().trim().url().or(z.literal("")).optional(),
   sortOrder: z.number().int().min(0).default(0),
+});
+
+const supportPlatforms = ["whatsapp", "tiktok", "telegram", "facebook", "instagram", "youtube"] as const;
+
+const supportChannelInput = z.object({
+  platform: z.enum(supportPlatforms),
+  label: z.string().trim().min(1).max(120),
+  value: z.string().trim().max(512),
+  sortOrder: z.number().int().min(0).default(0),
+});
+
+const supportMessageInput = z.object({
+  name: z.string().trim().min(1).max(120),
+  email: z.string().trim().email().max(320),
+  message: z.string().trim().min(1).max(5000),
 });
 
 const projectInput = z.object({
@@ -42,6 +61,12 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+  }),
+  support: router({
+    channels: publicProcedure.query(() => getSupportChannels()),
+    messages: publicProcedure.query(() => getSupportMessages()),
+    submitMessage: publicProcedure.input(supportMessageInput).mutation(({ input }) => addSupportMessage(input)),
+    saveChannel: publicProcedure.input(supportChannelInput).mutation(({ input }) => upsertSupportChannel(input)),
   }),
   content: router({
     list: publicProcedure.query(async () => ({

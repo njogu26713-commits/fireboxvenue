@@ -11,6 +11,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Solutions from "./pages/Solutions";
 import Admin from "./pages/Admin";
+import Support from "./pages/Support";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -19,6 +20,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/solutions" component={Solutions} />
       <Route path="/admin" component={Admin} />
+      <Route path="/support" component={Support} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>

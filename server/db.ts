@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, services, projects, InsertService, InsertProject } from "../drizzle/schema";
+import { InsertUser, users, services, projects, InsertService, InsertProject, supportChannels, supportMessages, InsertSupportChannel, InsertSupportMessage } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -135,4 +135,30 @@ export async function deleteProject(id: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(projects).where(eq(projects.id, id));
+}
+
+export async function getSupportChannels() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(supportChannels).orderBy(supportChannels.sortOrder);
+}
+
+export async function upsertSupportChannel(channel: InsertSupportChannel) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(supportChannels).values(channel).onDuplicateKeyUpdate({
+    set: { label: channel.label, value: channel.value, sortOrder: channel.sortOrder },
+  });
+}
+
+export async function addSupportMessage(message: InsertSupportMessage) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(supportMessages).values(message);
+}
+
+export async function getSupportMessages() {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(supportMessages).orderBy(supportMessages.createdAt);
 }
