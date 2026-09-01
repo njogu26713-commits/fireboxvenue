@@ -65,3 +65,9 @@
 
 - [x] Click the live-site and GitHub icons from a public card to confirm they open correctly in a new tab or window.
 - [x] Re-check the Solutions page on a phone viewport after the link-icon update.
+
+## Public Navigation Cleanup
+
+- [x] Remove CONTENT CONTROL from the public Solutions header.
+- [x] Keep the direct `/admin` route available for content management.
+- [x] Verify the public Solutions header on desktop and phone widths.

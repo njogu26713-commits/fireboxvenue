@@ -48,7 +48,6 @@ export default function Solutions() {
             FIREBOX<span className="text-[#ff5a1f]">//</span>STUDIOS
           </Link>
           <div className="flex items-center gap-4">
-            <Link href="/admin" className="hidden font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#ff5a1f] transition hover:text-white sm:block">CONTENT CONTROL</Link>
             <Link href="/" className="inline-flex items-center gap-2 font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white">
               <ArrowLeft className="h-3.5 w-3.5" /> RETURN TO HERO
             </Link>
