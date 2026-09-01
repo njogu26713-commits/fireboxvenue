@@ -29,3 +29,9 @@
 - [x] Verify `/solutions` and `/admin` on mobile and tablet breakpoints and fix any responsive issues.
 - [x] Exercise Admin add and delete flows in-browser, confirm the public Solutions page reflects the new record, and cover update/delete through tests.
 - [x] Add explicit loading and error states so content failures are visible instead of silently relying on fallback content.
+
+## Responsive Navigation Update
+
+- [x] Make the Solutions link a full-size CTA matching Open Channel on desktop.
+- [x] Add a collapsible mobile navigation toggle with Solutions and Open Channel actions.
+- [x] Verify the header fits and remains usable on phone and desktop breakpoints.

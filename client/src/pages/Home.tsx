@@ -4,7 +4,7 @@
  * create a cinematic studio entry without decorative excess.
  */
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Crosshair, MoveDown, Sparkles } from "lucide-react";
+import { ArrowUpRight, Crosshair, Menu, MoveDown, Sparkles, X } from "lucide-react";
 import { toast } from "sonner";
 
 const heroArtwork = "/manus-storage/firebox-hero-tech-city_a9b6b884.png";
@@ -20,6 +20,7 @@ function notifyChannel() {
 
 export default function Home() {
   const [typedCharacters, setTypedCharacters] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -108,20 +109,44 @@ export default function Home() {
             </span>
           </a>
 
-          <div className="flex items-center gap-3 sm:gap-5">
-            <a href="/solutions" className="hidden font-[IBM_Plex_Mono] text-[10px] tracking-[0.16em] text-[#aeb7c5] transition hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] md:block">SOLUTIONS</a>
-            <span className="hidden font-[IBM_Plex_Mono] text-[10px] tracking-[0.16em] text-[#aeb7c5] md:block">
+          <div className="flex items-center gap-2 sm:gap-3 lg:gap-5">
+            <a href="/solutions" className="group hidden h-10 items-center gap-2 border border-white/20 bg-white/[0.06] px-3.5 font-[IBM_Plex_Mono] text-[10px] font-medium tracking-[0.14em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b] sm:inline-flex sm:h-11 sm:px-4">
+              SOLUTIONS
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
+            </a>
+            <span className="hidden font-[IBM_Plex_Mono] text-[10px] tracking-[0.16em] text-[#aeb7c5] lg:block">
               SYS // ONLINE
             </span>
             <button
               type="button"
               onClick={notifyChannel}
-              className="group inline-flex h-10 items-center gap-2 border border-white/20 bg-white/[0.06] px-3.5 font-[IBM_Plex_Mono] text-[10px] font-medium tracking-[0.14em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b] sm:h-11 sm:px-4"
+              className="group hidden h-10 items-center gap-2 border border-white/20 bg-white/[0.06] px-3.5 font-[IBM_Plex_Mono] text-[10px] font-medium tracking-[0.14em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b] sm:inline-flex sm:h-11 sm:px-4"
             >
               OPEN CHANNEL
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
             </button>
+            <button
+              type="button"
+              aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={menuOpen}
+              onClick={() => setMenuOpen(open => !open)}
+              className="grid h-10 w-10 place-items-center border border-white/20 bg-white/[0.06] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:text-[#ff5a1f] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:hidden"
+            >
+              {menuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            </button>
           </div>
+          {menuOpen && (
+            <div className="absolute right-5 top-[calc(100%-0.25rem)] z-30 w-[min(16rem,calc(100vw-2.5rem))] border border-white/15 bg-[#080c13]/95 p-2 shadow-[0_18px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:hidden">
+              <a href="/solutions" onClick={() => setMenuOpen(false)} className="group flex h-12 items-center justify-between border border-[#ff5a1f]/70 bg-[#ff5a1f] px-3.5 font-[IBM_Plex_Mono] text-[10px] font-semibold tracking-[0.14em] text-[#07090d] transition hover:bg-[#6ae4ff]">
+                SOLUTIONS
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
+              </a>
+              <button type="button" onClick={() => { notifyChannel(); setMenuOpen(false); }} className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-[IBM_Plex_Mono] text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]">
+                OPEN CHANNEL
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
+              </button>
+            </div>
+          )}
         </header>
 
         <div className="relative z-10 flex flex-1 items-center px-5 pb-12 pt-14 sm:px-8 sm:pb-16 sm:pt-20 lg:px-12 lg:pb-20 lg:pt-24">
