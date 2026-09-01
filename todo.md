@@ -53,3 +53,15 @@
 - [x] Make the Services Admin image field clearly visible and editable.
 - [x] Add a live preview for the selected service image.
 - [x] Verify the image control on the Admin page and save a checkpoint.
+
+## Service and Project Links
+
+- [x] Add optional live URL and GitHub URL fields to services and projects.
+- [x] Add the URL fields to the Admin create and edit forms.
+- [x] Show accessible live and GitHub icons on public service and project cards.
+- [x] Verify links open in a new browser tab and remain usable on phone layouts.
+
+## Link Verification Follow-up
+
+- [x] Click the live-site and GitHub icons from a public card to confirm they open correctly in a new tab or window.
+- [x] Re-check the Solutions page on a phone viewport after the link-icon update.
