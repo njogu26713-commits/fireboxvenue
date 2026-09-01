@@ -4,15 +4,15 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 
 type PublicContent = {
-  services: Array<{ id: number; title: string; description: string; sortOrder: number }>;
+  services: Array<{ id: number; title: string; description: string; imageUrl?: string | null; sortOrder: number }>;
   projects: Array<{ id: number; title: string; client: string; description: string; imageUrl?: string | null; sortOrder: number }>;
 };
 
 const fallback: PublicContent = {
   services: [
-    { id: 1, title: "Digital Worlds", description: "Immersive 3D environments and interactive web experiences built for high-end brand storytelling.", sortOrder: 1 },
-    { id: 2, title: "Identity Systems", description: "Cyberpunk and industrial design languages, motion graphics, and robust brand guidelines.", sortOrder: 2 },
-    { id: 3, title: "Creative Engineering", description: "Custom frontend architecture, WebGL integrations, and high-performance interactive systems.", sortOrder: 3 },
+    { id: 1, title: "Digital Worlds", description: "Immersive 3D environments and interactive web experiences built for high-end brand storytelling.", imageUrl: "/manus-storage/firebox-network-atrium_1879ff5e.png", sortOrder: 1 },
+    { id: 2, title: "Identity Systems", description: "Cyberpunk and industrial design languages, motion graphics, and robust brand guidelines.", imageUrl: "/manus-storage/firebox-circuit-abyss_0d3067b7.png", sortOrder: 2 },
+    { id: 3, title: "Creative Engineering", description: "Custom frontend architecture, WebGL integrations, and high-performance interactive systems.", imageUrl: "/manus-storage/firebox-terminal-horizon_dcc40768.png", sortOrder: 3 },
   ],
   projects: [
     { id: 1, title: "Network Atrium", client: "Internal R&D", description: "A suspended energy core environment built to test our new lighting and particle systems.", imageUrl: "/manus-storage/firebox-network-atrium_1879ff5e.png", sortOrder: 1 },
@@ -49,8 +49,8 @@ export default function Solutions() {
 
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12" aria-labelledby="services-heading">
         <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-5"><div><span className="font-[IBM_Plex_Mono] text-[10px] tracking-[0.18em] text-[#6ae4ff]">01 / CAPABILITIES</span><h2 id="services-heading" className="mt-3 font-[Space_Grotesk] text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">SERVICES</h2></div><Cpu className="h-7 w-7 text-[#ff5a1f]" /></div>
-        <div className="mt-10 grid gap-px overflow-hidden border border-white/10 bg-white/10 md:grid-cols-3">
-          {localData.services.map((service, index) => <article key={service.id} className="group bg-[#090d14] p-7 transition hover:bg-[#0d141d] sm:p-9"><div className="flex items-center justify-between"><span className="font-[IBM_Plex_Mono] text-[11px] text-[#ff5a1f]">0{index + 1}</span><ArrowUpRight className="h-4 w-4 text-[#738094] transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#6ae4ff]" /></div><h3 className="mt-14 font-[Space_Grotesk] text-2xl font-semibold tracking-[-0.04em]">{service.title}</h3><p className="mt-4 font-[IBM_Plex_Mono] text-xs leading-6 text-[#9eabbc]">{service.description}</p></article>)}
+        <div className="mt-10 grid gap-6 lg:grid-cols-3">
+          {localData.services.map((service, index) => <article key={service.id} className="group border border-white/10 bg-[#090d14]"><div className="relative aspect-[4/3] overflow-hidden bg-[#0d141d]"><img src={service.imageUrl || "/manus-storage/firebox-network-atrium_1879ff5e.png"} alt="" className="h-full w-full object-cover opacity-75 transition duration-500 group-hover:scale-105 group-hover:opacity-100" /><div className="absolute inset-0 bg-gradient-to-t from-[#090d14] via-transparent to-transparent" /><span className="absolute left-4 top-4 font-[IBM_Plex_Mono] text-[10px] tracking-[0.15em] text-[#d4dde8]">0{index + 1} / CAPABILITY</span></div><div className="p-6"><div className="flex items-center justify-between gap-4 font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#ff5a1f]"><span>FIREBOX TECH</span><ArrowUpRight className="h-4 w-4 text-[#738094] transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#6ae4ff]" /></div><h3 className="mt-4 font-[Space_Grotesk] text-2xl font-semibold tracking-[-0.04em]">{service.title}</h3><p className="mt-3 font-[IBM_Plex_Mono] text-xs leading-6 text-[#9eabbc]">{service.description}</p></div></article>)}
         </div>
       </section>
 

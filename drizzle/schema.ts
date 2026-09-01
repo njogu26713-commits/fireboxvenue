@@ -29,6 +29,7 @@ export const services = mysqlTable("services", {
   id: int("id").autoincrement().primaryKey(),
   title: varchar("title", { length: 255 }).notNull(),
   description: text("description").notNull(),
+  imageUrl: varchar("imageUrl", { length: 512 }),
   sortOrder: int("order").default(0).notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),

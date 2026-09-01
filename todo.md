@@ -41,3 +41,9 @@
 - [x] Remove the Solutions page hero copy and large hero treatment.
 - [x] Keep services and projects as the direct page content below the header.
 - [x] Verify the simplified page on desktop and phone widths.
+
+## Image-led Services Update
+
+- [x] Add an image reference to service content records and Admin service controls.
+- [x] Restyle Services as image-led cards matching Projects.
+- [x] Verify service image cards on desktop and phone widths.

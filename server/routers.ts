@@ -17,6 +17,7 @@ import {
 const serviceInput = z.object({
   title: z.string().trim().min(1).max(255),
   description: z.string().trim().min(1).max(2000),
+  imageUrl: z.string().trim().url().or(z.literal("")).optional(),
   sortOrder: z.number().int().min(0).default(0),
 });
 
