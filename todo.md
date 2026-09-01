@@ -35,3 +35,9 @@
 - [x] Make the Solutions link a full-size CTA matching Open Channel on desktop.
 - [x] Add a collapsible mobile navigation toggle with Solutions and Open Channel actions.
 - [x] Verify the header fits and remains usable on phone and desktop breakpoints.
+
+## Solutions Page Simplification
+
+- [x] Remove the Solutions page hero copy and large hero treatment.
+- [x] Keep services and projects as the direct page content below the header.
+- [x] Verify the simplified page on desktop and phone widths.

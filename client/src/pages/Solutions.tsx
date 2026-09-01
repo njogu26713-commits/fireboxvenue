@@ -46,16 +46,6 @@ export default function Solutions() {
         </div>
       </header>
 
-      <section className="relative overflow-hidden border-b border-white/10 px-5 pb-20 pt-20 sm:px-8 sm:pt-28 lg:px-12">
-        <div className="signal-grid absolute inset-0 opacity-30" />
-        <div className="relative mx-auto max-w-7xl">
-          <div className="flex items-center gap-3 font-[IBM_Plex_Mono] text-[10px] tracking-[0.2em] text-[#e7c6ba]"><span className="h-px w-8 bg-[#ff5a1f]" /> FIREBOX TECH / SOLUTIONS</div>
-          <div className="mt-7 grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
-            <h1 className="max-w-4xl font-[Space_Grotesk] text-[clamp(3.3rem,7vw,7rem)] font-bold leading-[0.86] tracking-[-0.075em]">BUILD THE <span className="text-[#ff5a1f]">NEXT</span><br />LAYER.</h1>
-            <p className="max-w-md border-l border-[#6ae4ff]/60 pl-4 font-[IBM_Plex_Mono] text-xs leading-6 text-[#aeb9c8]">Firebox tech is the system behind the signal: strategy, visual identity, and interactive technology for ambitious teams.</p>
-          </div>
-        </div>
-      </section>
 
       <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12" aria-labelledby="services-heading">
         <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-5"><div><span className="font-[IBM_Plex_Mono] text-[10px] tracking-[0.18em] text-[#6ae4ff]">01 / CAPABILITIES</span><h2 id="services-heading" className="mt-3 font-[Space_Grotesk] text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">SERVICES</h2></div><Cpu className="h-7 w-7 text-[#ff5a1f]" /></div>
