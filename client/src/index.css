@@ -122,6 +122,23 @@
   .hero-reveal-3 {
     animation-delay: 290ms;
   }
+
+  .type-line {
+    display: block;
+    min-height: 0.84em;
+    white-space: nowrap;
+  }
+
+  .type-cursor {
+    display: inline-block;
+    width: 0.055em;
+    height: 0.78em;
+    margin-left: 0.08em;
+    vertical-align: -0.03em;
+    background: currentColor;
+    box-shadow: 0 0 14px currentColor;
+    animation: cursor-blink 760ms steps(1, end) infinite;
+  }
 }
 
 @keyframes hero-enter {
@@ -139,6 +156,18 @@
 @media (prefers-reduced-motion: no-preference) {
   .hero-art {
     animation: ambient-drift 14s cubic-bezier(0.45, 0, 0.55, 1) infinite alternate;
+  }
+}
+
+@keyframes cursor-blink {
+  0%,
+  48% {
+    opacity: 1;
+  }
+
+  49%,
+  100% {
+    opacity: 0;
   }
 }
 

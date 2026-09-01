@@ -3,11 +3,14 @@
  * Cobalt-black space, Furnace Orange hierarchy, and compact IBM Plex Mono metadata
  * create a cinematic studio entry without decorative excess.
  */
+import { useEffect, useState } from "react";
 import { ArrowUpRight, Crosshair, MoveDown, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 const heroArtwork = "/manus-storage/firebox-hero-tech-city_a9b6b884.png";
 const logoGlyph = "/manus-storage/firebox-ember-glyph_1302f74c.png";
+const headlineLines = ["MAKE THE", "SIGNAL", "UNMISSABLE."] as const;
+const totalHeadlineLength = headlineLines.reduce((total, line) => total + line.length, 0);
 
 function notifyChannel() {
   toast("Studio channel is standing by", {
@@ -16,6 +19,50 @@ function notifyChannel() {
 }
 
 export default function Home() {
+  const [typedCharacters, setTypedCharacters] = useState(0);
+
+  useEffect(() => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    if (reducedMotion) {
+      setTypedCharacters(totalHeadlineLength);
+      return;
+    }
+
+    let characterIndex = 0;
+    let intervalId: number | undefined;
+    const timeoutId = window.setTimeout(() => {
+      intervalId = window.setInterval(() => {
+        characterIndex += 1;
+        setTypedCharacters(characterIndex);
+
+        if (characterIndex >= totalHeadlineLength && intervalId) {
+          window.clearInterval(intervalId);
+        }
+      }, 52);
+    }, 430);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      if (intervalId) window.clearInterval(intervalId);
+    };
+  }, []);
+
+  const visibleCharactersForLine = (lineIndex: number) => {
+    const charactersBeforeLine = headlineLines
+      .slice(0, lineIndex)
+      .reduce((total, line) => total + line.length, 0);
+    return Math.min(
+      Math.max(typedCharacters - charactersBeforeLine, 0),
+      headlineLines[lineIndex].length,
+    );
+  };
+
+  const activeLineIndex = headlineLines.findIndex((line, index) => {
+    const lineStart = headlineLines.slice(0, index).reduce((total, item) => total + item.length, 0);
+    return typedCharacters >= lineStart && typedCharacters < lineStart + line.length;
+  });
+
   return (
     <main id="top" className="min-h-svh overflow-hidden bg-[#05070b] text-[#f5f1eb]">
       <section
@@ -88,11 +135,21 @@ export default function Home() {
 
             <h1
               id="hero-title"
+              aria-label={headlineLines.join(" ")}
               className="hero-reveal hero-reveal-2 mt-7 max-w-3xl font-[Space_Grotesk] text-[clamp(3.5rem,8.5vw,7.8rem)] font-bold leading-[0.84] tracking-[-0.075em] text-[#f7f4ef]"
             >
-              MAKE THE
-              <span className="mt-1 block text-[#ff5a1f]">SIGNAL</span>
-              <span className="mt-1 block pl-[0.12em] text-[#f7f4ef]">UNMISSABLE.</span>
+              <span aria-hidden="true" className="type-line">
+                {headlineLines[0].slice(0, visibleCharactersForLine(0))}
+                {activeLineIndex === 0 && <span className="type-cursor" />}
+              </span>
+              <span aria-hidden="true" className="type-line mt-1 text-[#ff5a1f]">
+                {headlineLines[1].slice(0, visibleCharactersForLine(1))}
+                {activeLineIndex === 1 && <span className="type-cursor" />}
+              </span>
+              <span aria-hidden="true" className="type-line mt-1 pl-[0.12em] text-[#f7f4ef]">
+                {headlineLines[2].slice(0, visibleCharactersForLine(2))}
+                {activeLineIndex === 2 && <span className="type-cursor" />}
+              </span>
             </h1>
 
             <div className="hero-reveal hero-reveal-3 mt-8 flex max-w-xl flex-col gap-6 sm:mt-10 sm:flex-row sm:items-end sm:gap-8">
