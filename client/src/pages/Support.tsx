@@ -66,13 +66,7 @@ export default function Support() {
       </header>
 
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
-        <div className="max-w-4xl">
-          <span className="font-[IBM_Plex_Mono] text-[10px] tracking-[0.2em] text-[#6ae4ff]">FIREBOX TECH / SUPPORT</span>
-          <h1 className="mt-5 font-[Space_Grotesk] text-6xl font-bold leading-[0.88] tracking-[-0.07em] sm:text-8xl">OPEN A <span className="text-[#ff5a1f]">SUPPORT</span> CHANNEL.</h1>
-          <p className="mt-7 max-w-2xl font-[IBM_Plex_Mono] text-xs leading-6 text-[#aab5c4] sm:text-sm">Send a support signal to the Firebox team, or reach the channel that fits your workflow.</p>
-        </div>
-
-        <section className="mt-14" aria-labelledby="support-channels-heading">
+        <section className="mt-2" aria-labelledby="support-channels-heading">
           <div className="flex items-end justify-between gap-5 border-b border-white/10 pb-5"><div><span className="font-[IBM_Plex_Mono] text-[10px] tracking-[0.18em] text-[#ff5a1f]">01 / DIRECT CHANNELS</span><h2 id="support-channels-heading" className="mt-3 font-[Space_Grotesk] text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">FIND SUPPORT</h2></div><MessageCircle className="h-7 w-7 text-[#6ae4ff]" /></div>
           {channelsLoading && <p className="mt-7 font-[IBM_Plex_Mono] text-xs text-[#9eabbc]">SYNCING SUPPORT CHANNELS...</p>}
           {channelsError && <p className="mt-7 border border-[#ff5a1f]/30 bg-[#ff5a1f]/5 px-4 py-3 font-[IBM_Plex_Mono] text-[10px] tracking-[0.12em] text-[#ffae8c]">SUPPORT CHANNEL NODE OFFLINE</p>}

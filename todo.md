@@ -83,3 +83,9 @@
 
 - [x] Configure at least one support channel in Admin and verify its icon renders above the Support form.
 - [x] Exercise the Admin support-channel save flow and confirm the configured channel appears on desktop and phone layouts.
+
+## Support Page Simplification
+
+- [x] Remove the Support page hero copy and large hero treatment.
+- [x] Keep support channels and the message form as the direct page content below the header.
+- [x] Verify the simplified Support page on desktop and phone widths.
