@@ -47,3 +47,9 @@
 - [x] Add an image reference to service content records and Admin service controls.
 - [x] Restyle Services as image-led cards matching Projects.
 - [x] Verify service image cards on desktop and phone widths.
+
+## Admin Service Image Controls
+
+- [x] Make the Services Admin image field clearly visible and editable.
+- [x] Add a live preview for the selected service image.
+- [x] Verify the image control on the Admin page and save a checkpoint.
