@@ -109,6 +109,7 @@ export default function Home() {
           </a>
 
           <div className="flex items-center gap-3 sm:gap-5">
+            <a href="/solutions" className="hidden font-[IBM_Plex_Mono] text-[10px] tracking-[0.16em] text-[#aeb7c5] transition hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] md:block">SOLUTIONS</a>
             <span className="hidden font-[IBM_Plex_Mono] text-[10px] tracking-[0.16em] text-[#aeb7c5] md:block">
               SYS // ONLINE
             </span>

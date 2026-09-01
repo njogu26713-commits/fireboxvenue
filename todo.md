@@ -8,3 +8,24 @@
 ## Completed
 
 - [x] Existing Signal Furnace cyberpunk hero is implemented and tested.
+
+## Solutions and Admin Update
+
+- [x] Upgrade the project architecture for database-backed content management.
+- [x] Define service and project content structures and sample firebox tech entries.
+- [x] Build the cyberpunk Solutions page with service and project sections.
+- [x] Build the open Admin page for adding, editing, and removing entries.
+- [x] Add navigation between the hero, Solutions page, and Admin area.
+- [x] Verify admin content rendering, public rendering, and responsive layouts.
+
+## Admin Access Change
+
+- [x] Remove authentication checks from the Admin page for the current prototype phase.
+- [x] Keep the admin data flow easy to secure later when login is requested.
+- [x] Re-test the public Solutions page and open Admin page after the access change.
+
+## Verification Follow-up
+
+- [x] Verify `/solutions` and `/admin` on mobile and tablet breakpoints and fix any responsive issues.
+- [x] Exercise Admin add and delete flows in-browser, confirm the public Solutions page reflects the new record, and cover update/delete through tests.
+- [x] Add explicit loading and error states so content failures are visible instead of silently relying on fallback content.

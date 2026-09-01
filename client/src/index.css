@@ -139,6 +139,68 @@
     box-shadow: 0 0 14px currentColor;
     animation: cursor-blink 760ms steps(1, end) infinite;
   }
+
+  .field-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #8996a7;
+  }
+
+  .field-input {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    background: rgba(255, 255, 255, 0.035);
+    padding: 0.78rem 0.9rem;
+    color: #f5f1eb;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    outline: none;
+    transition: border-color 180ms ease-out, background 180ms ease-out;
+  }
+
+  .field-input::placeholder {
+    color: #536073;
+  }
+
+  .field-input:focus {
+    border-color: rgba(106, 228, 255, 0.75);
+    background: rgba(106, 228, 255, 0.045);
+    box-shadow: 0 0 0 2px rgba(106, 228, 255, 0.08);
+  }
+
+  .action-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: 1px solid #ff5a1f;
+    background: #ff5a1f;
+    padding: 0.85rem 1rem;
+    color: #080b11;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    transition: background 180ms ease-out, color 180ms ease-out, transform 160ms ease-out;
+  }
+
+  .action-button:hover {
+    background: #6ae4ff;
+    border-color: #6ae4ff;
+  }
+
+  .action-button:active {
+    transform: scale(0.97);
+  }
+
+  .action-button:disabled {
+    cursor: wait;
+    opacity: 0.55;
+  }
 }
 
 @keyframes hero-enter {
