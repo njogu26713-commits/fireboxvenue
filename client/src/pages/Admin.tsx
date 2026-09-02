@@ -313,7 +313,7 @@ export default function Admin() {
 
   return (
     <main className="min-h-screen bg-[#06080d] text-[#f5f1eb]">
-      <BrandMark />
+      <BrandMark className="!absolute" />
       <header className="border-b border-white/10 bg-[#080b11] px-5 py-5 sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-[1500px] items-center justify-end gap-4">
           <div className="flex items-center gap-4">
@@ -349,7 +349,9 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-10 xl:grid-cols-[11rem_minmax(0,0.85fr)_minmax(0,1.15fr)]">
+        <div
+          className={`mt-10 grid gap-10 ${activeSection === "live-index" || activeSection === "faq-archive" || activeSection === "directory-archive" || activeSection === "support-inbox" ? "xl:grid-cols-[11rem_minmax(0,0.85fr)_minmax(0,1.15fr)]" : "xl:grid-cols-[11rem_minmax(0,1fr)]"}`}
+        >
           <nav
             aria-label="Admin sections"
             className="flex gap-2 overflow-x-auto border border-white/10 bg-[#080b11] p-3 xl:hidden"
@@ -368,7 +370,7 @@ export default function Admin() {
           <aside className="hidden xl:block">
             <nav
               aria-label="Admin sections"
-              className="sticky top-6 border border-white/10 bg-[#080b11] p-3"
+              className="border border-white/10 bg-[#080b11] p-3"
             >
               <p className="border-b border-white/10 px-2 pb-3 font-sans text-[9px] tracking-[0.16em] text-[#6ae4ff]">
                 ADMIN INDEX
