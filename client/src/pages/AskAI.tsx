@@ -109,19 +109,35 @@ export default function AskAI() {
       </header>
 
       <section className="w-full px-0 py-0" aria-label="Ask Firebox AI">
-        <AIChatBox
-          messages={messages}
-          onSendMessage={handleSend}
-          isLoading={ask.isPending || isTyping}
-          className="h-[min(760px,calc(100vh-8rem))] w-full rounded-none border-x-0 border-y border-border bg-transparent shadow-none"
-          placeholder="Ask about Firebox..."
-          emptyStateMessage="Ask a question about Firebox"
-          suggestedPrompts={[
-            "What services does Firebox offer?",
-            "Show me the latest tutorials",
-            "How can I contact Support?",
-          ]}
-        />
+        <div className="w-full border-y border-border bg-card">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-8 lg:px-12">
+            <div>
+              <p className="font-sans text-[10px] font-semibold tracking-[0.16em] text-foreground">
+                ASK AI
+              </p>
+              <p className="mt-1 font-sans text-[9px] tracking-[0.12em] text-muted-foreground">
+                FIREBOX PUBLIC KNOWLEDGE
+              </p>
+            </div>
+            <span className="inline-flex items-center gap-2 font-sans text-[9px] tracking-[0.12em] text-[#6ae4ff]">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6ae4ff]" />
+              ONLINE
+            </span>
+          </div>
+          <AIChatBox
+            messages={messages}
+            onSendMessage={handleSend}
+            isLoading={ask.isPending || isTyping}
+            className="h-[min(700px,calc(100vh-12rem))] w-full rounded-none border-0 bg-transparent shadow-none"
+            placeholder="Ask about Firebox..."
+            emptyStateMessage="Ask a question about Firebox"
+            suggestedPrompts={[
+              "What services does Firebox offer?",
+              "Show me the latest tutorials",
+              "How can I contact Support?",
+            ]}
+          />
+        </div>
         {(ask.isPending || isTyping) && (
           <div className="flex h-10 items-center gap-2 border-b border-border px-5 font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff] sm:px-8 lg:px-12">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6ae4ff]" />
