@@ -57,7 +57,7 @@ function PageShell({ children }: { children: React.ReactNode }) {
           <BrandMark />
           <Link
             href="/"
-            className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.04] px-3 py-2 font-sans text-[10px] tracking-[0.14em] text-muted-foreground transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f]/10 hover:text-foreground"
+            className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-muted-foreground transition hover:text-[#ff5a1f]"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> BACK TO HOME
           </Link>
@@ -205,7 +205,7 @@ export function BlogPost() {
           </p>
           <Link
             href="/blog"
-            className="mt-6 inline-flex items-center gap-2 border border-[#6ae4ff]/40 bg-[#6ae4ff]/5 px-3 py-2 font-sans text-xs text-[#6ae4ff] transition hover:border-[#6ae4ff]"
+            className="mt-6 inline-flex items-center gap-2 font-sans text-xs text-[#6ae4ff] transition hover:text-white"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> BACK TO BLOG
           </Link>
@@ -217,7 +217,7 @@ export function BlogPost() {
       <article className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
         <Link
           href="/blog"
-          className="inline-flex items-center gap-2 border border-[#6ae4ff]/40 bg-[#6ae4ff]/5 px-3 py-2 font-sans text-[10px] tracking-[0.14em] text-[#6ae4ff] transition hover:border-[#6ae4ff]"
+          className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-[#6ae4ff] transition hover:text-white"
         >
           <ArrowLeft className="h-3.5 w-3.5" /> BACK TO BLOG
         </Link>

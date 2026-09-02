@@ -107,31 +107,31 @@ export default function Home() {
             <BrandMark />
             <a
               href="/services"
-              className="hidden h-10 items-center border border-white/20 bg-white/[0.06] px-3 font-sans text-[10px] font-medium tracking-[0.12em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex lg:h-11"
+              className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
             >
               SERVICES
             </a>
             <a
               href="/products"
-              className="hidden h-10 items-center border border-white/20 bg-white/[0.06] px-3 font-sans text-[10px] font-medium tracking-[0.12em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex lg:h-11"
+              className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
             >
               PRODUCTS
             </a>
             <a
               href="/blog"
-              className="hidden h-10 items-center border border-white/20 bg-white/[0.06] px-3 font-sans text-[10px] font-medium tracking-[0.12em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex lg:h-11"
+              className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
             >
               BLOG
             </a>
             <a
               href="/docs"
-              className="hidden h-10 items-center border border-white/20 bg-white/[0.06] px-3 font-sans text-[10px] font-medium tracking-[0.12em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex lg:h-11"
+              className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
             >
               DOCS
             </a>
             <a
               href="/support"
-              className="group hidden h-10 items-center gap-2 border border-white/20 bg-white/[0.06] px-3.5 font-sans text-[10px] font-medium tracking-[0.14em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b] sm:inline-flex sm:h-11 sm:px-4"
+              className="group hidden items-center gap-2 font-sans text-[10px] font-medium tracking-[0.14em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:inline-flex"
             >
               SUPPORT
               <ArrowUpRight
@@ -147,7 +147,7 @@ export default function Home() {
               }
               aria-expanded={menuOpen}
               onClick={() => setMenuOpen(open => !open)}
-              className="grid h-10 w-10 place-items-center border border-white/20 bg-white/[0.06] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:text-[#ff5a1f] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:hidden"
+              className="grid h-10 w-10 place-items-center text-white transition hover:text-[#ff5a1f] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:hidden"
             >
               {menuOpen ? (
                 <X className="h-4 w-4" />
@@ -161,7 +161,7 @@ export default function Home() {
               <a
                 href="/support"
                 onClick={() => setMenuOpen(false)}
-                className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 SUPPORT
                 <ArrowUpRight
@@ -172,7 +172,7 @@ export default function Home() {
               <a
                 href="/services"
                 onClick={() => setMenuOpen(false)}
-                className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 SERVICES
                 <ArrowUpRight
@@ -183,7 +183,7 @@ export default function Home() {
               <a
                 href="/products"
                 onClick={() => setMenuOpen(false)}
-                className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 PRODUCTS
                 <ArrowUpRight
@@ -194,7 +194,7 @@ export default function Home() {
               <a
                 href="/blog"
                 onClick={() => setMenuOpen(false)}
-                className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 BLOG
                 <ArrowUpRight
@@ -205,7 +205,7 @@ export default function Home() {
               <a
                 href="/docs"
                 onClick={() => setMenuOpen(false)}
-                className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 DOCS
                 <ArrowUpRight

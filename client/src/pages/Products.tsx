@@ -58,7 +58,7 @@ export default function Products() {
           <BrandMark />
           <Link
             href="/"
-            className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.04] px-3 py-2 font-sans text-[10px] tracking-[0.14em] text-muted-foreground transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f]/10 hover:text-foreground"
+            className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-muted-foreground transition hover:text-[#ff5a1f]"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> BACK TO HOME
           </Link>
