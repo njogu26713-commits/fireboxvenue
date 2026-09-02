@@ -5,46 +5,12 @@ import {
   CalendarDays,
   Sparkles,
 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useRoute } from "wouter";
+import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
 import BrandMark from "@/components/BrandMark";
 
-type BlogPost = {
-  category: string;
-  date: string;
-  readTime: string;
-  title: string;
-  excerpt: string;
-};
-
-const posts: BlogPost[] = [
-  {
-    category: "BUILD LOG",
-    date: "SEP 03, 2026",
-    readTime: "5 MIN READ",
-    title: "Designing digital systems that feel alive",
-    excerpt:
-      "Why strong interfaces need more than polish: they need rhythm, hierarchy, and a point of view that users can feel.",
-  },
-  {
-    category: "FIELD NOTES",
-    date: "AUG 26, 2026",
-    readTime: "4 MIN READ",
-    title: "From signal to system",
-    excerpt:
-      "A practical look at how Firebox turns an early creative signal into a reliable product, brand, or interactive experience.",
-  },
-  {
-    category: "TECHNOLOGY",
-    date: "AUG 14, 2026",
-    readTime: "6 MIN READ",
-    title: "The case for a sharper web",
-    excerpt:
-      "Performance, accessibility, and visual ambition are not competing goals. The best digital work makes them reinforce each other.",
-  },
-];
-
-export default function Blog() {
+function PageShell({ children }: { children: React.ReactNode }) {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <BrandMark />
@@ -59,7 +25,23 @@ export default function Blog() {
           <ThemeToggle />
         </div>
       </header>
+      {children}
+      <footer className="border-t border-border px-5 py-8 sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-7xl items-center justify-between font-sans text-[10px] tracking-[0.14em] text-muted-foreground">
+          <span>FIREBOX TECH / TRANSMISSION LOG</span>
+          <span className="inline-flex items-center gap-2">
+            <Sparkles className="h-3 w-3 text-[#6ae4ff]" /> SIGNAL IS LIVE
+          </span>
+        </div>
+      </footer>
+    </main>
+  );
+}
 
+export default function Blog() {
+  const { data: posts, isLoading, isError } = trpc.blog.list.useQuery();
+  return (
+    <PageShell>
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
         <div className="flex items-end justify-between gap-6 border-b border-border pb-6">
           <div>
@@ -79,47 +61,143 @@ export default function Blog() {
             strokeWidth={1.5}
           />
         </div>
-
-        <div className="mt-10 grid gap-6 lg:grid-cols-3">
-          {posts.map((post, index) => (
-            <article
-              key={post.title}
-              className="group flex min-h-[22rem] flex-col justify-between border border-border bg-card p-6 transition hover:border-[#ff5a1f]/70 sm:p-8"
-            >
-              <div>
-                <div className="flex items-center justify-between gap-4 font-sans text-[10px] tracking-[0.14em] text-[#ff5a1f]">
-                  <span>
-                    0{index + 1} / {post.category}
-                  </span>
-                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+        {isLoading && (
+          <p className="mt-10 font-sans text-xs tracking-[0.12em] text-muted-foreground">
+            SYNCING TRANSMISSION LOG...
+          </p>
+        )}
+        {isError && (
+          <p className="mt-10 border border-[#ff5a1f]/30 bg-[#ff5a1f]/5 px-4 py-4 font-sans text-[10px] tracking-[0.12em] text-[#ffae8c]">
+            BLOG NODE OFFLINE / RETRY THE CONNECTION
+          </p>
+        )}
+        {!isLoading && !isError && posts?.length === 0 && (
+          <div className="mt-10 border border-border bg-card p-6 sm:p-8">
+            <p className="font-sans text-[10px] tracking-[0.14em] text-muted-foreground">
+              NO PUBLISHED POSTS YET
+            </p>
+            <p className="mt-3 font-sans text-xs leading-6 text-muted-foreground">
+              The next transmission will appear here when it is published from
+              Admin.
+            </p>
+          </div>
+        )}
+        {!isLoading && !isError && (posts?.length ?? 0) > 0 && (
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {posts?.map((post, index) => (
+              <article
+                key={post.id}
+                className="group flex min-h-[22rem] flex-col justify-between border border-border bg-card p-6 transition hover:border-[#ff5a1f]/70 sm:p-8"
+              >
+                {post.imageUrl && (
+                  <img
+                    src={post.imageUrl}
+                    alt=""
+                    className="-mx-6 -mt-6 mb-6 h-40 w-[calc(100%+3rem)] object-cover opacity-80 sm:-mx-8 sm:-mt-8 sm:mb-8 sm:h-48 sm:w-[calc(100%+4rem)]"
+                  />
+                )}
+                <div>
+                  <div className="flex items-center justify-between gap-4 font-sans text-[10px] tracking-[0.14em] text-[#ff5a1f]">
+                    <span>0{index + 1} / BLOG</span>
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                  </div>
+                  <h2 className="mt-8 font-sans text-3xl font-semibold leading-[0.98] tracking-[-0.05em]">
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="transition hover:text-[#ff5a1f]"
+                    >
+                      {post.title}
+                    </Link>
+                  </h2>
+                  <p className="mt-5 font-sans text-xs leading-6 text-muted-foreground">
+                    {post.excerpt}
+                  </p>
                 </div>
-                <h2 className="mt-10 font-sans text-3xl font-semibold leading-[0.98] tracking-[-0.05em]">
-                  {post.title}
-                </h2>
-                <p className="mt-5 font-sans text-xs leading-6 text-muted-foreground">
-                  {post.excerpt}
-                </p>
-              </div>
-              <div className="mt-10 flex items-center justify-between border-t border-border pt-4 font-sans text-[9px] tracking-[0.12em] text-muted-foreground">
-                <span className="inline-flex items-center gap-2">
-                  <CalendarDays className="h-3.5 w-3.5 text-[#6ae4ff]" />{" "}
-                  {post.date}
-                </span>
-                <span>{post.readTime}</span>
-              </div>
-            </article>
-          ))}
-        </div>
+                <div className="mt-10 flex items-center justify-between border-t border-border pt-4 font-sans text-[9px] tracking-[0.12em] text-muted-foreground">
+                  <span className="inline-flex items-center gap-2">
+                    <CalendarDays className="h-3.5 w-3.5 text-[#6ae4ff]" />{" "}
+                    {new Date(
+                      post.publishedAt ?? post.createdAt
+                    ).toLocaleDateString()}
+                  </span>
+                  <span>{post.author}</span>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
+    </PageShell>
+  );
+}
 
-      <footer className="border-t border-border px-5 py-8 sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-between font-sans text-[10px] tracking-[0.14em] text-muted-foreground">
-          <span>FIREBOX TECH / TRANSMISSION LOG</span>
-          <span className="inline-flex items-center gap-2">
-            <Sparkles className="h-3 w-3 text-[#6ae4ff]" /> SIGNAL IS LIVE
-          </span>
+export function BlogPost() {
+  const [, params] = useRoute<{ slug: string }>("/blog/:slug");
+  const {
+    data: post,
+    isLoading,
+    isError,
+  } = trpc.blog.getBySlug.useQuery(
+    { slug: params?.slug ?? "" },
+    { enabled: Boolean(params?.slug) }
+  );
+  if (isLoading)
+    return (
+      <PageShell>
+        <div className="mx-auto max-w-3xl px-5 py-24 font-sans text-xs tracking-[0.12em] text-muted-foreground">
+          SYNCING ARTICLE...
         </div>
-      </footer>
-    </main>
+      </PageShell>
+    );
+  if (isError || !post)
+    return (
+      <PageShell>
+        <div className="mx-auto max-w-3xl px-5 py-24">
+          <p className="font-sans text-xs tracking-[0.12em] text-[#ffae8c]">
+            ARTICLE NOT FOUND
+          </p>
+          <Link
+            href="/blog"
+            className="mt-6 inline-flex items-center gap-2 font-sans text-xs text-[#6ae4ff]"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" /> RETURN TO BLOG
+          </Link>
+        </div>
+      </PageShell>
+    );
+  return (
+    <PageShell>
+      <article className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
+        <Link
+          href="/blog"
+          className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-[#6ae4ff]"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" /> BACK TO BLOG
+        </Link>
+        <span className="mt-12 block font-sans text-[10px] tracking-[0.18em] text-[#ff5a1f]">
+          TRANSMISSION / {post.author}
+        </span>
+        <h1 className="mt-4 font-sans text-5xl font-bold leading-[0.95] tracking-[-0.06em] sm:text-7xl">
+          {post.title}
+        </h1>
+        <div className="mt-6 flex items-center gap-4 font-sans text-[10px] tracking-[0.12em] text-muted-foreground">
+          <span className="inline-flex items-center gap-2">
+            <CalendarDays className="h-3.5 w-3.5 text-[#6ae4ff]" />{" "}
+            {new Date(post.publishedAt ?? post.createdAt).toLocaleDateString()}
+          </span>
+          <span>{post.slug}</span>
+        </div>
+        {post.imageUrl && (
+          <img
+            src={post.imageUrl}
+            alt=""
+            className="mt-10 max-h-[32rem] w-full object-cover"
+          />
+        )}
+        <div className="mt-10 whitespace-pre-wrap border-t border-border pt-8 font-sans text-sm leading-8 text-muted-foreground">
+          {post.content}
+        </div>
+      </article>
+    </PageShell>
   );
 }

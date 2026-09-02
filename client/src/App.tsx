@@ -15,7 +15,7 @@ import Support from "@/pages/Support";
 import { Documentation } from "@/pages/Directory";
 import Services from "@/pages/Services";
 import Products from "@/pages/Products";
-import Blog from "@/pages/Blog";
+import Blog, { BlogPost } from "@/pages/Blog";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -27,6 +27,7 @@ function Router() {
       <Route path="/support" component={Support} />
       <Route path="/products" component={Products} />
       <Route path="/services" component={Services} />
+      <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/blog" component={Blog} />
       <Route path="/docs" component={Documentation} />
       <Route path="/404" component={NotFound} />

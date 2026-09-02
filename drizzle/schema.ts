@@ -102,6 +102,24 @@ export interface Faq {
 
 export type InsertFaq = Omit<Faq, "id" | "createdAt" | "updatedAt">;
 
+export type BlogPostStatus = "draft" | "published";
+
+export interface BlogPost {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  imageUrl: string | null;
+  author: string;
+  status: BlogPostStatus;
+  publishedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type InsertBlogPost = Omit<BlogPost, "id" | "createdAt" | "updatedAt">;
+
 export type DirectorySection = "products" | "developers" | "docs";
 
 export interface DirectoryItem {
@@ -115,4 +133,7 @@ export interface DirectoryItem {
   updatedAt: Date;
 }
 
-export type InsertDirectoryItem = Omit<DirectoryItem, "id" | "createdAt" | "updatedAt">;
+export type InsertDirectoryItem = Omit<
+  DirectoryItem,
+  "id" | "createdAt" | "updatedAt"
+>;

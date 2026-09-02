@@ -1,6 +1,7 @@
 import { MongoClient, type Collection, type Db } from "mongodb";
 import type {
   InsertFaq,
+  InsertBlogPost,
   InsertProject,
   InsertService,
   InsertSupportChannel,
@@ -9,6 +10,7 @@ import type {
   DirectoryItem,
   DirectorySection,
   Faq,
+  BlogPost,
   InsertDirectoryItem,
   Project,
   Service,
@@ -29,6 +31,7 @@ const collectionNames = {
   supportChannels: "supportChannels",
   supportMessages: "supportMessages",
   faqs: "faqs",
+  blogPosts: "blogPosts",
   directory: "directory",
 } as const;
 
@@ -65,16 +68,20 @@ function collection<T>(db: Db, name: string): Collection<any> {
 }
 
 async function nextId(db: Db, sequenceName: string): Promise<number> {
-  const result = await db.collection<{ _id: string; value: number }>("sequences").findOneAndUpdate(
-    { _id: sequenceName },
-    { $inc: { value: 1 } },
-    { upsert: true, returnDocument: "after" },
-  );
+  const result = await db
+    .collection<{ _id: string; value: number }>("sequences")
+    .findOneAndUpdate(
+      { _id: sequenceName },
+      { $inc: { value: 1 } },
+      { upsert: true, returnDocument: "after" }
+    );
   return result?.value ?? 1;
 }
 
 function clean<T extends object>(value: T): Partial<T> {
-  return Object.fromEntries(Object.entries(value).filter(([, field]) => field !== undefined)) as Partial<T>;
+  return Object.fromEntries(
+    Object.entries(value).filter(([, field]) => field !== undefined)
+  ) as Partial<T>;
 }
 
 export async function upsertUser(user: InsertUser): Promise<void> {
@@ -89,7 +96,8 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   const users = collection<User>(db, collectionNames.users);
   const now = new Date();
   const existing = await users.findOne({ openId: user.openId });
-  const role = user.role ?? (user.openId === ENV.ownerOpenId ? "admin" : undefined);
+  const role =
+    user.role ?? (user.openId === ENV.ownerOpenId ? "admin" : undefined);
   const update = clean({
     ...user,
     ...(role ? { role } : {}),
@@ -115,25 +123,36 @@ export async function upsertUser(user: InsertUser): Promise<void> {
   });
 }
 
-export async function getUserByOpenId(openId: string): Promise<User | undefined> {
+export async function getUserByOpenId(
+  openId: string
+): Promise<User | undefined> {
   const db = await getDb();
   if (!db) {
     console.warn("[Database] Cannot get user: MongoDB is not available");
     return undefined;
   }
-  return (await collection<User>(db, collectionNames.users).findOne({ openId })) ?? undefined;
+  return (
+    (await collection<User>(db, collectionNames.users).findOne({ openId })) ??
+    undefined
+  );
 }
 
 export async function getServices(): Promise<Service[]> {
   const db = await getDb();
   if (!db) return [];
-  return collection<Service>(db, collectionNames.services).find({}).sort({ sortOrder: 1 }).toArray();
+  return collection<Service>(db, collectionNames.services)
+    .find({})
+    .sort({ sortOrder: 1 })
+    .toArray();
 }
 
 export async function getProjects(): Promise<Project[]> {
   const db = await getDb();
   if (!db) return [];
-  return collection<Project>(db, collectionNames.projects).find({}).sort({ sortOrder: 1 }).toArray();
+  return collection<Project>(db, collectionNames.projects)
+    .find({})
+    .sort({ sortOrder: 1 })
+    .toArray();
 }
 
 export async function addService(service: InsertService): Promise<void> {
@@ -166,21 +185,27 @@ export async function addProject(project: InsertProject): Promise<void> {
   });
 }
 
-export async function updateService(id: number, service: Partial<InsertService>): Promise<void> {
+export async function updateService(
+  id: number,
+  service: Partial<InsertService>
+): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await collection<Service>(db, collectionNames.services).updateOne(
     { id },
-    { $set: { ...clean(service), updatedAt: new Date() } },
+    { $set: { ...clean(service), updatedAt: new Date() } }
   );
 }
 
-export async function updateProject(id: number, project: Partial<InsertProject>): Promise<void> {
+export async function updateProject(
+  id: number,
+  project: Partial<InsertProject>
+): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await collection<Project>(db, collectionNames.projects).updateOne(
     { id },
-    { $set: { ...clean(project), updatedAt: new Date() } },
+    { $set: { ...clean(project), updatedAt: new Date() } }
   );
 }
 
@@ -199,28 +224,46 @@ export async function deleteProject(id: number): Promise<void> {
 export async function getSupportChannels(): Promise<SupportChannel[]> {
   const db = await getDb();
   if (!db) return [];
-  return collection<SupportChannel>(db, collectionNames.supportChannels).find({}).sort({ sortOrder: 1 }).toArray();
+  return collection<SupportChannel>(db, collectionNames.supportChannels)
+    .find({})
+    .sort({ sortOrder: 1 })
+    .toArray();
 }
 
-export async function upsertSupportChannel(channel: InsertSupportChannel): Promise<void> {
+export async function upsertSupportChannel(
+  channel: InsertSupportChannel
+): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  const channels = collection<SupportChannel>(db, collectionNames.supportChannels);
+  const channels = collection<SupportChannel>(
+    db,
+    collectionNames.supportChannels
+  );
   const now = new Date();
   await channels.updateOne(
     { platform: channel.platform },
     {
-      $set: { label: channel.label, value: channel.value, sortOrder: channel.sortOrder, updatedAt: now },
+      $set: {
+        label: channel.label,
+        value: channel.value,
+        sortOrder: channel.sortOrder,
+        updatedAt: now,
+      },
       $setOnInsert: { id: await nextId(db, "supportChannels"), createdAt: now },
     },
-    { upsert: true },
+    { upsert: true }
   );
 }
 
-export async function addSupportMessage(message: InsertSupportMessage): Promise<void> {
+export async function addSupportMessage(
+  message: InsertSupportMessage
+): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await collection<SupportMessage>(db, collectionNames.supportMessages).insertOne({
+  await collection<SupportMessage>(
+    db,
+    collectionNames.supportMessages
+  ).insertOne({
     ...message,
     id: await nextId(db, "supportMessages"),
     createdAt: new Date(),
@@ -230,13 +273,19 @@ export async function addSupportMessage(message: InsertSupportMessage): Promise<
 export async function getSupportMessages(): Promise<SupportMessage[]> {
   const db = await getDb();
   if (!db) return [];
-  return collection<SupportMessage>(db, collectionNames.supportMessages).find({}).sort({ createdAt: 1 }).toArray();
+  return collection<SupportMessage>(db, collectionNames.supportMessages)
+    .find({})
+    .sort({ createdAt: 1 })
+    .toArray();
 }
 
 export async function getFaqs(): Promise<Faq[]> {
   const db = await getDb();
   if (!db) return [];
-  return collection<Faq>(db, collectionNames.faqs).find({}).sort({ sortOrder: 1, id: 1 }).toArray();
+  return collection<Faq>(db, collectionNames.faqs)
+    .find({})
+    .sort({ sortOrder: 1, id: 1 })
+    .toArray();
 }
 
 export async function addFaq(faq: InsertFaq): Promise<void> {
@@ -251,12 +300,15 @@ export async function addFaq(faq: InsertFaq): Promise<void> {
   });
 }
 
-export async function updateFaq(id: number, faq: Partial<InsertFaq>): Promise<void> {
+export async function updateFaq(
+  id: number,
+  faq: Partial<InsertFaq>
+): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await collection<Faq>(db, collectionNames.faqs).updateOne(
     { id },
-    { $set: { ...clean(faq), updatedAt: new Date() } },
+    { $set: { ...clean(faq), updatedAt: new Date() } }
   );
 }
 
@@ -266,14 +318,74 @@ export async function deleteFaq(id: number): Promise<void> {
   await collection<Faq>(db, collectionNames.faqs).deleteOne({ id });
 }
 
-export async function getDirectoryItems(section?: DirectorySection): Promise<DirectoryItem[]> {
+export async function getBlogPosts(includeDrafts = false): Promise<BlogPost[]> {
+  const db = await getDb();
+  if (!db) return [];
+  const filter = includeDrafts ? {} : { status: "published" };
+  return collection<BlogPost>(db, collectionNames.blogPosts)
+    .find(filter)
+    .sort({ publishedAt: -1, createdAt: -1, id: -1 })
+    .toArray();
+}
+
+export async function getBlogPostBySlug(
+  slug: string
+): Promise<BlogPost | undefined> {
+  const db = await getDb();
+  if (!db) return undefined;
+  return (
+    (await collection<BlogPost>(db, collectionNames.blogPosts).findOne({
+      slug,
+      status: "published",
+    })) ?? undefined
+  );
+}
+
+export async function addBlogPost(post: InsertBlogPost): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await collection<BlogPost>(db, collectionNames.blogPosts).insertOne({
+    ...post,
+    id: await nextId(db, "blogPosts"),
+    createdAt: now,
+    updatedAt: now,
+  });
+}
+
+export async function updateBlogPost(
+  id: number,
+  post: Partial<InsertBlogPost>
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<BlogPost>(db, collectionNames.blogPosts).updateOne(
+    { id },
+    { $set: { ...clean(post), updatedAt: new Date() } }
+  );
+}
+
+export async function deleteBlogPost(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<BlogPost>(db, collectionNames.blogPosts).deleteOne({ id });
+}
+
+export async function getDirectoryItems(
+  section?: DirectorySection
+): Promise<DirectoryItem[]> {
   const db = await getDb();
   if (!db) return [];
   const filter = section ? { section } : {};
-  return collection<DirectoryItem>(db, collectionNames.directory).find(filter).sort({ section: 1, sortOrder: 1, id: 1 }).toArray();
+  return collection<DirectoryItem>(db, collectionNames.directory)
+    .find(filter)
+    .sort({ section: 1, sortOrder: 1, id: 1 })
+    .toArray();
 }
 
-export async function addDirectoryItem(item: InsertDirectoryItem): Promise<void> {
+export async function addDirectoryItem(
+  item: InsertDirectoryItem
+): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const now = new Date();
@@ -286,19 +398,24 @@ export async function addDirectoryItem(item: InsertDirectoryItem): Promise<void>
   });
 }
 
-export async function updateDirectoryItem(id: number, item: Partial<InsertDirectoryItem>): Promise<void> {
+export async function updateDirectoryItem(
+  id: number,
+  item: Partial<InsertDirectoryItem>
+): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await collection<DirectoryItem>(db, collectionNames.directory).updateOne(
     { id },
-    { $set: { ...clean(item), updatedAt: new Date() } },
+    { $set: { ...clean(item), updatedAt: new Date() } }
   );
 }
 
 export async function deleteDirectoryItem(id: number): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
-  await collection<DirectoryItem>(db, collectionNames.directory).deleteOne({ id });
+  await collection<DirectoryItem>(db, collectionNames.directory).deleteOne({
+    id,
+  });
 }
 
 export async function closeDb(): Promise<void> {

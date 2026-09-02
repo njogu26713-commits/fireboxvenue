@@ -2,6 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import {
   ArrowLeft,
   Boxes,
+  BookOpen,
   Check,
   Database,
   HelpCircle,
@@ -23,6 +24,16 @@ type ServiceForm = {
   githubUrl: string;
   sortOrder: string;
 };
+type BlogForm = {
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  imageUrl: string;
+  author: string;
+  status: "draft" | "published";
+};
+
 type ProjectForm = {
   title: string;
   client: string;
@@ -49,6 +60,15 @@ const emptyProject: ProjectForm = {
   liveUrl: "",
   githubUrl: "",
   sortOrder: "0",
+};
+const emptyBlog: BlogForm = {
+  title: "",
+  slug: "",
+  excerpt: "",
+  content: "",
+  imageUrl: "",
+  author: "Firebox Studios",
+  status: "draft",
 };
 const emptyFaq: FaqForm = { question: "", answer: "", sortOrder: "0" };
 const emptyDirectoryItem: DirectoryForm = {
@@ -105,10 +125,12 @@ const emptySupportForms = Object.fromEntries(
 const adminNavItems = [
   ["products", "01 / PRODUCTS"],
   ["services", "02 / SERVICES"],
+  ["blog-editor", "03 / BLOG EDITOR"],
   ["support-channels", "03 / SUPPORT CHANNELS"],
   ["faq-editor", "04 / FAQ EDITOR"],
   ["directory-editor", "05 / RESOURCE EDITOR + URL"],
   ["live-index", "LIVE INDEX"],
+  ["blog-archive", "BLOG ARCHIVE"],
   ["faq-archive", "FAQ ARCHIVE"],
   ["directory-archive", "RESOURCE ARCHIVE"],
   ["support-inbox", "SUPPORT INBOX"],
@@ -124,8 +146,12 @@ export default function Admin() {
   const { data: faqs, isLoading: faqsLoading } = trpc.faq.list.useQuery();
   const { data: directoryItems, isLoading: directoryItemsLoading } =
     trpc.directory.list.useQuery();
+  const { data: blogPosts, isLoading: blogPostsLoading } =
+    trpc.blog.adminList.useQuery();
   const [service, setService] = useState(emptyService);
   const [project, setProject] = useState(emptyProject);
+  const [blog, setBlog] = useState(emptyBlog);
+  const [editingBlogId, setEditingBlogId] = useState<number | null>(null);
   const [editingServiceId, setEditingServiceId] = useState<number | null>(null);
   const [editingProjectId, setEditingProjectId] = useState<number | null>(null);
   const [supportForms, setSupportForms] =
@@ -204,6 +230,27 @@ export default function Admin() {
     onSuccess: () => utils.content.list.invalidate(),
     onError: error => toast.error(error.message),
   });
+  const addBlogPost = trpc.blog.add.useMutation({
+    onSuccess: async () => {
+      await utils.blog.adminList.invalidate();
+      setBlog(emptyBlog);
+      toast.success("Blog post saved");
+    },
+    onError: error => toast.error(error.message),
+  });
+  const updateBlogPost = trpc.blog.update.useMutation({
+    onSuccess: async () => {
+      await utils.blog.adminList.invalidate();
+      setBlog(emptyBlog);
+      setEditingBlogId(null);
+      toast.success("Blog post updated");
+    },
+    onError: error => toast.error(error.message),
+  });
+  const deleteBlogPost = trpc.blog.delete.useMutation({
+    onSuccess: () => utils.blog.adminList.invalidate(),
+    onError: error => toast.error(error.message),
+  });
   const saveSupportChannel = trpc.support.saveChannel.useMutation({
     onSuccess: () => {
       utils.support.channels.invalidate();
@@ -280,6 +327,17 @@ export default function Admin() {
     if (editingProjectId)
       updateProject.mutate({ ...input, id: editingProjectId });
     else addProject.mutate(input);
+  };
+
+  const submitBlog = (event: FormEvent) => {
+    event.preventDefault();
+    const input = {
+      ...blog,
+      imageUrl: blog.imageUrl || undefined,
+      publishedAt: blog.status === "published" ? new Date() : null,
+    };
+    if (editingBlogId) updateBlogPost.mutate({ ...input, id: editingBlogId });
+    else addBlogPost.mutate(input);
   };
 
   const submitFaq = (event: FormEvent) => {
@@ -642,6 +700,145 @@ export default function Admin() {
               </button>
             </form>
 
+            <form
+              id="blog-editor"
+              onSubmit={submitBlog}
+              className={`scroll-mt-28 border border-white/10 bg-[#0a0e15] p-6 sm:p-8 ${activeSection === "blog-editor" ? "" : "hidden"}`}
+            >
+              <div className="flex items-start justify-between">
+                <div>
+                  <span className="font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff]">
+                    03 / BLOG NODE
+                  </span>
+                  <h2 className="mt-2 font-sans text-2xl font-semibold">
+                    {editingBlogId ? "EDIT BLOG POST" : "WRITE BLOG POST"}
+                  </h2>
+                </div>
+                <BookOpen className="h-5 w-5 text-[#ff5a1f]" />
+              </div>
+              <div className="mt-7 space-y-4">
+                <label className="block">
+                  <span className="field-label">Title</span>
+                  <input
+                    required
+                    value={blog.title}
+                    onChange={event =>
+                      setBlog({ ...blog, title: event.target.value })
+                    }
+                    placeholder="e.g. Designing digital systems that feel alive"
+                    className="field-input"
+                  />
+                </label>
+                <label className="block">
+                  <span className="field-label">Slug</span>
+                  <input
+                    required
+                    pattern="[a-z0-9]+(?:-[a-z0-9]+)*"
+                    value={blog.slug}
+                    onChange={event =>
+                      setBlog({ ...blog, slug: event.target.value })
+                    }
+                    placeholder="designing-digital-systems"
+                    className="field-input"
+                  />
+                </label>
+                <label className="block">
+                  <span className="field-label">Excerpt</span>
+                  <textarea
+                    required
+                    rows={3}
+                    maxLength={500}
+                    value={blog.excerpt}
+                    onChange={event =>
+                      setBlog({ ...blog, excerpt: event.target.value })
+                    }
+                    placeholder="A short summary for the blog index..."
+                    className="field-input resize-none"
+                  />
+                </label>
+                <label className="block">
+                  <span className="field-label">Article content</span>
+                  <textarea
+                    required
+                    rows={12}
+                    value={blog.content}
+                    onChange={event =>
+                      setBlog({ ...blog, content: event.target.value })
+                    }
+                    placeholder="Write the full article here..."
+                    className="field-input resize-y"
+                  />
+                </label>
+                <label className="block">
+                  <span className="field-label">
+                    Featured image URL{" "}
+                    <span className="text-[#738094]">(optional)</span>
+                  </span>
+                  <input
+                    type="url"
+                    value={blog.imageUrl}
+                    onChange={event =>
+                      setBlog({ ...blog, imageUrl: event.target.value })
+                    }
+                    placeholder="https://..."
+                    className="field-input"
+                  />
+                </label>
+                <label className="block">
+                  <span className="field-label">Author</span>
+                  <input
+                    required
+                    value={blog.author}
+                    onChange={event =>
+                      setBlog({ ...blog, author: event.target.value })
+                    }
+                    className="field-input"
+                  />
+                </label>
+                <label className="block">
+                  <span className="field-label">Publication status</span>
+                  <select
+                    value={blog.status}
+                    onChange={event =>
+                      setBlog({
+                        ...blog,
+                        status: event.target.value as BlogForm["status"],
+                      })
+                    }
+                    className="field-input"
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                  </select>
+                </label>
+              </div>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <button
+                  disabled={addBlogPost.isPending || updateBlogPost.isPending}
+                  className="action-button"
+                >
+                  <Check className="h-4 w-4" />{" "}
+                  {addBlogPost.isPending || updateBlogPost.isPending
+                    ? "WRITING..."
+                    : editingBlogId
+                      ? "UPDATE BLOG POST"
+                      : "SAVE BLOG POST"}
+                </button>
+                {editingBlogId && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEditingBlogId(null);
+                      setBlog(emptyBlog);
+                    }}
+                    className="border border-white/20 px-4 py-3 font-sans text-[10px] tracking-[0.12em] text-[#9da9b8]"
+                  >
+                    CANCEL
+                  </button>
+                )}
+              </div>
+            </form>
+
             <section
               id="support-channels"
               className={`scroll-mt-28 border border-white/10 bg-[#0a0e15] p-6 sm:p-8 ${activeSection === "support-channels" ? "" : "hidden"}`}
@@ -942,7 +1139,7 @@ export default function Admin() {
 
           <section
             id="live-index"
-            className={`scroll-mt-28 border border-white/10 bg-[#080b11] p-6 sm:p-8 ${activeSection === "live-index" || activeSection === "faq-archive" || activeSection === "directory-archive" || activeSection === "support-inbox" ? "" : "hidden"}`}
+            className={`scroll-mt-28 border border-white/10 bg-[#080b11] p-6 sm:p-8 ${activeSection === "live-index" || activeSection === "faq-archive" || activeSection === "directory-archive" || activeSection === "support-inbox" || activeSection === "blog-archive" ? "" : "hidden"}`}
           >
             <div
               className={`${activeSection === "live-index" ? "" : "hidden"} flex items-end justify-between gap-4 border-b border-white/10 pb-5`}
@@ -1065,6 +1262,78 @@ export default function Admin() {
                           deleteProject.mutate({ id: projectItem.id })
                         }
                         className="p-2 text-[#687588] transition hover:text-[#ff5a1f]"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div
+              className={`${activeSection === "blog-archive" ? "" : "hidden"} mt-12 border-t border-white/10 pt-8`}
+            >
+              <div className="flex items-end justify-between gap-4">
+                <div>
+                  <span className="font-sans text-[10px] tracking-[0.16em] text-[#ff5a1f]">
+                    BLOG ARCHIVE
+                  </span>
+                  <h3 className="mt-2 font-sans text-2xl font-semibold">
+                    ALL POSTS
+                  </h3>
+                </div>
+                <span className="font-sans text-[10px] text-[#768397]">
+                  {blogPostsLoading
+                    ? "SYNCING"
+                    : `${blogPosts?.length ?? 0} POSTS`}
+                </span>
+              </div>
+              {(blogPosts?.length ?? 0) === 0 && !blogPostsLoading && (
+                <p className="mt-6 border border-white/10 bg-[#090d14] px-4 py-5 font-sans text-[10px] tracking-[0.14em] text-[#768397]">
+                  NO BLOG POSTS YET
+                </p>
+              )}
+              <div className="mt-6 divide-y divide-white/10">
+                {blogPosts?.map(post => (
+                  <div
+                    key={post.id}
+                    className="flex items-start justify-between gap-4 py-4"
+                  >
+                    <div>
+                      <p className="font-sans text-lg font-medium">
+                        {post.title}
+                      </p>
+                      <p className="mt-1 font-sans text-[10px] text-[#8491a2]">
+                        {post.status.toUpperCase()} / {post.author}
+                      </p>
+                      <p className="mt-2 font-sans text-[10px] leading-5 text-[#8491a2]">
+                        {post.excerpt}
+                      </p>
+                    </div>
+                    <div className="flex shrink-0 items-center gap-1">
+                      <button
+                        aria-label={`Edit ${post.title}`}
+                        onClick={() => {
+                          setActiveSection("blog-editor");
+                          setEditingBlogId(post.id);
+                          setBlog({
+                            title: post.title,
+                            slug: post.slug,
+                            excerpt: post.excerpt,
+                            content: post.content,
+                            imageUrl: post.imageUrl ?? "",
+                            author: post.author,
+                            status: post.status,
+                          });
+                        }}
+                        className="p-2 text-[#687588] hover:text-[#6ae4ff]"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </button>
+                      <button
+                        aria-label={`Delete ${post.title}`}
+                        onClick={() => deleteBlogPost.mutate({ id: post.id })}
+                        className="p-2 text-[#687588] hover:text-[#ff5a1f]"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
