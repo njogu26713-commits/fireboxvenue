@@ -406,9 +406,7 @@ export default function Admin() {
           </div>
         </div>
 
-        <div
-          className={`mt-10 grid gap-10 ${activeSection === "live-index" || activeSection === "faq-archive" || activeSection === "directory-archive" || activeSection === "support-inbox" ? "xl:grid-cols-[11rem_minmax(0,0.85fr)_minmax(0,1.15fr)]" : "xl:grid-cols-[11rem_minmax(0,1fr)]"}`}
-        >
+        <div className="mt-10 grid gap-10 xl:grid-cols-[11rem_minmax(0,1fr)]">
           <nav
             aria-label="Admin sections"
             className="flex gap-2 overflow-x-auto border border-white/10 bg-[#080b11] p-3 xl:hidden"
