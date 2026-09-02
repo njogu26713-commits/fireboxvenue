@@ -192,11 +192,30 @@ export const appRouter = router({
           choices?: Array<{ message?: { content?: string | null } }>;
         };
         const content = completion.choices?.[0]?.message?.content;
+        const answer =
+          typeof content === "string"
+            ? content
+            : "I could not generate an answer right now. Please contact Support.";
+        const topic = `${input.question} ${answer}`.toLowerCase();
+        const actions: Array<{ label: string; href: string }> = [];
+        const addAction = (label: string, href: string) => {
+          if (!actions.some(action => action.href === href))
+            actions.push({ label, href });
+        };
+        if (/product|platform|tool|app|bot/.test(topic))
+          addAction("VIEW PRODUCTS", "/products");
+        if (/service|develop|build|deploy|api|database|automation/.test(topic))
+          addAction("VIEW SERVICES", "/services");
+        if (/tutorial|learn|guide|article|blog|how to/.test(topic))
+          addAction("READ TUTORIALS", "/blog");
+        if (/faq|question|contact|support|help/.test(topic))
+          addAction("OPEN SUPPORT", "/support");
         return {
-          answer:
-            typeof content === "string"
-              ? content
-              : "I could not generate an answer right now. Please contact Support.",
+          answer,
+          actions:
+            actions.length > 0
+              ? actions.slice(0, 3)
+              : [{ label: "OPEN SUPPORT", href: "/support" }],
         };
       }),
   }),

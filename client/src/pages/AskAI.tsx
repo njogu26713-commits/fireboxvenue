@@ -36,7 +36,10 @@ export default function AskAI() {
             setMessages(current => {
               const next = [...current];
               const last = next[next.length - 1];
-              if (last?.role === "assistant") last.content = answer;
+              if (last?.role === "assistant") {
+                last.content = answer;
+                last.actions = result.actions;
+              }
               return next;
             });
             setIsTyping(false);

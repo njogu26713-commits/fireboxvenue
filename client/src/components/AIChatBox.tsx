@@ -12,6 +12,7 @@ import { Streamdown } from "streamdown";
 export type Message = {
   role: "system" | "user" | "assistant";
   content: string;
+  actions?: Array<{ label: string; href: string }>;
 };
 
 export type AIChatBoxProps = {
@@ -127,7 +128,7 @@ export function AIChatBox({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Filter out system messages
-  const displayMessages = messages.filter((msg) => msg.role !== "system");
+  const displayMessages = messages.filter(msg => msg.role !== "system");
 
   // Calculate min-height for last assistant message to push user message to top
   const [minHeightForLastMessage, setMinHeightForLastMessage] = useState(0);
@@ -143,7 +144,8 @@ export function AIChatBox({
       // - user message: 40px (item height) + 16px (margin-top from space-y-4) = 56px
       // Note: margin-bottom is not counted because it naturally pushes the assistant message down
       const userMessageReservedHeight = 56;
-      const calculatedHeight = scrollAreaHeight - 32 - userMessageReservedHeight;
+      const calculatedHeight =
+        scrollAreaHeight - 32 - userMessageReservedHeight;
 
       setMinHeightForLastMessage(Math.max(0, calculatedHeight));
     }
@@ -152,14 +154,14 @@ export function AIChatBox({
   // Scroll to bottom helper function with smooth animation
   const scrollToBottom = () => {
     const viewport = scrollAreaRef.current?.querySelector(
-      '[data-radix-scroll-area-viewport]'
+      "[data-radix-scroll-area-viewport]"
     ) as HTMLDivElement;
 
     if (viewport) {
       requestAnimationFrame(() => {
         viewport.scrollTo({
           top: viewport.scrollHeight,
-          behavior: 'smooth'
+          behavior: "smooth",
         });
       });
     }
@@ -263,6 +265,22 @@ export function AIChatBox({
                       {message.role === "assistant" ? (
                         <div className="prose prose-sm dark:prose-invert max-w-none">
                           <Streamdown>{message.content}</Streamdown>
+                          {message.actions && message.actions.length > 0 && (
+                            <div className="mt-4 flex flex-wrap gap-2 not-prose">
+                              {message.actions.map(action => (
+                                <button
+                                  key={action.href}
+                                  type="button"
+                                  onClick={() => {
+                                    window.location.href = action.href;
+                                  }}
+                                  className="inline-flex items-center gap-2 border border-[#ff5a1f]/50 px-3 py-2 font-sans text-[10px] font-semibold tracking-[0.12em] text-[#ff5a1f] transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f] hover:text-[#07090d]"
+                                >
+                                  {action.label}
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       ) : (
                         <p className="whitespace-pre-wrap text-sm">
@@ -311,7 +329,7 @@ export function AIChatBox({
         <Textarea
           ref={textareaRef}
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className="flex-1 max-h-32 resize-none min-h-9"
