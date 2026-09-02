@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowUpRight, Cpu, ExternalLink, Github, Layers3, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type PublicContent = {
   services: Array<{ id: number; title: string; description: string; imageUrl?: string | null; liveUrl?: string | null; githubUrl?: string | null; sortOrder: number }>;
@@ -51,6 +52,7 @@ export default function Solutions() {
             <Link href="/" className="inline-flex items-center gap-2 font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white">
               <ArrowLeft className="h-3.5 w-3.5" /> RETURN TO HERO
             </Link>
+            <ThemeToggle />
           </div>
         </div>
       </header>

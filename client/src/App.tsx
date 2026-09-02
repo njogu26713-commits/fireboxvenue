@@ -7,7 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Solutions from "./pages/Solutions";
 import Admin from "./pages/Admin";
@@ -27,14 +27,22 @@ function Router() {
   );
 }
 
+function AppContent() {
+  const { theme } = useTheme();
+
+  return (
+    <TooltipProvider>
+      <Toaster richColors theme={theme} position="bottom-right" />
+      <Router />
+    </TooltipProvider>
+  );
+}
+
 function App() {
   return (
     <ErrorBoundary>
-      <ThemeProvider defaultTheme="dark">
-        <TooltipProvider>
-          <Toaster richColors theme="dark" position="bottom-right" />
-          <Router />
-        </TooltipProvider>
+      <ThemeProvider defaultTheme="dark" switchable>
+        <AppContent />
       </ThemeProvider>
     </ErrorBoundary>
   );

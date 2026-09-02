@@ -3,6 +3,7 @@ import { ArrowLeft, Camera, Facebook, Instagram, MessageCircle, Music2, Play, Se
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type SupportPlatform = "whatsapp" | "tiktok" | "telegram" | "facebook" | "instagram" | "youtube";
 
@@ -61,7 +62,10 @@ export default function Support() {
             <span className="grid h-9 w-9 place-items-center border border-[#ff5a1f]/60 text-[#ff5a1f]">F//</span>
             FIREBOX<span className="text-[#ff5a1f]">//</span>STUDIOS
           </Link>
-          <Link href="/" className="inline-flex items-center gap-2 font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f]"><ArrowLeft className="h-3.5 w-3.5" /> RETURN TO HERO</Link>
+          <div className="flex items-center gap-4">
+            <Link href="/" className="inline-flex items-center gap-2 font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f]"><ArrowLeft className="h-3.5 w-3.5" /> RETURN TO HERO</Link>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 

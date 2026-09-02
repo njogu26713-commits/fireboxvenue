@@ -5,6 +5,7 @@
  */
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Crosshair, Menu, MoveDown, Sparkles, X } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const heroArtwork = "/manus-storage/firebox-hero-tech-city_a9b6b884.png";
 const logoGlyph = "/manus-storage/firebox-ember-glyph_1302f74c.png";
@@ -58,7 +59,7 @@ export default function Home() {
   });
 
   return (
-    <main id="top" className="min-h-svh overflow-hidden bg-[#05070b] text-[#f5f1eb]">
+    <main id="top" className="min-h-svh overflow-hidden bg-background text-foreground">
       <section
         aria-labelledby="hero-title"
         className="relative isolate flex min-h-svh flex-col overflow-hidden"
@@ -70,11 +71,11 @@ export default function Home() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-20 bg-[linear-gradient(90deg,rgba(5,7,11,0.99)_0%,rgba(5,7,11,0.94)_30%,rgba(5,7,11,0.63)_54%,rgba(5,7,11,0.28)_100%)]"
+          className="hero-overlay-horizontal absolute inset-0 -z-20"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 -z-20 bg-[linear-gradient(180deg,rgba(5,7,11,0.45)_0%,transparent_23%,transparent_70%,rgba(5,7,11,0.96)_100%)]"
+          className="hero-overlay-vertical absolute inset-0 -z-20"
         />
         <div aria-hidden="true" className="signal-grid absolute inset-0 -z-10 opacity-50" />
         <div aria-hidden="true" className="scanlines absolute inset-0 -z-10" />
@@ -117,6 +118,7 @@ export default function Home() {
               OPEN CHANNEL
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
             </a>
+            <ThemeToggle />
             <button
               type="button"
               aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -187,7 +189,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="relative z-10 flex flex-col border-t border-white/10 bg-[#070a0f]/72 px-5 py-4 backdrop-blur-md sm:px-8 md:flex-row md:items-center md:justify-between lg:px-12">
+        <div className="relative z-10 flex flex-col border-t border-border bg-background/72 px-5 py-4 backdrop-blur-md sm:px-8 md:flex-row md:items-center md:justify-between lg:px-12">
           <div className="flex items-center gap-3 font-[IBM_Plex_Mono] text-[10px] tracking-[0.16em] text-[#9ba7b7]">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff5a1f] opacity-75" />

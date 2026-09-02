@@ -203,6 +203,121 @@
   }
 }
 
+/* Light mode keeps the Signal Furnace hierarchy while shifting the canvas to a warm paper-white. */
+:root:not(.dark) {
+  color-scheme: light;
+  --background: oklch(0.965 0.012 88);
+  --foreground: oklch(0.19 0.018 258);
+  --card: oklch(0.985 0.008 88);
+  --card-foreground: oklch(0.19 0.018 258);
+  --popover: oklch(0.985 0.008 88);
+  --popover-foreground: oklch(0.19 0.018 258);
+  --primary: oklch(0.61 0.20 37);
+  --primary-foreground: oklch(0.985 0.008 88);
+  --secondary: oklch(0.92 0.018 88);
+  --secondary-foreground: oklch(0.24 0.018 258);
+  --muted: oklch(0.92 0.014 88);
+  --muted-foreground: oklch(0.43 0.025 255);
+  --accent: oklch(0.57 0.12 210);
+  --accent-foreground: oklch(0.985 0.008 88);
+  --destructive: oklch(0.58 0.22 25);
+  --destructive-foreground: oklch(0.985 0.008 88);
+  --border: oklch(0.28 0.02 258 / 18%);
+  --input: oklch(0.28 0.02 258 / 22%);
+  --ring: oklch(0.61 0.20 37);
+}
+
+:root:not(.dark) html,
+:root:not(.dark) body {
+  background: var(--background);
+}
+
+:root:not(.dark) .hero-overlay-horizontal {
+  background: linear-gradient(90deg, rgba(246, 244, 238, 0.99) 0%, rgba(246, 244, 238, 0.91) 30%, rgba(246, 244, 238, 0.63) 54%, rgba(246, 244, 238, 0.16) 100%);
+}
+
+:root:not(.dark) .hero-overlay-vertical {
+  background: linear-gradient(180deg, rgba(246, 244, 238, 0.44) 0%, transparent 23%, transparent 70%, rgba(246, 244, 238, 0.96) 100%);
+}
+
+:root:not(.dark) .signal-grid {
+  opacity: 0.22;
+}
+
+:root:not(.dark) .scanlines {
+  opacity: 0.16;
+  mix-blend-mode: multiply;
+}
+
+/* Several public pages predate the token system and use literal Signal Furnace colors. */
+:root:not(.dark) [class*="bg-[#05070b]"],
+:root:not(.dark) [class*="bg-[#06080d]"] {
+  background-color: var(--background) !important;
+}
+
+:root:not(.dark) [class*="bg-[#070a0f]"],
+:root:not(.dark) [class*="bg-[#080b11]"],
+:root:not(.dark) [class*="bg-[#080c13]"],
+:root:not(.dark) [class*="bg-[#090d14]"],
+:root:not(.dark) [class*="bg-[#0a0e15]"],
+:root:not(.dark) [class*="bg-[#0b1018]"],
+:root:not(.dark) [class*="bg-[#0d141d]"] {
+  background-color: var(--card) !important;
+}
+
+:root:not(.dark) [class~="bg-white/[0.06]"] {
+  background-color: color-mix(in oklch, var(--foreground) 5%, transparent) !important;
+}
+
+:root:not(.dark) [class~="border-white/10"],
+:root:not(.dark) [class~="border-white/15"],
+:root:not(.dark) [class~="border-white/20"] {
+  border-color: color-mix(in oklch, var(--foreground) 16%, transparent) !important;
+}
+
+:root:not(.dark) [class~="text-white"],
+:root:not(.dark) [class~="text-[#f5f1eb]"],
+:root:not(.dark) [class~="text-[#f7f4ef]"],
+:root:not(.dark) [class~="text-[#fff7f2]"],
+:root:not(.dark) [class~="text-[#dce3ec]"],
+:root:not(.dark) [class~="text-[#d5dce6]"],
+:root:not(.dark) [class~="text-[#d4dde8]"] {
+  color: var(--foreground) !important;
+}
+
+:root:not(.dark) [class~="text-[#9eabbc]"],
+:root:not(.dark) [class~="text-[#9da9b8]"],
+:root:not(.dark) [class~="text-[#9ba7b7]"],
+:root:not(.dark) [class~="text-[#8a96a7]"],
+:root:not(.dark) [class~="text-[#8996a7]"],
+:root:not(.dark) [class~="text-[#8491a2]"],
+:root:not(.dark) [class~="text-[#768397]"],
+:root:not(.dark) [class~="text-[#687588]"],
+:root:not(.dark) [class~="text-[#536073]"],
+:root:not(.dark) [class~="text-[#aeb7c5]"],
+:root:not(.dark) [class~="text-[#c7ced8]"] {
+  color: var(--muted-foreground) !important;
+}
+
+:root:not(.dark) .field-label {
+  color: var(--muted-foreground);
+}
+
+:root:not(.dark) .field-input {
+  border-color: color-mix(in oklch, var(--foreground) 22%, transparent);
+  background: color-mix(in oklch, var(--foreground) 3%, transparent);
+  color: var(--foreground);
+}
+
+:root:not(.dark) .field-input::placeholder {
+  color: color-mix(in oklch, var(--muted-foreground) 80%, transparent);
+}
+
+:root:not(.dark) .field-input:focus {
+  border-color: color-mix(in oklch, var(--accent) 75%, transparent);
+  background: color-mix(in oklch, var(--accent) 7%, transparent);
+}
+
 @keyframes hero-enter {
   from {
     opacity: 0;

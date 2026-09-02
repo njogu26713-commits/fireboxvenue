@@ -3,6 +3,7 @@ import { ArrowLeft, Check, Database, Pencil, Plus, Trash2 } from "lucide-react";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
+import ThemeToggle from "@/components/ThemeToggle";
 
 type ServiceForm = { title: string; description: string; imageUrl: string; liveUrl: string; githubUrl: string; sortOrder: string };
 type ProjectForm = { title: string; client: string; description: string; imageUrl: string; liveUrl: string; githubUrl: string; sortOrder: string };
@@ -84,7 +85,10 @@ export default function Admin() {
       <header className="border-b border-white/10 bg-[#080b11] px-5 py-5 sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-5">
           <Link href="/" className="inline-flex items-center gap-3 font-[Space_Grotesk] text-sm font-bold tracking-[0.14em] text-white transition hover:text-[#ff5a1f]"><span className="grid h-9 w-9 place-items-center border border-[#ff5a1f]/60 text-[#ff5a1f]">F//</span> FIREBOX//STUDIOS</Link>
-          <Link href="/solutions" className="inline-flex items-center gap-2 font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white"><ArrowLeft className="h-3.5 w-3.5" /> VIEW SOLUTIONS</Link>
+          <div className="flex items-center gap-4">
+            <Link href="/solutions" className="inline-flex items-center gap-2 font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white"><ArrowLeft className="h-3.5 w-3.5" /> VIEW SOLUTIONS</Link>
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 
