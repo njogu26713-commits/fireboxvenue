@@ -1,18 +1,23 @@
 import { z } from "zod";
+import type { DirectorySection } from "../drizzle/schema";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import {
+  addDirectoryItem,
   addFaq,
   addProject,
   addService,
+  deleteDirectoryItem,
   deleteFaq,
   deleteProject,
   deleteService,
+  updateDirectoryItem,
   updateFaq,
   updateProject,
   updateService,
+  getDirectoryItems,
   getFaqs,
   getProjects,
   getServices,
@@ -52,6 +57,16 @@ const faqInput = z.object({
   sortOrder: z.number().int().min(0).default(0),
 });
 
+const directorySections = ["products", "developers", "docs"] as const;
+
+const directoryInput = z.object({
+  section: z.enum(directorySections),
+  title: z.string().trim().min(1).max(255),
+  description: z.string().trim().min(1).max(2000),
+  href: z.string().trim().max(512).optional(),
+  sortOrder: z.number().int().min(0).default(0),
+});
+
 const projectInput = z.object({
   title: z.string().trim().min(1).max(255),
   client: z.string().trim().min(1).max(255),
@@ -71,6 +86,15 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+  }),
+  directory: router({
+    list: publicProcedure.input(z.object({ section: z.enum(directorySections) }).optional()).query(({ input }) => getDirectoryItems(input?.section as DirectorySection | undefined)),
+    add: publicProcedure.input(directoryInput).mutation(({ input }) => addDirectoryItem({ ...input, href: input.href || null })),
+    update: publicProcedure.input(directoryInput.extend({ id: z.number().int().positive() })).mutation(({ input }) => {
+      const { id, ...values } = input;
+      return updateDirectoryItem(id, { ...values, href: values.href || null });
+    }),
+    delete: publicProcedure.input(z.object({ id: z.number().int().positive() })).mutation(({ input }) => deleteDirectoryItem(input.id)),
   }),
   faq: router({
     list: publicProcedure.query(() => getFaqs()),

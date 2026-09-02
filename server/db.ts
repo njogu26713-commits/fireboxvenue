@@ -6,7 +6,10 @@ import type {
   InsertSupportChannel,
   InsertSupportMessage,
   InsertUser,
+  DirectoryItem,
+  DirectorySection,
   Faq,
+  InsertDirectoryItem,
   Project,
   Service,
   SupportChannel,
@@ -26,6 +29,7 @@ const collectionNames = {
   supportChannels: "supportChannels",
   supportMessages: "supportMessages",
   faqs: "faqs",
+  directory: "directory",
 } as const;
 
 /** Lazily connect so local type-checking and tests work without MongoDB configured. */
@@ -260,6 +264,41 @@ export async function deleteFaq(id: number): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await collection<Faq>(db, collectionNames.faqs).deleteOne({ id });
+}
+
+export async function getDirectoryItems(section?: DirectorySection): Promise<DirectoryItem[]> {
+  const db = await getDb();
+  if (!db) return [];
+  const filter = section ? { section } : {};
+  return collection<DirectoryItem>(db, collectionNames.directory).find(filter).sort({ section: 1, sortOrder: 1, id: 1 }).toArray();
+}
+
+export async function addDirectoryItem(item: InsertDirectoryItem): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await collection<DirectoryItem>(db, collectionNames.directory).insertOne({
+    ...item,
+    id: await nextId(db, "directory"),
+    href: item.href ?? null,
+    createdAt: now,
+    updatedAt: now,
+  });
+}
+
+export async function updateDirectoryItem(id: number, item: Partial<InsertDirectoryItem>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<DirectoryItem>(db, collectionNames.directory).updateOne(
+    { id },
+    { $set: { ...clean(item), updatedAt: new Date() } },
+  );
+}
+
+export async function deleteDirectoryItem(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<DirectoryItem>(db, collectionNames.directory).deleteOne({ id });
 }
 
 export async function closeDb(): Promise<void> {

@@ -100,3 +100,18 @@ export interface Faq {
 }
 
 export type InsertFaq = Omit<Faq, "id" | "createdAt" | "updatedAt">;
+
+export type DirectorySection = "products" | "developers" | "docs";
+
+export interface DirectoryItem {
+  id: number;
+  section: DirectorySection;
+  title: string;
+  description: string;
+  href: string | null;
+  sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type InsertDirectoryItem = Omit<DirectoryItem, "id" | "createdAt" | "updatedAt">;

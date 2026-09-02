@@ -13,6 +13,7 @@ import Solutions from "./pages/Solutions";
 import Admin from "./pages/Admin";
 import Support from "@/pages/Support";
 import FAQ from "@/pages/FAQ";
+import { Developers, Documentation, Products } from "@/pages/Directory";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -23,6 +24,9 @@ function Router() {
       <Route path="/admin" component={Admin} />
       <Route path="/support" component={Support} />
       <Route path="/faq" component={FAQ} />
+      <Route path="/products" component={Products} />
+      <Route path="/developers" component={Developers} />
+      <Route path="/docs" component={Documentation} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
