@@ -10,7 +10,8 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Solutions from "./pages/Solutions";
-import Admin from "./pages/Admin";
+import Admin from "@/pages/Admin";
+import AskAI from "@/pages/AskAI";
 import Support from "@/pages/Support";
 import { Documentation } from "@/pages/Directory";
 import Services from "@/pages/Services";
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/solutions" component={Solutions} />
       <Route path="/admin" component={Admin} />
+      <Route path="/ask-ai" component={AskAI} />
       <Route path="/support" component={Support} />
       <Route path="/products" component={Products} />
       <Route path="/services" component={Services} />

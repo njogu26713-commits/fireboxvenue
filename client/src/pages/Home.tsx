@@ -125,6 +125,12 @@ export default function Home() {
                 BLOG
               </a>
               <a
+                href="/ask-ai"
+                className="hidden items-center gap-2 font-sans text-[10px] font-medium tracking-[0.12em] text-[#6ae4ff] transition hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+              >
+                ASK AI
+              </a>
+              <a
                 href="/docs"
                 className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
               >
@@ -203,6 +209,14 @@ export default function Home() {
                   className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                   strokeWidth={2.2}
                 />
+              </a>
+              <a
+                href="/ask-ai"
+                onClick={() => setMenuOpen(false)}
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-[#6ae4ff] transition hover:text-white"
+              >
+                ASK AI
+                <ArrowUpRight className="h-4 w-4" strokeWidth={2.2} />
               </a>
               <a
                 href="/docs"
