@@ -82,9 +82,9 @@ export default function Directory({ section }: DirectoryPageProps) {
         <div className="mx-auto flex max-w-7xl items-center justify-end gap-3 sm:gap-4">
           <Link
             href="/"
-            className="hidden items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-muted-foreground transition hover:text-foreground sm:inline-flex"
+            className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.04] px-3 py-2 font-sans text-[10px] tracking-[0.14em] text-muted-foreground transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f]/10 hover:text-foreground"
           >
-            <ArrowLeft className="h-3.5 w-3.5" /> RETURN TO HERO
+            <ArrowLeft className="h-3.5 w-3.5" /> BACK TO HOME
           </Link>
           <ThemeToggle />
         </div>

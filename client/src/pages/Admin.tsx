@@ -378,7 +378,7 @@ export default function Admin() {
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white"
+              className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.04] px-3 py-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f]/10 hover:text-white"
             >
               <ArrowLeft className="h-3.5 w-3.5" /> BACK TO HOME
             </Link>

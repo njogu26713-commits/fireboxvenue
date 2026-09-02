@@ -119,9 +119,9 @@ export default function Support() {
         <div className="mx-auto flex max-w-7xl items-center justify-end gap-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f]"
+            className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.04] px-3 py-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f]/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f]"
           >
-            <ArrowLeft className="h-3.5 w-3.5" /> RETURN TO HERO
+            <ArrowLeft className="h-3.5 w-3.5" /> BACK TO HOME
           </Link>
           <ThemeToggle />
         </div>

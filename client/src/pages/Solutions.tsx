@@ -85,9 +85,9 @@ export default function Solutions() {
         <div className="mx-auto flex max-w-7xl items-center justify-end gap-4">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white"
+            className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.04] px-3 py-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f]/10 hover:text-white"
           >
-            <ArrowLeft className="h-3.5 w-3.5" /> RETURN TO HERO
+            <ArrowLeft className="h-3.5 w-3.5" /> BACK TO HOME
           </Link>
           <ThemeToggle />
         </div>
