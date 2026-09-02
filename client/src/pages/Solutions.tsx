@@ -3,6 +3,7 @@ import { ArrowLeft, ArrowUpRight, Cpu, ExternalLink, Github, Layers3, Sparkles }
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
+import BrandMark from "@/components/BrandMark";
 
 type PublicContent = {
   services: Array<{ id: number; title: string; description: string; imageUrl?: string | null; liveUrl?: string | null; githubUrl?: string | null; sortOrder: number }>;
@@ -42,19 +43,14 @@ export default function Solutions() {
 
   return (
     <main className="min-h-screen bg-[#05070b] text-[#f5f1eb]">
+      <BrandMark />
       <header className="sticky top-0 z-20 border-b border-white/10 bg-[#05070b]/85 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-between">
-          <Link href="/" className="group inline-flex items-center gap-3 font-sans text-sm font-bold tracking-[0.13em] text-white outline-none transition hover:text-[#ff5a1f] focus-visible:ring-2 focus-visible:ring-[#ff5a1f]">
-            <span className="grid h-9 w-9 place-items-center border border-[#ff5a1f]/60 text-[#ff5a1f]">F//</span>
-            FIREBOX<span className="text-[#ff5a1f]">//</span>STUDIOS
-          </Link>
-          <div className="flex items-center gap-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-end gap-4">
             <Link href="/" className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white">
               <ArrowLeft className="h-3.5 w-3.5" /> RETURN TO HERO
             </Link>
             <ThemeToggle />
           </div>
-        </div>
       </header>
 
 

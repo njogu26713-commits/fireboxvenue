@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowUpRight, BookOpen, Boxes, Code2, FileText, Sparkles } f
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
+import BrandMark from "@/components/BrandMark";
 
 type DirectorySection = "products" | "developers" | "docs";
 
@@ -72,19 +73,14 @@ export default function Directory({ section }: DirectoryPageProps) {
 
   return (
     <main className={`min-h-screen bg-background text-foreground ${copy.pageClass}`}>
+      <BrandMark />
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link href="/" className="group inline-flex items-center gap-3 font-sans text-sm font-bold tracking-[0.13em] text-foreground outline-none transition hover:text-[#ff5a1f] focus-visible:ring-2 focus-visible:ring-[#ff5a1f]">
-            <span className="grid h-9 w-9 place-items-center border border-[#ff5a1f]/60 text-[#ff5a1f]">F//</span>
-            FIREBOX<span className="text-[#ff5a1f]">//</span>STUDIOS
-          </Link>
-          <div className="flex items-center gap-3 sm:gap-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-end gap-3 sm:gap-4">
             <Link href="/" className="hidden items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-muted-foreground transition hover:text-foreground sm:inline-flex">
               <ArrowLeft className="h-3.5 w-3.5" /> RETURN TO HERO
             </Link>
             <ThemeToggle />
           </div>
-        </div>
       </header>
 
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-24 lg:px-12">

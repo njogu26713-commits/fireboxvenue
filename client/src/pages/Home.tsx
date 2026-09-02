@@ -6,9 +6,9 @@
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Crosshair, Menu, MoveDown, Sparkles, X } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+import BrandMark from "@/components/BrandMark";
 
 const heroArtwork = "/manus-storage/firebox-hero-tech-city_a9b6b884.png";
-const logoGlyph = "/manus-storage/firebox-ember-glyph_1302f74c.png";
 const headlineLines = ["MAKE THE", "SIGNAL", "UNMISSABLE."] as const;
 const totalHeadlineLength = headlineLines.reduce((total, line) => total + line.length, 0);
 
@@ -60,6 +60,7 @@ export default function Home() {
 
   return (
     <main id="top" className="min-h-svh overflow-hidden bg-background text-foreground">
+      <BrandMark />
       <section
         aria-labelledby="hero-title"
         className="relative isolate flex min-h-svh flex-col overflow-hidden"
@@ -81,29 +82,7 @@ export default function Home() {
         <div aria-hidden="true" className="scanlines absolute inset-0 -z-10" />
 
         <header className="relative z-20 flex items-center justify-between px-5 py-5 sm:px-8 sm:py-7 lg:px-12">
-          <a
-            href="#top"
-            aria-label="fireboxStudios home"
-            className="group flex items-center gap-3 rounded-sm outline-none transition-opacity duration-200 hover:opacity-85 focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b]"
-          >
-            <span className="relative grid h-11 w-11 place-items-center overflow-hidden border border-[#ff5a1f]/45 bg-[#0b1018]/80 p-1.5 shadow-[0_0_28px_rgba(255,90,31,0.17)] backdrop-blur-sm sm:h-12 sm:w-12">
-              <img
-                src={logoGlyph}
-                alt=""
-                className="h-full w-full object-contain transition-transform duration-200 group-hover:scale-110"
-              />
-            </span>
-            <span className="leading-none">
-              <span className="block font-sans text-sm font-bold tracking-[0.13em] text-white sm:text-base">
-                FIREBOX<span className="text-[#ff5a1f]">//</span>STUDIOS
-              </span>
-              <span className="mt-1.5 block font-sans text-[9px] font-medium tracking-[0.18em] text-[#93a1b4] sm:text-[10px]">
-                CREATIVE TECHNOLOGY UNIT
-              </span>
-            </span>
-          </a>
-
-          <div className="flex items-center gap-2 sm:gap-3 lg:gap-5">
+          <div className="flex w-full items-center justify-end gap-2 sm:gap-3 lg:gap-5">
             <a href="/solutions" className="group hidden h-10 items-center gap-2 border border-white/20 bg-white/[0.06] px-3.5 font-sans text-[10px] font-medium tracking-[0.14em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b] sm:inline-flex sm:h-11 sm:px-4">
               SOLUTIONS
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />

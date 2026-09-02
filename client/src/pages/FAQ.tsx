@@ -2,6 +2,7 @@ import { ArrowLeft, HelpCircle, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
+import BrandMark from "@/components/BrandMark";
 import {
   Accordion,
   AccordionContent,
@@ -14,15 +15,9 @@ export default function FAQ() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      <BrandMark />
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
-          <Link
-            href="/"
-            className="group inline-flex items-center gap-3 font-sans text-sm font-bold tracking-[0.13em] text-foreground outline-none transition hover:text-[#ff5a1f] focus-visible:ring-2 focus-visible:ring-[#ff5a1f]"
-          >
-            <span className="grid h-9 w-9 place-items-center border border-[#ff5a1f]/60 text-[#ff5a1f]">F//</span>
-            FIREBOX<span className="text-[#ff5a1f]">//</span>STUDIOS
-          </Link>
+        <div className="mx-auto flex max-w-7xl items-center justify-end gap-3 sm:gap-4">
           <div className="flex items-center gap-3 sm:gap-4">
             <Link
               href="/"
