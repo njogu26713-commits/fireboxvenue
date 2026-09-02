@@ -444,7 +444,9 @@ export default function Admin() {
               </div>
             </nav>
           </aside>
-          <section className="space-y-8">
+          <section
+            className={`space-y-8 ${activeSection === "live-index" || activeSection === "blog-archive" || activeSection === "faq-archive" || activeSection === "directory-archive" || activeSection === "support-inbox" ? "xl:hidden" : ""}`}
+          >
             <form
               id="products"
               onSubmit={submitService}
