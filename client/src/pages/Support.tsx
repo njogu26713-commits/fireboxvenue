@@ -128,65 +128,6 @@ export default function Support() {
       </header>
 
       <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
-        <section className="mt-2" aria-labelledby="support-channels-heading">
-          <div className="flex items-end justify-between gap-5 border-b border-white/10 pb-5">
-            <div>
-              <span className="font-sans text-[10px] tracking-[0.18em] text-[#ff5a1f]">
-                01 / DIRECT CHANNELS
-              </span>
-              <h2
-                id="support-channels-heading"
-                className="mt-3 font-sans text-3xl font-semibold tracking-[-0.05em] sm:text-4xl"
-              >
-                FIND SUPPORT
-              </h2>
-            </div>
-            <MessageCircle className="h-7 w-7 text-[#6ae4ff]" />
-          </div>
-          {channelsLoading && (
-            <p className="mt-7 font-sans text-xs text-[#9eabbc]">
-              SYNCING SUPPORT CHANNELS...
-            </p>
-          )}
-          {channelsError && (
-            <p className="mt-7 border border-[#ff5a1f]/30 bg-[#ff5a1f]/5 px-4 py-3 font-sans text-[10px] tracking-[0.12em] text-[#ffae8c]">
-              SUPPORT CHANNEL NODE OFFLINE
-            </p>
-          )}
-          {!channelsLoading &&
-            !channelsError &&
-            configuredChannels.length === 0 && (
-              <p className="mt-7 border border-white/10 bg-[#090d14] px-4 py-5 font-sans text-[10px] tracking-[0.14em] text-[#768397]">
-                NO SUPPORT CHANNELS CONFIGURED / USE ADMIN TO ADD THEM
-              </p>
-            )}
-          {configuredChannels.length > 0 && (
-            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
-              {configuredChannels.map(channel => {
-                const platform = channel.platform as SupportPlatform;
-                return (
-                  <a
-                    key={channel.id}
-                    href={channelHref(platform, channel.value)}
-                    target="_blank"
-                    rel="noreferrer"
-                    title={`Open ${channel.label}`}
-                    aria-label={`Open ${channel.label}`}
-                    className="group flex min-h-28 flex-col justify-between border border-white/10 bg-[#090d14] p-4 transition hover:border-[#ff5a1f]/70 hover:bg-[#0d141d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6ae4ff]"
-                  >
-                    <span className="text-[#ff5a1f] transition group-hover:text-[#6ae4ff]">
-                      {platformIcon(platform)}
-                    </span>
-                    <span className="font-sans text-[10px] tracking-[0.12em] text-[#d5dce6]">
-                      {channel.label || platformLabels[platform]}
-                    </span>
-                  </a>
-                );
-              })}
-            </div>
-          )}
-        </section>
-
         <section
           className="mt-16 grid gap-10 border-t border-white/10 pt-12 lg:grid-cols-[0.7fr_1.3fr]"
           aria-labelledby="support-form-heading"
@@ -340,6 +281,64 @@ export default function Support() {
                 </AccordionItem>
               ))}
             </Accordion>
+          )}
+        </section>
+        <section className="mt-2" aria-labelledby="support-channels-heading">
+          <div className="flex items-end justify-between gap-5 border-b border-white/10 pb-5">
+            <div>
+              <span className="font-sans text-[10px] tracking-[0.18em] text-[#ff5a1f]">
+                04 / DIRECT CHANNELS
+              </span>
+              <h2
+                id="support-channels-heading"
+                className="mt-3 font-sans text-3xl font-semibold tracking-[-0.05em] sm:text-4xl"
+              >
+                FIND SUPPORT
+              </h2>
+            </div>
+            <MessageCircle className="h-7 w-7 text-[#6ae4ff]" />
+          </div>
+          {channelsLoading && (
+            <p className="mt-7 font-sans text-xs text-[#9eabbc]">
+              SYNCING SUPPORT CHANNELS...
+            </p>
+          )}
+          {channelsError && (
+            <p className="mt-7 border border-[#ff5a1f]/30 bg-[#ff5a1f]/5 px-4 py-3 font-sans text-[10px] tracking-[0.12em] text-[#ffae8c]">
+              SUPPORT CHANNEL NODE OFFLINE
+            </p>
+          )}
+          {!channelsLoading &&
+            !channelsError &&
+            configuredChannels.length === 0 && (
+              <p className="mt-7 border border-white/10 bg-[#090d14] px-4 py-5 font-sans text-[10px] tracking-[0.14em] text-[#768397]">
+                NO SUPPORT CHANNELS CONFIGURED / USE ADMIN TO ADD THEM
+              </p>
+            )}
+          {configuredChannels.length > 0 && (
+            <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+              {configuredChannels.map(channel => {
+                const platform = channel.platform as SupportPlatform;
+                return (
+                  <a
+                    key={channel.id}
+                    href={channelHref(platform, channel.value)}
+                    target="_blank"
+                    rel="noreferrer"
+                    title={`Open ${channel.label}`}
+                    aria-label={`Open ${channel.label}`}
+                    className="group flex min-h-28 flex-col justify-between border border-white/10 bg-[#090d14] p-4 transition hover:border-[#ff5a1f]/70 hover:bg-[#0d141d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6ae4ff]"
+                  >
+                    <span className="text-[#ff5a1f] transition group-hover:text-[#6ae4ff]">
+                      {platformIcon(platform)}
+                    </span>
+                    <span className="font-sans text-[10px] tracking-[0.12em] text-[#d5dce6]">
+                      {channel.label || platformLabels[platform]}
+                    </span>
+                  </a>
+                );
+              })}
+            </div>
           )}
         </section>
       </div>
