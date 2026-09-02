@@ -12,9 +12,9 @@ import Home from "./pages/Home";
 import Solutions from "./pages/Solutions";
 import Admin from "./pages/Admin";
 import Support from "@/pages/Support";
-import FAQ from "@/pages/FAQ";
 import { Developers, Documentation } from "@/pages/Directory";
 import Services from "@/pages/Services";
+import Products from "@/pages/Products";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -24,8 +24,7 @@ function Router() {
       <Route path="/solutions" component={Solutions} />
       <Route path="/admin" component={Admin} />
       <Route path="/support" component={Support} />
-      <Route path="/faq" component={FAQ} />
-      <Route path="/products" component={Services} />
+      <Route path="/products" component={Products} />
       <Route path="/services" component={Services} />
       <Route path="/developers" component={Developers} />
       <Route path="/docs" component={Documentation} />
