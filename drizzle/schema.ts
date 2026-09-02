@@ -89,3 +89,14 @@ export interface SupportMessage {
 }
 
 export type InsertSupportMessage = Omit<SupportMessage, "id" | "createdAt">;
+
+export interface Faq {
+  id: number;
+  question: string;
+  answer: string;
+  sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type InsertFaq = Omit<Faq, "id" | "createdAt" | "updatedAt">;

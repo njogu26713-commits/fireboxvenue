@@ -1,10 +1,12 @@
 import { MongoClient, type Collection, type Db } from "mongodb";
 import type {
+  InsertFaq,
   InsertProject,
   InsertService,
   InsertSupportChannel,
   InsertSupportMessage,
   InsertUser,
+  Faq,
   Project,
   Service,
   SupportChannel,
@@ -23,6 +25,7 @@ const collectionNames = {
   projects: "projects",
   supportChannels: "supportChannels",
   supportMessages: "supportMessages",
+  faqs: "faqs",
 } as const;
 
 /** Lazily connect so local type-checking and tests work without MongoDB configured. */
@@ -224,6 +227,39 @@ export async function getSupportMessages(): Promise<SupportMessage[]> {
   const db = await getDb();
   if (!db) return [];
   return collection<SupportMessage>(db, collectionNames.supportMessages).find({}).sort({ createdAt: 1 }).toArray();
+}
+
+export async function getFaqs(): Promise<Faq[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return collection<Faq>(db, collectionNames.faqs).find({}).sort({ sortOrder: 1, id: 1 }).toArray();
+}
+
+export async function addFaq(faq: InsertFaq): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await collection<Faq>(db, collectionNames.faqs).insertOne({
+    ...faq,
+    id: await nextId(db, "faqs"),
+    createdAt: now,
+    updatedAt: now,
+  });
+}
+
+export async function updateFaq(id: number, faq: Partial<InsertFaq>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<Faq>(db, collectionNames.faqs).updateOne(
+    { id },
+    { $set: { ...clean(faq), updatedAt: new Date() } },
+  );
+}
+
+export async function deleteFaq(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<Faq>(db, collectionNames.faqs).deleteOne({ id });
 }
 
 export async function closeDb(): Promise<void> {

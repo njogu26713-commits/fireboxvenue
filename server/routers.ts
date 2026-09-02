@@ -4,12 +4,16 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import {
+  addFaq,
   addProject,
   addService,
+  deleteFaq,
   deleteProject,
   deleteService,
+  updateFaq,
   updateProject,
   updateService,
+  getFaqs,
   getProjects,
   getServices,
   getSupportChannels,
@@ -42,6 +46,12 @@ const supportMessageInput = z.object({
   message: z.string().trim().min(1).max(5000),
 });
 
+const faqInput = z.object({
+  question: z.string().trim().min(1).max(255),
+  answer: z.string().trim().min(1).max(5000),
+  sortOrder: z.number().int().min(0).default(0),
+});
+
 const projectInput = z.object({
   title: z.string().trim().min(1).max(255),
   client: z.string().trim().min(1).max(255),
@@ -61,6 +71,15 @@ export const appRouter = router({
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
       return { success: true } as const;
     }),
+  }),
+  faq: router({
+    list: publicProcedure.query(() => getFaqs()),
+    add: publicProcedure.input(faqInput).mutation(({ input }) => addFaq(input)),
+    update: publicProcedure.input(faqInput.extend({ id: z.number().int().positive() })).mutation(({ input }) => {
+      const { id, ...values } = input;
+      return updateFaq(id, values);
+    }),
+    delete: publicProcedure.input(z.object({ id: z.number().int().positive() })).mutation(({ input }) => deleteFaq(input.id)),
   }),
   support: router({
     channels: publicProcedure.query(() => getSupportChannels()),

@@ -108,6 +108,10 @@ export default function Home() {
               SOLUTIONS
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
             </a>
+            <a href="/faq" className="group hidden h-10 items-center gap-2 border border-white/20 bg-white/[0.06] px-3.5 font-[IBM_Plex_Mono] text-[10px] font-medium tracking-[0.14em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b] sm:inline-flex sm:h-11 sm:px-4">
+              FAQ
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
+            </a>
             <span className="hidden font-[IBM_Plex_Mono] text-[10px] tracking-[0.16em] text-[#aeb7c5] lg:block">
               SYS // ONLINE
             </span>
@@ -137,6 +141,10 @@ export default function Home() {
               </a>
               <a href="/support" onClick={() => setMenuOpen(false)} className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-[IBM_Plex_Mono] text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]">
                 OPEN CHANNEL
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
+              </a>
+              <a href="/faq" onClick={() => setMenuOpen(false)} className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-[IBM_Plex_Mono] text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]">
+                FAQ
                 <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" strokeWidth={2.2} />
               </a>
             </div>
