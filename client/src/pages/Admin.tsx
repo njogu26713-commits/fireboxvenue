@@ -406,7 +406,7 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="mt-10 grid gap-10 xl:grid-cols-[11rem_minmax(0,1fr)]">
+        <div className="mt-10 grid gap-10 xl:grid-cols-[15rem_minmax(0,1fr)]">
           <nav
             aria-label="Admin sections"
             className="flex gap-2 overflow-x-auto border border-white/10 bg-[#080b11] p-3 xl:hidden"
@@ -422,23 +422,40 @@ export default function Admin() {
               </a>
             ))}
           </nav>
-          <aside className="hidden xl:block">
+          <aside className="hidden self-start xl:sticky xl:top-6 xl:block">
             <nav
               aria-label="Admin sections"
-              className="border border-white/10 bg-[#080b11] p-3"
+              className="relative overflow-hidden border border-white/15 bg-[#080b11] p-3 shadow-[0_18px_50px_rgba(0,0,0,0.24)]"
             >
-              <p className="border-b border-white/10 px-2 pb-3 font-sans text-[9px] tracking-[0.16em] text-[#6ae4ff]">
-                ADMIN INDEX
-              </p>
-              <div className="mt-2 space-y-1">
-                {adminNavItems.map(([id, label]) => (
+              <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#ff5a1f] to-transparent" />
+              <div className="flex items-end justify-between border-b border-white/10 px-2 pb-4 pt-2">
+                <div>
+                  <p className="font-sans text-[9px] font-semibold tracking-[0.18em] text-[#6ae4ff]">
+                    CONTROL DECK
+                  </p>
+                  <p className="mt-1 font-sans text-[8px] tracking-[0.12em] text-[#536073]">
+                    ADMIN INDEX / {adminNavItems.length} NODES
+                  </p>
+                </div>
+                <span className="h-2 w-2 rounded-full bg-[#ff5a1f] shadow-[0_0_12px_#ff5a1f]" />
+              </div>
+              <div className="mt-3 space-y-1">
+                {adminNavItems.map(([id, label], index) => (
                   <a
                     key={id}
                     href={`#${id}`}
                     aria-current={activeSection === id ? "page" : undefined}
-                    className={`block border-l px-2 py-2 font-sans text-[9px] tracking-[0.1em] transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f]/5 hover:text-[#ff5a1f] ${activeSection === id ? "border-[#ff5a1f] bg-[#ff5a1f]/10 text-[#ff5a1f]" : "border-transparent text-[#9da9b8]"}`}
+                    className={`group flex min-h-10 items-center gap-3 border px-3 py-2 font-sans text-[9px] tracking-[0.1em] transition duration-200 hover:border-[#ff5a1f]/50 hover:bg-[#ff5a1f]/5 hover:text-[#ffae8c] ${index === 5 ? "mt-4 border-t-white/10" : "border-transparent"} ${activeSection === id ? "border-[#ff5a1f]/50 bg-[#ff5a1f]/10 text-[#ffae8c] shadow-[inset_3px_0_0_#ff5a1f]" : "text-[#9da9b8]"}`}
                   >
-                    {label}
+                    <span
+                      className={`h-1.5 w-1.5 shrink-0 rounded-full transition ${activeSection === id ? "bg-[#ff5a1f] shadow-[0_0_8px_#ff5a1f]" : "bg-[#354052] group-hover:bg-[#ff5a1f]"}`}
+                    />
+                    <span className="leading-4">{label}</span>
+                    <span
+                      className={`ml-auto text-sm transition ${activeSection === id ? "translate-x-0 text-[#ff5a1f]" : "-translate-x-1 text-transparent group-hover:translate-x-0 group-hover:text-[#6ae4ff]"}`}
+                    >
+                      ›
+                    </span>
                   </a>
                 ))}
               </div>
