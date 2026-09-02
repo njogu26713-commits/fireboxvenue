@@ -191,7 +191,7 @@ export function BlogPost() {
   if (isLoading)
     return (
       <PageShell>
-        <div className="mx-auto max-w-3xl px-5 py-24 font-sans text-xs tracking-[0.12em] text-muted-foreground">
+        <div className="w-full px-5 py-24 font-sans text-xs tracking-[0.12em] text-muted-foreground sm:px-8 lg:px-12">
           SYNCING ARTICLE...
         </div>
       </PageShell>
@@ -199,7 +199,7 @@ export function BlogPost() {
   if (isError || !post)
     return (
       <PageShell>
-        <div className="mx-auto max-w-3xl px-5 py-24">
+        <div className="w-full px-5 py-24 sm:px-8 lg:px-12">
           <p className="font-sans text-xs tracking-[0.12em] text-[#ffae8c]">
             ARTICLE NOT FOUND
           </p>
@@ -214,7 +214,7 @@ export function BlogPost() {
     );
   return (
     <PageShell>
-      <article className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
+      <article className="w-full px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
         <Link
           href="/blog"
           className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-[#6ae4ff] transition hover:text-white"

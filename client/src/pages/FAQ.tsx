@@ -30,7 +30,7 @@ export default function FAQ() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-4xl px-5 py-16 sm:px-8 sm:py-24">
+      <div className="w-full px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
         <div className="flex items-end justify-between gap-6 border-b border-border pb-6">
           <div>
             <span className="font-sans text-[10px] tracking-[0.18em] text-[#ff5a1f]">
@@ -101,7 +101,7 @@ export default function FAQ() {
       </div>
 
       <footer className="border-t border-border px-5 py-8 sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-4xl items-center justify-between font-sans text-[10px] tracking-[0.14em] text-muted-foreground">
+        <div className="flex w-full items-center justify-between font-sans text-[10px] tracking-[0.14em] text-muted-foreground">
           <span>FIREBOX TECH / KNOWLEDGE NODE</span>
           <span className="inline-flex items-center gap-2">
             <Sparkles className="h-3 w-3 text-[#6ae4ff]" /> SIGNAL IS LIVE
