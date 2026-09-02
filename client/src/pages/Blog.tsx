@@ -98,7 +98,10 @@ export default function Blog() {
                 )}
                 <div>
                   <div className="flex items-center justify-between gap-4 font-sans text-[10px] tracking-[0.14em] text-[#ff5a1f]">
-                    <span>0{index + 1} / BLOG</span>
+                    <span>
+                      0{index + 1} /{" "}
+                      {post.category.replace("-", " ").toUpperCase()}
+                    </span>
                     <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </div>
                   <h2 className="mt-8 font-sans text-3xl font-semibold leading-[0.98] tracking-[-0.05em]">
@@ -175,7 +178,8 @@ export function BlogPost() {
           <ArrowLeft className="h-3.5 w-3.5" /> BACK TO BLOG
         </Link>
         <span className="mt-12 block font-sans text-[10px] tracking-[0.18em] text-[#ff5a1f]">
-          TRANSMISSION / {post.author}
+          TRANSMISSION / {post.category.replace("-", " ").toUpperCase()} /{" "}
+          {post.author}
         </span>
         <h1 className="mt-4 font-sans text-5xl font-bold leading-[0.95] tracking-[-0.06em] sm:text-7xl">
           {post.title}

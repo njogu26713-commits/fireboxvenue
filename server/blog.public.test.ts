@@ -37,6 +37,7 @@ describe("blog procedures", () => {
       title: "Signal to system",
       slug: "signal-to-system",
       excerpt: "A short summary.",
+      category: "tutorial" as const,
       content: "The full article.",
       imageUrl: "",
       author: "Firebox Studios",
@@ -50,6 +51,7 @@ describe("blog procedures", () => {
     expect(dbMocks.addBlogPost).toHaveBeenCalledWith(
       expect.objectContaining({
         title: input.title,
+        category: "tutorial",
         imageUrl: null,
         publishedAt: expect.any(Date),
       })

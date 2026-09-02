@@ -103,12 +103,14 @@ export interface Faq {
 export type InsertFaq = Omit<Faq, "id" | "createdAt" | "updatedAt">;
 
 export type BlogPostStatus = "draft" | "published";
+export type BlogPostCategory = "article" | "tutorial" | "case-study";
 
 export interface BlogPost {
   id: number;
   title: string;
   slug: string;
   excerpt: string;
+  category: BlogPostCategory;
   content: string;
   imageUrl: string | null;
   author: string;

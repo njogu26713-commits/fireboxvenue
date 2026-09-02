@@ -28,6 +28,7 @@ type BlogForm = {
   title: string;
   slug: string;
   excerpt: string;
+  category: "article" | "tutorial" | "case-study";
   content: string;
   imageUrl: string;
   author: string;
@@ -65,6 +66,7 @@ const emptyBlog: BlogForm = {
   title: "",
   slug: "",
   excerpt: "",
+  category: "article",
   content: "",
   imageUrl: "",
   author: "Firebox Studios",
@@ -774,6 +776,23 @@ export default function Admin() {
                   />
                 </label>
                 <label className="block">
+                  <span className="field-label">Post type</span>
+                  <select
+                    value={blog.category}
+                    onChange={event =>
+                      setBlog({
+                        ...blog,
+                        category: event.target.value as BlogForm["category"],
+                      })
+                    }
+                    className="field-input"
+                  >
+                    <option value="article">Article</option>
+                    <option value="tutorial">Tutorial</option>
+                    <option value="case-study">Case study</option>
+                  </select>
+                </label>
+                <label className="block">
                   <span className="field-label">Article content</span>
                   <textarea
                     required
@@ -1337,6 +1356,7 @@ export default function Admin() {
                             title: post.title,
                             slug: post.slug,
                             excerpt: post.excerpt,
+                            category: post.category,
                             content: post.content,
                             imageUrl: post.imageUrl ?? "",
                             author: post.author,

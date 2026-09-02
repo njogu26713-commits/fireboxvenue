@@ -325,7 +325,10 @@ export async function getBlogPosts(includeDrafts = false): Promise<BlogPost[]> {
   return collection<BlogPost>(db, collectionNames.blogPosts)
     .find(filter)
     .sort({ publishedAt: -1, createdAt: -1, id: -1 })
-    .toArray();
+    .toArray()
+    .then(posts =>
+      posts.map(post => ({ ...post, category: post.category ?? "article" }))
+    );
 }
 
 export async function getBlogPostBySlug(
@@ -333,12 +336,14 @@ export async function getBlogPostBySlug(
 ): Promise<BlogPost | undefined> {
   const db = await getDb();
   if (!db) return undefined;
-  return (
-    (await collection<BlogPost>(db, collectionNames.blogPosts).findOne({
-      slug,
-      status: "published",
-    })) ?? undefined
-  );
+  const post = await collection<BlogPost>(
+    db,
+    collectionNames.blogPosts
+  ).findOne({
+    slug,
+    status: "published",
+  });
+  return post ? { ...post, category: post.category ?? "article" } : undefined;
 }
 
 export async function addBlogPost(post: InsertBlogPost): Promise<void> {

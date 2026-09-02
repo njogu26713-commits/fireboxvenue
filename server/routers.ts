@@ -88,6 +88,7 @@ const blogPostInput = z.object({
     .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
     .max(255),
   excerpt: z.string().trim().min(1).max(500),
+  category: z.enum(["article", "tutorial", "case-study"]).default("article"),
   content: z.string().trim().min(1).max(50000),
   imageUrl: z.string().trim().url().or(z.literal("")).optional(),
   author: z.string().trim().min(1).max(120),
