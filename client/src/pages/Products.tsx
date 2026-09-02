@@ -103,7 +103,7 @@ export default function Products() {
             </div>
             <p className="mt-3 max-w-xl font-sans text-xs leading-6 text-muted-foreground">
               The Admin workspace is ready for the team to publish the first
-              service.
+              product.
             </p>
           </div>
         )}
