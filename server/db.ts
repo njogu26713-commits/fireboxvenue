@@ -1,164 +1,233 @@
-import { eq } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, services, projects, InsertService, InsertProject, supportChannels, supportMessages, InsertSupportChannel, InsertSupportMessage } from "../drizzle/schema";
-import { ENV } from './_core/env';
+import { MongoClient, type Collection, type Db } from "mongodb";
+import type {
+  InsertProject,
+  InsertService,
+  InsertSupportChannel,
+  InsertSupportMessage,
+  InsertUser,
+  Project,
+  Service,
+  SupportChannel,
+  SupportMessage,
+  User,
+} from "../drizzle/schema";
+import { ENV } from "./_core/env";
 
-let _db: ReturnType<typeof drizzle> | null = null;
+let client: MongoClient | null = null;
+let database: Db | null = null;
+let connectionPromise: Promise<Db | null> | null = null;
 
-// Lazily create the drizzle instance so local tooling can run without a DB.
-export async function getDb() {
-  if (!_db && process.env.DATABASE_URL) {
+const collectionNames = {
+  users: "users",
+  services: "services",
+  projects: "projects",
+  supportChannels: "supportChannels",
+  supportMessages: "supportMessages",
+} as const;
+
+/** Lazily connect so local type-checking and tests work without MongoDB configured. */
+export async function getDb(): Promise<Db | null> {
+  if (database) return database;
+  if (!ENV.mongoUri) return null;
+  if (connectionPromise) return connectionPromise;
+
+  connectionPromise = (async () => {
     try {
-      _db = drizzle(process.env.DATABASE_URL);
+      client = new MongoClient(ENV.mongoUri, {
+        serverSelectionTimeoutMS: 5_000,
+      });
+      await client.connect();
+      database = client.db(ENV.mongoDbName);
+      console.info("[Database] Connected to MongoDB");
+      return database;
     } catch (error) {
-      console.warn("[Database] Failed to connect:", error);
-      _db = null;
+      console.warn("[Database] Failed to connect to MongoDB:", error);
+      client = null;
+      database = null;
+      return null;
+    } finally {
+      connectionPromise = null;
     }
-  }
-  return _db;
+  })();
+
+  return connectionPromise;
+}
+
+function collection<T>(db: Db, name: string): Collection<any> {
+  return db.collection(name);
+}
+
+async function nextId(db: Db, sequenceName: string): Promise<number> {
+  const result = await db.collection<{ _id: string; value: number }>("sequences").findOneAndUpdate(
+    { _id: sequenceName },
+    { $inc: { value: 1 } },
+    { upsert: true, returnDocument: "after" },
+  );
+  return result?.value ?? 1;
+}
+
+function clean<T extends object>(value: T): Partial<T> {
+  return Object.fromEntries(Object.entries(value).filter(([, field]) => field !== undefined)) as Partial<T>;
 }
 
 export async function upsertUser(user: InsertUser): Promise<void> {
-  if (!user.openId) {
-    throw new Error("User openId is required for upsert");
-  }
+  if (!user.openId) throw new Error("User openId is required for upsert");
 
   const db = await getDb();
   if (!db) {
-    console.warn("[Database] Cannot upsert user: database not available");
+    console.warn("[Database] Cannot upsert user: MongoDB is not available");
     return;
   }
 
-  try {
-    const values: InsertUser = {
-      openId: user.openId,
-    };
-    const updateSet: Record<string, unknown> = {};
+  const users = collection<User>(db, collectionNames.users);
+  const now = new Date();
+  const existing = await users.findOne({ openId: user.openId });
+  const role = user.role ?? (user.openId === ENV.ownerOpenId ? "admin" : undefined);
+  const update = clean({
+    ...user,
+    ...(role ? { role } : {}),
+    updatedAt: now,
+    lastSignedIn: user.lastSignedIn ?? now,
+  });
 
-    const textFields = ["name", "email", "loginMethod"] as const;
-    type TextField = (typeof textFields)[number];
-
-    const assignNullable = (field: TextField) => {
-      const value = user[field];
-      if (value === undefined) return;
-      const normalized = value ?? null;
-      values[field] = normalized;
-      updateSet[field] = normalized;
-    };
-
-    textFields.forEach(assignNullable);
-
-    if (user.lastSignedIn !== undefined) {
-      values.lastSignedIn = user.lastSignedIn;
-      updateSet.lastSignedIn = user.lastSignedIn;
-    }
-    if (user.role !== undefined) {
-      values.role = user.role;
-      updateSet.role = user.role;
-    } else if (user.openId === ENV.ownerOpenId) {
-      values.role = 'admin';
-      updateSet.role = 'admin';
-    }
-
-    if (!values.lastSignedIn) {
-      values.lastSignedIn = new Date();
-    }
-
-    if (Object.keys(updateSet).length === 0) {
-      updateSet.lastSignedIn = new Date();
-    }
-
-    await db.insert(users).values(values).onDuplicateKeyUpdate({
-      set: updateSet,
-    });
-  } catch (error) {
-    console.error("[Database] Failed to upsert user:", error);
-    throw error;
-  }
-}
-
-export async function getUserByOpenId(openId: string) {
-  const db = await getDb();
-  if (!db) {
-    console.warn("[Database] Cannot get user: database not available");
-    return undefined;
+  if (existing) {
+    await users.updateOne({ openId: user.openId }, { $set: update });
+    return;
   }
 
-  const result = await db.select().from(users).where(eq(users.openId, openId)).limit(1);
-
-  return result.length > 0 ? result[0] : undefined;
-}
-
-export async function getServices() {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(services).orderBy(services.sortOrder);
-}
-
-export async function getProjects() {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(projects).orderBy(projects.sortOrder);
-}
-
-export async function addService(service: InsertService) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.insert(services).values(service);
-}
-
-export async function addProject(project: InsertProject) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.insert(projects).values(project);
-}
-
-export async function updateService(id: number, service: Partial<InsertService>) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.update(services).set(service).where(eq(services.id, id));
-}
-
-export async function updateProject(id: number, project: Partial<InsertProject>) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.update(projects).set(project).where(eq(projects.id, id));
-}
-
-export async function deleteService(id: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.delete(services).where(eq(services.id, id));
-}
-
-export async function deleteProject(id: number) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.delete(projects).where(eq(projects.id, id));
-}
-
-export async function getSupportChannels() {
-  const db = await getDb();
-  if (!db) return [];
-  return db.select().from(supportChannels).orderBy(supportChannels.sortOrder);
-}
-
-export async function upsertSupportChannel(channel: InsertSupportChannel) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.insert(supportChannels).values(channel).onDuplicateKeyUpdate({
-    set: { label: channel.label, value: channel.value, sortOrder: channel.sortOrder },
+  await users.insertOne({
+    id: await nextId(db, "users"),
+    openId: user.openId,
+    name: user.name ?? null,
+    email: user.email ?? null,
+    loginMethod: user.loginMethod ?? null,
+    role: role ?? "user",
+    createdAt: now,
+    updatedAt: now,
+    lastSignedIn: user.lastSignedIn ?? now,
   });
 }
 
-export async function addSupportMessage(message: InsertSupportMessage) {
+export async function getUserByOpenId(openId: string): Promise<User | undefined> {
   const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  await db.insert(supportMessages).values(message);
+  if (!db) {
+    console.warn("[Database] Cannot get user: MongoDB is not available");
+    return undefined;
+  }
+  return (await collection<User>(db, collectionNames.users).findOne({ openId })) ?? undefined;
 }
 
-export async function getSupportMessages() {
+export async function getServices(): Promise<Service[]> {
   const db = await getDb();
   if (!db) return [];
-  return db.select().from(supportMessages).orderBy(supportMessages.createdAt);
+  return collection<Service>(db, collectionNames.services).find({}).sort({ sortOrder: 1 }).toArray();
+}
+
+export async function getProjects(): Promise<Project[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return collection<Project>(db, collectionNames.projects).find({}).sort({ sortOrder: 1 }).toArray();
+}
+
+export async function addService(service: InsertService): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await collection<Service>(db, collectionNames.services).insertOne({
+    ...service,
+    id: await nextId(db, "services"),
+    imageUrl: service.imageUrl ?? null,
+    liveUrl: service.liveUrl ?? null,
+    githubUrl: service.githubUrl ?? null,
+    createdAt: now,
+    updatedAt: now,
+  });
+}
+
+export async function addProject(project: InsertProject): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await collection<Project>(db, collectionNames.projects).insertOne({
+    ...project,
+    id: await nextId(db, "projects"),
+    imageUrl: project.imageUrl ?? null,
+    liveUrl: project.liveUrl ?? null,
+    githubUrl: project.githubUrl ?? null,
+    createdAt: now,
+    updatedAt: now,
+  });
+}
+
+export async function updateService(id: number, service: Partial<InsertService>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<Service>(db, collectionNames.services).updateOne(
+    { id },
+    { $set: { ...clean(service), updatedAt: new Date() } },
+  );
+}
+
+export async function updateProject(id: number, project: Partial<InsertProject>): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<Project>(db, collectionNames.projects).updateOne(
+    { id },
+    { $set: { ...clean(project), updatedAt: new Date() } },
+  );
+}
+
+export async function deleteService(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<Service>(db, collectionNames.services).deleteOne({ id });
+}
+
+export async function deleteProject(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<Project>(db, collectionNames.projects).deleteOne({ id });
+}
+
+export async function getSupportChannels(): Promise<SupportChannel[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return collection<SupportChannel>(db, collectionNames.supportChannels).find({}).sort({ sortOrder: 1 }).toArray();
+}
+
+export async function upsertSupportChannel(channel: InsertSupportChannel): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const channels = collection<SupportChannel>(db, collectionNames.supportChannels);
+  const now = new Date();
+  await channels.updateOne(
+    { platform: channel.platform },
+    {
+      $set: { label: channel.label, value: channel.value, sortOrder: channel.sortOrder, updatedAt: now },
+      $setOnInsert: { id: await nextId(db, "supportChannels"), createdAt: now },
+    },
+    { upsert: true },
+  );
+}
+
+export async function addSupportMessage(message: InsertSupportMessage): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<SupportMessage>(db, collectionNames.supportMessages).insertOne({
+    ...message,
+    id: await nextId(db, "supportMessages"),
+    createdAt: new Date(),
+  });
+}
+
+export async function getSupportMessages(): Promise<SupportMessage[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return collection<SupportMessage>(db, collectionNames.supportMessages).find({}).sort({ createdAt: 1 }).toArray();
+}
+
+export async function closeDb(): Promise<void> {
+  if (client) await client.close();
+  client = null;
+  database = null;
 }
