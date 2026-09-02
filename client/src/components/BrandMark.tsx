@@ -9,7 +9,7 @@ export default function BrandMark({ className = "" }: BrandMarkProps) {
     <Link
       href="/"
       aria-label="FireboxStudios home"
-      className={`relative z-10 inline-flex shrink-0 items-center gap-3 rounded-sm border border-border bg-background/90 px-2.5 py-2 shadow-[0_10px_30px_rgba(0,0,0,0.16)] backdrop-blur-xl transition hover:border-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:px-3 ${className}`}
+      className={`relative z-10 inline-flex shrink-0 items-center gap-3 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] ${className}`}
     >
       <span className="grid h-9 w-9 place-items-center bg-gradient-to-br from-[#ff5a1f] via-[#ff7c3d] to-[#6ae4ff] font-sans text-sm font-black tracking-[-0.12em] text-[#05070b] shadow-[0_0_22px_rgba(255,90,31,0.22)] sm:h-10 sm:w-10">
         FB
