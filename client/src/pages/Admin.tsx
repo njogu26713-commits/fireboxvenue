@@ -64,7 +64,6 @@ const directorySections: Array<{
   path: string;
 }> = [
   { value: "products", label: "Products", path: "/products" },
-  { value: "developers", label: "Developers", path: "/developers" },
   { value: "docs", label: "Documentation", path: "/docs" },
 ];
 
@@ -831,7 +830,6 @@ export default function Admin() {
                     className="field-input"
                   >
                     <option value="products">Products</option>
-                    <option value="developers">Developers</option>
                     <option value="docs">Documentation</option>
                   </select>
                 </label>
@@ -875,11 +873,9 @@ export default function Admin() {
                   </span>
                   <p className="mb-3 font-sans text-[10px] leading-5 text-[#8491a2]">
                     Add the page URL for this{" "}
-                    {directoryItem.section === "developers"
-                      ? "developer resource"
-                      : directoryItem.section === "docs"
-                        ? "documentation entry"
-                        : "product"}
+                    {directoryItem.section === "docs"
+                      ? "documentation entry"
+                      : "product"}
                     .
                   </p>
                   <input
@@ -1155,7 +1151,7 @@ export default function Admin() {
                     RESOURCE ARCHIVE
                   </span>
                   <h3 className="mt-2 font-sans text-2xl font-semibold">
-                    PRODUCTS / DEVELOPERS / DOCS
+                    PRODUCTS / DOCS
                   </h3>
                 </div>
                 <span className="font-sans text-[10px] text-[#768397]">

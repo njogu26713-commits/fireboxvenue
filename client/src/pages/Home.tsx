@@ -112,12 +112,6 @@ export default function Home() {
               SERVICES
             </a>
             <a
-              href="/developers"
-              className="hidden h-10 items-center border border-white/20 bg-white/[0.06] px-3 font-sans text-[10px] font-medium tracking-[0.12em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex lg:h-11"
-            >
-              DEVELOPERS
-            </a>
-            <a
               href="/docs"
               className="hidden h-10 items-center border border-white/20 bg-white/[0.06] px-3 font-sans text-[10px] font-medium tracking-[0.12em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex lg:h-11"
             >
@@ -127,7 +121,7 @@ export default function Home() {
               href="/support"
               className="group hidden h-10 items-center gap-2 border border-white/20 bg-white/[0.06] px-3.5 font-sans text-[10px] font-medium tracking-[0.14em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b] sm:inline-flex sm:h-11 sm:px-4"
             >
-              OPEN CHANNEL
+              SUPPORT
               <ArrowUpRight
                 className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 strokeWidth={2.2}
@@ -157,7 +151,7 @@ export default function Home() {
                 onClick={() => setMenuOpen(false)}
                 className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]"
               >
-                OPEN CHANNEL
+                SUPPORT
                 <ArrowUpRight
                   className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                   strokeWidth={2.2}
@@ -169,17 +163,6 @@ export default function Home() {
                 className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]"
               >
                 SERVICES
-                <ArrowUpRight
-                  className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  strokeWidth={2.2}
-                />
-              </a>
-              <a
-                href="/developers"
-                onClick={() => setMenuOpen(false)}
-                className="group mt-2 flex h-12 w-full items-center justify-between border border-white/20 bg-white/[0.06] px-3.5 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:border-[#6ae4ff] hover:text-[#6ae4ff]"
-              >
-                DEVELOPERS
                 <ArrowUpRight
                   className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                   strokeWidth={2.2}

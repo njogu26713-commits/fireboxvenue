@@ -12,7 +12,7 @@ import Home from "./pages/Home";
 import Solutions from "./pages/Solutions";
 import Admin from "./pages/Admin";
 import Support from "@/pages/Support";
-import { Developers, Documentation } from "@/pages/Directory";
+import { Documentation } from "@/pages/Directory";
 import Services from "@/pages/Services";
 import Products from "@/pages/Products";
 
@@ -26,7 +26,6 @@ function Router() {
       <Route path="/support" component={Support} />
       <Route path="/products" component={Products} />
       <Route path="/services" component={Services} />
-      <Route path="/developers" component={Developers} />
       <Route path="/docs" component={Documentation} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
