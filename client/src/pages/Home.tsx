@@ -216,17 +216,23 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 flex flex-col border-t border-border bg-background/72 px-5 py-4 backdrop-blur-md sm:px-8 md:flex-row md:items-center md:justify-between lg:px-12">
-          <div className="flex items-center gap-3 font-[IBM_Plex_Mono] text-[10px] tracking-[0.16em] text-[#9ba7b7]">
-            <span className="relative flex h-2 w-2">
+          <div className="flex min-w-0 items-center gap-3 font-[IBM_Plex_Mono] text-[10px] tracking-[0.16em] text-[#9ba7b7]">
+            <span className="relative flex h-2 w-2 shrink-0">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff5a1f] opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[#ff5a1f]" />
             </span>
-            INTAKE WINDOW / OPEN
+            <span className="hero-marquee-viewport min-w-0 md:overflow-visible">
+              <span className="hero-marquee-track">
+                <span>INTAKE WINDOW / OPEN</span>
+                <span aria-hidden="true">INTAKE WINDOW / OPEN</span>
+              </span>
+            </span>
           </div>
-          <div className="mt-4 flex items-center gap-7 font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#8a96a7] md:mt-0">
-            <span>01 / DESIGN</span>
-            <span>02 / DIGITAL</span>
-            <span className="hidden sm:inline">03 / IMMERSIVE</span>
+          <div className="hero-marquee-viewport mt-4 min-w-0 overflow-hidden font-[IBM_Plex_Mono] text-[10px] tracking-[0.14em] text-[#8a96a7] md:mt-0 md:overflow-visible">
+            <div className="hero-marquee-track hero-marquee-track--capabilities">
+              <span className="hero-marquee-set"><span>01 / DESIGN</span><span>02 / DIGITAL</span><span>03 / IMMERSIVE</span></span>
+              <span aria-hidden="true" className="hero-marquee-set"><span>01 / DESIGN</span><span>02 / DIGITAL</span><span>03 / IMMERSIVE</span></span>
+            </div>
           </div>
           <a
             href="#top"

@@ -123,6 +123,48 @@
     animation-delay: 290ms;
   }
 
+  .hero-marquee-viewport {
+    overflow: hidden;
+  }
+
+  .hero-marquee-track {
+    --marquee-gap-offset: 1.5rem;
+    display: flex;
+    width: max-content;
+    align-items: center;
+    gap: 3rem;
+    white-space: nowrap;
+  }
+
+  .hero-marquee-track--capabilities {
+    --marquee-gap-offset: 0.875rem;
+    gap: 1.75rem;
+  }
+
+  .hero-marquee-set {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.75rem;
+  }
+
+  @media (max-width: 767px) {
+    .hero-marquee-track {
+      animation: hero-marquee 12s linear infinite;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .hero-marquee-track > [aria-hidden="true"] {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-marquee-track {
+      animation: none !important;
+    }
+  }
+
   .type-line {
     display: block;
     min-height: 0.84em;
@@ -336,7 +378,17 @@
   }
 }
 
-@keyframes cursor-blink {
+  @keyframes hero-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-50% - var(--marquee-gap-offset)));
+    }
+  }
+
+  @keyframes cursor-blink {
+
   0%,
   48% {
     opacity: 1;
