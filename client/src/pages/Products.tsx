@@ -49,7 +49,7 @@ function CardLinks({
 
 export default function Products() {
   const { data, isLoading, isError } = trpc.content.list.useQuery();
-  const products = data?.services ?? [];
+  const products = data?.products ?? [];
 
   return (
     <main className="min-h-screen bg-background text-foreground">

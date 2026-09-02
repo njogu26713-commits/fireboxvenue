@@ -197,8 +197,8 @@ export const appRouter = router({
   }),
   content: router({
     list: publicProcedure.query(async () => ({
-      services: await getServices(),
-      projects: await getProjects(),
+      products: await getServices(),
+      services: await getProjects(),
     })),
     addService: publicProcedure
       .input(serviceInput)

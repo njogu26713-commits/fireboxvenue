@@ -621,7 +621,7 @@ export default function Admin() {
                   />
                 </label>
                 <label className="block">
-                  <span className="field-label">Client / label</span>
+                  <span className="field-label">Service label</span>
                   <input
                     required
                     value={project.client}
@@ -644,7 +644,7 @@ export default function Admin() {
                         description: event.target.value,
                       })
                     }
-                    placeholder="Describe the project..."
+                    placeholder="Describe the service offering..."
                     className="field-input resize-none"
                   />
                 </label>
@@ -1172,7 +1172,7 @@ export default function Admin() {
               <span className="font-sans text-[10px] text-[#768397]">
                 {isLoading || faqsLoading || directoryItemsLoading
                   ? "SYNCING"
-                  : `${(data?.services.length ?? 0) + (data?.projects.length ?? 0) + (faqs?.length ?? 0) + (directoryItems?.length ?? 0)} RECORDS`}
+                  : `${(data?.products.length ?? 0) + (data?.services.length ?? 0) + (faqs?.length ?? 0) + (directoryItems?.length ?? 0)} RECORDS`}
               </span>
             </div>
             {isError && (
@@ -1187,7 +1187,7 @@ export default function Admin() {
                 PRODUCTS
               </h3>
               <div className="mt-3 divide-y divide-white/10">
-                {data?.services.map(serviceItem => (
+                {data?.products.map(serviceItem => (
                   <div
                     key={serviceItem.id}
                     className="flex items-center justify-between gap-4 py-4"
@@ -1240,7 +1240,7 @@ export default function Admin() {
                 SERVICES
               </h3>
               <div className="mt-3 divide-y divide-white/10">
-                {data?.projects.map(projectItem => (
+                {data?.services.map(projectItem => (
                   <div
                     key={projectItem.id}
                     className="flex items-center justify-between gap-4 py-4"
