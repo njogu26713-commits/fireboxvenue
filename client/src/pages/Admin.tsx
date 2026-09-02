@@ -375,10 +375,10 @@ export default function Admin() {
         <div className="mx-auto flex max-w-[1500px] items-center justify-end gap-4">
           <div className="flex items-center gap-4">
             <Link
-              href="/products"
+              href="/"
               className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white"
             >
-              <ArrowLeft className="h-3.5 w-3.5" /> VIEW SERVICES
+              <ArrowLeft className="h-3.5 w-3.5" /> BACK TO HOME
             </Link>
             <ThemeToggle />
           </div>
