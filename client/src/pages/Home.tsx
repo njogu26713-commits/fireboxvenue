@@ -103,58 +103,60 @@ export default function Home() {
         <div aria-hidden="true" className="scanlines absolute inset-0 -z-10" />
 
         <header className="relative z-20 flex items-center justify-between px-5 py-5 sm:px-8 sm:py-7 lg:px-12">
-          <div className="flex w-full items-center justify-between gap-2 sm:gap-3 lg:gap-5">
+          <div className="flex w-full items-center justify-between gap-4">
             <BrandMark />
-            <a
-              href="/services"
-              className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
-            >
-              SERVICES
-            </a>
-            <a
-              href="/products"
-              className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
-            >
-              PRODUCTS
-            </a>
-            <a
-              href="/blog"
-              className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
-            >
-              BLOG
-            </a>
-            <a
-              href="/docs"
-              className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
-            >
-              DOCS
-            </a>
-            <a
-              href="/support"
-              className="group hidden items-center gap-2 font-sans text-[10px] font-medium tracking-[0.14em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:inline-flex"
-            >
-              SUPPORT
-              <ArrowUpRight
-                className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                strokeWidth={2.2}
-              />
-            </a>
-            <ThemeToggle />
-            <button
-              type="button"
-              aria-label={
-                menuOpen ? "Close navigation menu" : "Open navigation menu"
-              }
-              aria-expanded={menuOpen}
-              onClick={() => setMenuOpen(open => !open)}
-              className="grid h-10 w-10 place-items-center text-white transition hover:text-[#ff5a1f] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:hidden"
-            >
-              {menuOpen ? (
-                <X className="h-4 w-4" />
-              ) : (
-                <Menu className="h-4 w-4" />
-              )}
-            </button>
+            <div className="flex items-center gap-4 sm:gap-5 lg:gap-6">
+              <a
+                href="/services"
+                className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+              >
+                SERVICES
+              </a>
+              <a
+                href="/products"
+                className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+              >
+                PRODUCTS
+              </a>
+              <a
+                href="/blog"
+                className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+              >
+                BLOG
+              </a>
+              <a
+                href="/docs"
+                className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+              >
+                DOCS
+              </a>
+              <a
+                href="/support"
+                className="group hidden items-center gap-2 font-sans text-[10px] font-medium tracking-[0.14em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:inline-flex"
+              >
+                SUPPORT
+                <ArrowUpRight
+                  className="h-3.5 w-3.5 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  strokeWidth={2.2}
+                />
+              </a>
+              <ThemeToggle />
+              <button
+                type="button"
+                aria-label={
+                  menuOpen ? "Close navigation menu" : "Open navigation menu"
+                }
+                aria-expanded={menuOpen}
+                onClick={() => setMenuOpen(open => !open)}
+                className="grid h-10 w-10 place-items-center text-white transition hover:text-[#ff5a1f] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:hidden"
+              >
+                {menuOpen ? (
+                  <X className="h-4 w-4" />
+                ) : (
+                  <Menu className="h-4 w-4" />
+                )}
+              </button>
+            </div>
           </div>
           {menuOpen && (
             <div className="absolute right-5 top-[calc(100%-0.25rem)] z-30 w-[min(16rem,calc(100vw-2.5rem))] border border-white/15 bg-[#080c13]/95 p-2 shadow-[0_18px_60px_rgba(0,0,0,0.45)] backdrop-blur-xl sm:hidden">
