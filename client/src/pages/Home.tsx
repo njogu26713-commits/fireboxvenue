@@ -79,7 +79,6 @@ export default function Home() {
       id="top"
       className="min-h-svh overflow-hidden bg-background text-foreground"
     >
-      <BrandMark />
       <section
         aria-labelledby="hero-title"
         className="relative isolate flex min-h-svh flex-col overflow-hidden"
@@ -104,7 +103,8 @@ export default function Home() {
         <div aria-hidden="true" className="scanlines absolute inset-0 -z-10" />
 
         <header className="relative z-20 flex items-center justify-between px-5 py-5 sm:px-8 sm:py-7 lg:px-12">
-          <div className="flex w-full items-center justify-end gap-2 sm:gap-3 lg:gap-5">
+          <div className="flex w-full items-center justify-between gap-2 sm:gap-3 lg:gap-5">
+            <BrandMark />
             <a
               href="/services"
               className="hidden h-10 items-center border border-white/20 bg-white/[0.06] px-3 font-sans text-[10px] font-medium tracking-[0.12em] text-white backdrop-blur-md transition duration-200 hover:border-[#ff5a1f]/80 hover:bg-[#ff5a1f] hover:text-[#07090d] active:scale-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex lg:h-11"

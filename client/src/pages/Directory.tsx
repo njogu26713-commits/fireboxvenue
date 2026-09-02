@@ -77,9 +77,9 @@ export default function Directory({ section }: DirectoryPageProps) {
     <main
       className={`min-h-screen bg-background text-foreground ${copy.pageClass}`}
     >
-      <BrandMark />
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-end gap-3 sm:gap-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 sm:gap-4">
+          <BrandMark />
           <Link
             href="/"
             className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.04] px-3 py-2 font-sans text-[10px] tracking-[0.14em] text-muted-foreground transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f]/10 hover:text-foreground"

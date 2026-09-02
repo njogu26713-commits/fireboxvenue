@@ -15,9 +15,9 @@ export default function FAQ() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <BrandMark />
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-end gap-3 sm:gap-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 sm:gap-4">
+          <BrandMark />
           <div className="flex items-center gap-3 sm:gap-4">
             <Link
               href="/"

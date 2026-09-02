@@ -114,9 +114,9 @@ export default function Support() {
 
   return (
     <main className="min-h-screen bg-[#05070b] text-[#f5f1eb]">
-      <BrandMark />
       <header className="sticky top-0 z-20 border-b border-white/10 bg-[#05070b]/90 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-end gap-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+          <BrandMark />
           <Link
             href="/"
             className="inline-flex items-center gap-2 border border-white/20 bg-white/[0.04] px-3 py-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f]/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f]"

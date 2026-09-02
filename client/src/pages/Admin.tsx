@@ -393,9 +393,9 @@ export default function Admin() {
 
   return (
     <main className="min-h-screen bg-[#06080d] text-[#f5f1eb]">
-      <BrandMark className="!absolute" />
       <header className="border-b border-white/10 bg-[#080b11] px-5 py-5 sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-[1500px] items-center justify-end gap-4">
+        <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-4">
+          <BrandMark />
           <div className="flex items-center gap-4">
             <Link
               href="/"
