@@ -1,6 +1,6 @@
 import { ArrowLeft, ShieldCheck, Sparkles } from "lucide-react";
 import { Link } from "wouter";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AIChatBox, type Message } from "@/components/AIChatBox";
 import BrandMark from "@/components/BrandMark";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -8,14 +8,47 @@ import { trpc } from "@/lib/trpc";
 
 export default function AskAI() {
   const [messages, setMessages] = useState<Message[]>([]);
+  const [isTyping, setIsTyping] = useState(false);
+  const [statusText, setStatusText] = useState("");
+  const animationRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const statusRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const ask = trpc.ai.ask.useMutation({
     onSuccess: result => {
-      setMessages(current => [
-        ...current,
-        { role: "assistant", content: result.answer },
-      ]);
+      if (statusRef.current) clearInterval(statusRef.current);
+      setStatusText("");
+      setIsTyping(true);
+      const answer = result.answer;
+      const startedAt = Date.now();
+      let index = 0;
+      setMessages(current => [...current, { role: "assistant", content: "" }]);
+      animationRef.current = setInterval(
+        () => {
+          index += 1;
+          setMessages(current => {
+            const next = [...current];
+            const last = next[next.length - 1];
+            if (last?.role === "assistant")
+              last.content = answer.slice(0, index);
+            return next;
+          });
+          if (Date.now() - startedAt >= 3000) {
+            if (animationRef.current) clearInterval(animationRef.current);
+            setMessages(current => {
+              const next = [...current];
+              const last = next[next.length - 1];
+              if (last?.role === "assistant") last.content = answer;
+              return next;
+            });
+            setIsTyping(false);
+          }
+        },
+        Math.max(12, Math.floor(3000 / Math.max(answer.length, 1)))
+      );
     },
     onError: error => {
+      if (statusRef.current) clearInterval(statusRef.current);
+      setStatusText("");
+      setIsTyping(false);
       setMessages(current => [
         ...current,
         {
@@ -27,9 +60,33 @@ export default function AskAI() {
   });
 
   const handleSend = (question: string) => {
+    if (animationRef.current) clearInterval(animationRef.current);
+    setIsTyping(false);
+    setStatusText("");
     setMessages(current => [...current, { role: "user", content: question }]);
     ask.mutate({ question });
   };
+
+  useEffect(() => {
+    if (!ask.isPending) return;
+    const narration = "SEARCHING PUBLIC KNOWLEDGE...";
+    let index = 0;
+    statusRef.current = setInterval(() => {
+      index = (index + 1) % (narration.length + 1);
+      setStatusText(narration.slice(0, index));
+    }, 100);
+    return () => {
+      if (statusRef.current) clearInterval(statusRef.current);
+    };
+  }, [ask.isPending]);
+
+  useEffect(
+    () => () => {
+      if (animationRef.current) clearInterval(animationRef.current);
+      if (statusRef.current) clearInterval(statusRef.current);
+    },
+    []
+  );
 
   return (
     <main className="min-h-screen w-full bg-background text-foreground">
@@ -52,7 +109,7 @@ export default function AskAI() {
         <AIChatBox
           messages={messages}
           onSendMessage={handleSend}
-          isLoading={ask.isPending}
+          isLoading={ask.isPending || isTyping}
           className="h-[min(760px,calc(100vh-8rem))] w-full rounded-none border-x-0 border-y border-border bg-transparent shadow-none"
           placeholder="Ask about Firebox..."
           emptyStateMessage="Ask a question about Firebox"
@@ -62,6 +119,12 @@ export default function AskAI() {
             "How can I contact Support?",
           ]}
         />
+        {(ask.isPending || isTyping) && (
+          <div className="flex h-10 items-center gap-2 border-b border-border px-5 font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff] sm:px-8 lg:px-12">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6ae4ff]" />
+            {ask.isPending ? statusText : "NARRATING ANSWER..."}
+          </div>
+        )}
         <div className="flex w-full flex-col gap-3 border-t border-border px-5 py-5 font-sans text-[10px] tracking-[0.12em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-12">
           <span className="inline-flex items-center gap-2">
             <ShieldCheck className="h-3.5 w-3.5 text-[#6ae4ff]" /> PUBLIC
