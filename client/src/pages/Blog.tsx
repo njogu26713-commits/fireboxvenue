@@ -10,6 +10,45 @@ import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
 import BrandMark from "@/components/BrandMark";
 
+function videoSource(url: string) {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname.includes("youtube.com")) {
+      const id = parsed.searchParams.get("v");
+      return id ? `https://www.youtube.com/embed/${id}` : url;
+    }
+    if (parsed.hostname === "youtu.be")
+      return `https://www.youtube.com/embed/${parsed.pathname.slice(1)}`;
+    if (parsed.hostname.includes("vimeo.com"))
+      return `https://player.vimeo.com/video/${parsed.pathname.split("/").filter(Boolean).pop()}`;
+  } catch {
+    return url;
+  }
+  return url;
+}
+
+function VideoPlayer({ url }: { url: string }) {
+  const embedUrl = videoSource(url);
+  const isDirect = /\.(mp4|webm|ogg)(\?.*)?$/i.test(url);
+  return isDirect ? (
+    <video
+      controls
+      className="mt-10 w-full border border-border bg-black"
+      src={url}
+    >
+      Your browser does not support video playback.
+    </video>
+  ) : (
+    <iframe
+      title="Blog tutorial video"
+      src={embedUrl}
+      className="mt-10 aspect-video w-full border border-border bg-black"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowFullScreen
+    />
+  );
+}
+
 function PageShell({ children }: { children: React.ReactNode }) {
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -95,6 +134,11 @@ export default function Blog() {
                     alt=""
                     className="-mx-6 -mt-6 mb-6 h-40 w-[calc(100%+3rem)] object-cover opacity-80 sm:-mx-8 sm:-mt-8 sm:mb-8 sm:h-48 sm:w-[calc(100%+4rem)]"
                   />
+                )}
+                {post.videoUrl && (
+                  <div className="mb-6 border border-[#6ae4ff]/20 bg-[#6ae4ff]/5 px-3 py-2 font-sans text-[9px] tracking-[0.12em] text-[#6ae4ff]">
+                    VIDEO TUTORIAL AVAILABLE
+                  </div>
                 )}
                 <div>
                   <div className="flex items-center justify-between gap-4 font-sans text-[10px] tracking-[0.14em] text-[#ff5a1f]">
@@ -198,6 +242,7 @@ export function BlogPost() {
             className="mt-10 max-h-[32rem] w-full object-cover"
           />
         )}
+        {post.videoUrl && <VideoPlayer url={post.videoUrl} />}
         <div className="mt-10 whitespace-pre-wrap border-t border-border pt-8 font-sans text-sm leading-8 text-muted-foreground">
           {post.content}
         </div>

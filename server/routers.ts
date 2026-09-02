@@ -91,6 +91,7 @@ const blogPostInput = z.object({
   category: z.enum(["article", "tutorial", "case-study"]).default("article"),
   content: z.string().trim().min(1).max(50000),
   imageUrl: z.string().trim().url().or(z.literal("")).optional(),
+  videoUrl: z.string().trim().url().or(z.literal("")).optional(),
   author: z.string().trim().min(1).max(120),
   status: z.enum(["draft", "published"]),
   publishedAt: z.coerce.date().nullable().optional(),
@@ -126,6 +127,7 @@ export const appRouter = router({
       addBlogPost({
         ...input,
         imageUrl: input.imageUrl || null,
+        videoUrl: input.videoUrl || null,
         publishedAt:
           input.status === "published"
             ? (input.publishedAt ?? new Date())
@@ -139,6 +141,7 @@ export const appRouter = router({
         return updateBlogPost(id, {
           ...values,
           imageUrl: values.imageUrl || null,
+          videoUrl: values.videoUrl || null,
           publishedAt:
             values.status === "published"
               ? (values.publishedAt ?? new Date())

@@ -40,6 +40,7 @@ describe("blog procedures", () => {
       category: "tutorial" as const,
       content: "The full article.",
       imageUrl: "",
+      videoUrl: "https://youtu.be/tutorial123",
       author: "Firebox Studios",
       status: "published" as const,
     };
@@ -53,6 +54,7 @@ describe("blog procedures", () => {
         title: input.title,
         category: "tutorial",
         imageUrl: null,
+        videoUrl: input.videoUrl,
         publishedAt: expect.any(Date),
       })
     );
@@ -61,6 +63,7 @@ describe("blog procedures", () => {
       expect.objectContaining({
         status: "draft",
         imageUrl: null,
+        videoUrl: input.videoUrl,
         publishedAt: null,
       })
     );

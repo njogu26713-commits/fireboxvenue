@@ -31,6 +31,7 @@ type BlogForm = {
   category: "article" | "tutorial" | "case-study";
   content: string;
   imageUrl: string;
+  videoUrl: string;
   author: string;
   status: "draft" | "published";
 };
@@ -44,6 +45,25 @@ type ProjectForm = {
   githubUrl: string;
   sortOrder: string;
 };
+
+function blogVideoPreviewUrl(url: string) {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname.includes("youtube.com")) {
+      const id = parsed.searchParams.get("v");
+      return id ? `https://www.youtube.com/embed/${id}` : url;
+    }
+    if (parsed.hostname === "youtu.be") {
+      return `https://www.youtube.com/embed/${parsed.pathname.slice(1)}`;
+    }
+    if (parsed.hostname.includes("vimeo.com")) {
+      return `https://player.vimeo.com/video/${parsed.pathname.split("/").filter(Boolean).pop()}`;
+    }
+  } catch {
+    return url;
+  }
+  return url;
+}
 
 const emptyService: ServiceForm = {
   title: "",
@@ -69,6 +89,7 @@ const emptyBlog: BlogForm = {
   category: "article",
   content: "",
   imageUrl: "",
+  videoUrl: "",
   author: "Firebox Studios",
   status: "draft",
 };
@@ -821,6 +842,31 @@ export default function Admin() {
                   />
                 </label>
                 <label className="block">
+                  <span className="field-label">
+                    Video URL{" "}
+                    <span className="text-[#738094]">
+                      (YouTube, Vimeo, or direct video)
+                    </span>
+                  </span>
+                  <input
+                    type="url"
+                    value={blog.videoUrl}
+                    onChange={event =>
+                      setBlog({ ...blog, videoUrl: event.target.value })
+                    }
+                    placeholder="https://youtube.com/watch?v=..."
+                    className="field-input"
+                  />
+                  {blog.videoUrl && (
+                    <iframe
+                      title="Blog video preview"
+                      src={blogVideoPreviewUrl(blog.videoUrl)}
+                      className="mt-3 aspect-video w-full border border-white/10 bg-black"
+                      allowFullScreen
+                    />
+                  )}
+                </label>
+                <label className="block">
                   <span className="field-label">Author</span>
                   <input
                     required
@@ -1359,6 +1405,7 @@ export default function Admin() {
                             category: post.category,
                             content: post.content,
                             imageUrl: post.imageUrl ?? "",
+                            videoUrl: post.videoUrl ?? "",
                             author: post.author,
                             status: post.status,
                           });

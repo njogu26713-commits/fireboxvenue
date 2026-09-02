@@ -113,6 +113,7 @@ export interface BlogPost {
   category: BlogPostCategory;
   content: string;
   imageUrl: string | null;
+  videoUrl: string | null;
   author: string;
   status: BlogPostStatus;
   publishedAt: Date | null;
