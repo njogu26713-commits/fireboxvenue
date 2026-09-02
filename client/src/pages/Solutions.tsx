@@ -81,7 +81,7 @@ export default function Solutions() {
   return (
     <main className="min-h-screen bg-[#05070b] text-[#f5f1eb]">
       <header className="sticky top-0 z-20 border-b border-white/10 bg-[#05070b]/85 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+        <div className="flex w-full items-center justify-between gap-4">
           <BrandMark />
           <Link
             href="/"
@@ -94,7 +94,7 @@ export default function Solutions() {
       </header>
 
       <section
-        className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12"
+        className="w-full px-5 py-20 sm:px-8 lg:px-12"
         aria-labelledby="products-heading"
       >
         <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-5">
@@ -153,7 +153,7 @@ export default function Solutions() {
       </section>
 
       <section
-        className="mx-auto max-w-7xl px-5 pb-24 sm:px-8 lg:px-12"
+        className="w-full px-5 pb-24 sm:px-8 lg:px-12"
         aria-labelledby="services-heading"
       >
         <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-5">
@@ -225,7 +225,7 @@ export default function Solutions() {
       </section>
 
       <footer className="border-t border-white/10 px-5 py-8 sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-4 font-sans text-[10px] tracking-[0.14em] text-[#768397] sm:flex-row">
+        <div className="flex w-full flex-col justify-between gap-4 font-sans text-[10px] tracking-[0.14em] text-[#768397] sm:flex-row">
           <span>FIREBOX TECH / CONTENT NODE 02</span>
           <span className="inline-flex items-center gap-2">
             <Sparkles className="h-3 w-3 text-[#6ae4ff]" /> SIGNAL IS LIVE

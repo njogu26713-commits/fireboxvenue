@@ -78,7 +78,7 @@ export default function Directory({ section }: DirectoryPageProps) {
       className={`min-h-screen bg-background text-foreground ${copy.pageClass}`}
     >
       <header className="sticky top-0 z-20 border-b border-border bg-background/90 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 sm:gap-4">
+        <div className="flex w-full items-center justify-between gap-3 sm:gap-4">
           <BrandMark />
           <Link
             href="/"
@@ -90,7 +90,7 @@ export default function Directory({ section }: DirectoryPageProps) {
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
+      <div className="w-full px-5 py-16 sm:px-8 sm:py-24 lg:px-12">
         <div className="flex items-end justify-between gap-6 border-b border-border pb-6">
           <div>
             <span
@@ -175,7 +175,7 @@ export default function Directory({ section }: DirectoryPageProps) {
       </div>
 
       <footer className="border-t border-border px-5 py-8 sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-between font-sans text-[10px] tracking-[0.14em] text-muted-foreground">
+        <div className="flex w-full items-center justify-between font-sans text-[10px] tracking-[0.14em] text-muted-foreground">
           <span>FIREBOX TECH / {copy.title} NODE</span>
           <span className="inline-flex items-center gap-2">
             <Sparkles className="h-3 w-3 text-[#6ae4ff]" /> SIGNAL IS LIVE

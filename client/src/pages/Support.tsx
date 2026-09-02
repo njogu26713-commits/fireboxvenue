@@ -115,7 +115,7 @@ export default function Support() {
   return (
     <main className="min-h-screen bg-[#05070b] text-[#f5f1eb]">
       <header className="sticky top-0 z-20 border-b border-white/10 bg-[#05070b]/90 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+        <div className="flex w-full items-center justify-between gap-4">
           <BrandMark />
           <Link
             href="/"
@@ -127,7 +127,7 @@ export default function Support() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
+      <div className="w-full px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
         <section
           className="mt-16 grid gap-10 border-t border-white/10 pt-12 lg:grid-cols-[0.7fr_1.3fr]"
           aria-labelledby="support-form-heading"
@@ -343,7 +343,7 @@ export default function Support() {
         </section>
       </div>
       <footer className="border-t border-white/10 px-5 py-8 sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-7xl items-center justify-between font-sans text-[10px] tracking-[0.14em] text-[#768397]">
+        <div className="flex w-full items-center justify-between font-sans text-[10px] tracking-[0.14em] text-[#768397]">
           <span>FIREBOX TECH / SUPPORT NODE</span>
           <span>CHANNEL OPEN</span>
         </div>

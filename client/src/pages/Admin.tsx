@@ -394,7 +394,7 @@ export default function Admin() {
   return (
     <main className="min-h-screen bg-[#06080d] text-[#f5f1eb]">
       <header className="border-b border-white/10 bg-[#080b11] px-5 py-5 sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-[1500px] items-center justify-between gap-4">
+        <div className="flex w-full items-center justify-between gap-4">
           <BrandMark />
           <div className="flex items-center gap-4">
             <Link
@@ -408,7 +408,7 @@ export default function Admin() {
         </div>
       </header>
 
-      <div className="mx-auto max-w-[1500px] px-5 py-10 sm:px-8 sm:py-14 lg:px-12">
+      <div className="w-full px-5 py-10 sm:px-8 sm:py-14 lg:px-12">
         <div className="flex flex-col justify-between gap-6 border-b border-white/10 pb-8 md:flex-row md:items-end">
           <div>
             <div className="flex items-center gap-3 font-sans text-[10px] tracking-[0.2em] text-[#ff5a1f]">
