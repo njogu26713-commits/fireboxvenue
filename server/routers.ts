@@ -48,6 +48,7 @@ const supportChannelInput = z.object({
 const supportMessageInput = z.object({
   name: z.string().trim().min(1).max(120),
   email: z.string().trim().email().max(320),
+  topic: z.string().trim().min(1).max(255).default("General inquiry"),
   message: z.string().trim().min(1).max(5000),
 });
 

@@ -66,7 +66,7 @@
   body {
     @apply bg-background text-foreground;
     min-width: 320px;
-    font-family: "IBM Plex Mono", monospace;
+    font-family: ui-sans-serif, system-ui, sans-serif;
   }
 
   button:not(:disabled),
@@ -185,7 +185,7 @@
   .field-label {
     display: block;
     margin-bottom: 0.5rem;
-    font-family: "IBM Plex Mono", monospace;
+    font-family: ui-sans-serif, system-ui, sans-serif;
     font-size: 10px;
     letter-spacing: 0.15em;
     text-transform: uppercase;
@@ -198,7 +198,7 @@
     background: rgba(255, 255, 255, 0.035);
     padding: 0.78rem 0.9rem;
     color: #f5f1eb;
-    font-family: "IBM Plex Mono", monospace;
+    font-family: ui-sans-serif, system-ui, sans-serif;
     font-size: 12px;
     line-height: 1.5;
     outline: none;
@@ -223,7 +223,7 @@
     background: #ff5a1f;
     padding: 0.85rem 1rem;
     color: #080b11;
-    font-family: "IBM Plex Mono", monospace;
+    font-family: ui-sans-serif, system-ui, sans-serif;
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.13em;

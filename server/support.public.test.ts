@@ -25,9 +25,9 @@ describe("support procedures", () => {
     const caller = appRouter.createCaller({ user: null, req: {} as never, res: {} as never });
 
     await caller.support.saveChannel({ platform: "telegram", label: "Telegram Support", value: "https://t.me/firebox", sortOrder: 2 });
-    await caller.support.submitMessage({ name: "Ari", email: "ari@example.com", message: "I need help with a project." });
+    await caller.support.submitMessage({ name: "Ari", email: "ari@example.com", topic: "Projects", message: "I need help with a project." });
 
     expect(dbMocks.upsertSupportChannel).toHaveBeenCalledWith({ platform: "telegram", label: "Telegram Support", value: "https://t.me/firebox", sortOrder: 2 });
-    expect(dbMocks.addSupportMessage).toHaveBeenCalledWith({ name: "Ari", email: "ari@example.com", message: "I need help with a project." });
+    expect(dbMocks.addSupportMessage).toHaveBeenCalledWith({ name: "Ari", email: "ari@example.com", topic: "Projects", message: "I need help with a project." });
   });
 });
