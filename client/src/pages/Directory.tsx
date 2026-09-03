@@ -51,7 +51,7 @@ const sectionCopy: Record<DirectorySection, SectionCopy> = {
     eyebrow: "03 / DOCUMENTATION NODE",
     title: "DOCUMENTATION",
     description:
-      "Reference material and practical notes for navigating the Firebox ecosystem.",
+      "Internal guides, setup notes, and practical documentation written and published directly by Firebox.",
     empty: "NO DOCUMENTATION PUBLISHED YET",
     icon: BookOpen,
     pageClass: "bg-[#b69cff]/[0.025]",
@@ -60,7 +60,7 @@ const sectionCopy: Record<DirectorySection, SectionCopy> = {
     cardClass:
       "border-[#b69cff]/30 bg-[#b69cff]/[0.035] hover:border-[#b69cff]",
     gridClass: "md:grid-cols-1",
-    linkLabel: "OPEN DOCUMENTATION",
+    linkLabel: "READ INTERNAL DOC",
   },
 };
 
@@ -154,6 +154,11 @@ export default function Directory({ section }: DirectoryPageProps) {
                   <p className="mt-3 font-sans text-xs leading-6 text-muted-foreground">
                     {item.description}
                   </p>
+                  {section === "docs" && (
+                    <p className="mt-5 border-l border-[#b69cff]/40 pl-3 font-sans text-[10px] leading-5 text-[#b69cff]/80">
+                      INTERNAL FIREBOX DOCUMENT / PUBLISHED ON THIS SITE
+                    </p>
+                  )}
                 </div>
                 {section === "docs" ? (
                   <Link

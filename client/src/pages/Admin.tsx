@@ -1093,12 +1093,12 @@ export default function Admin() {
               <div className="flex items-start justify-between">
                 <div>
                   <span className="font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff]">
-                    05 / RESOURCE NODE + URL
+                    05 / INTERNAL DOCUMENT NODE
                   </span>
                   <h2 className="mt-2 font-sans text-2xl font-semibold">
                     {editingDirectoryItemId
-                      ? "EDIT RESOURCE"
-                      : "ADD RESOURCE + URL"}
+                      ? "EDIT DOCUMENT"
+                      : "WRITE INTERNAL DOCUMENT"}
                   </h2>
                 </div>
                 <Boxes className="h-5 w-5 text-[#ff5a1f]" />
