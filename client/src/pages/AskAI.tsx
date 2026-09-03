@@ -1,4 +1,4 @@
-import { ArrowLeft, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Link } from "wouter";
 import { useEffect, useRef, useState } from "react";
 import { AIChatBox, type Message } from "@/components/AIChatBox";
@@ -108,9 +108,12 @@ export default function AskAI() {
         </div>
       </header>
 
-      <section className="w-full px-0 py-0" aria-label="Ask Firebox AI">
+      <section
+        className="w-full px-4 py-4 sm:px-8 sm:py-6 lg:px-12 xl:px-20"
+        aria-label="Ask Firebox AI"
+      >
         <div className="w-full border-y border-border bg-card">
-          <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-8 lg:px-12">
+          <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-8 lg:px-10">
             <div>
               <p className="font-sans text-[10px] font-semibold tracking-[0.16em] text-foreground">
                 ASK AI
@@ -139,21 +142,11 @@ export default function AskAI() {
           />
         </div>
         {(ask.isPending || isTyping) && (
-          <div className="flex h-10 items-center gap-2 border-b border-border px-5 font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff] sm:px-8 lg:px-12">
+          <div className="flex h-10 items-center gap-2 border-b border-border px-5 font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff] sm:px-8 lg:px-10">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6ae4ff]" />
             {ask.isPending ? statusText : "NARRATING ANSWER..."}
           </div>
         )}
-        <div className="flex w-full flex-col gap-3 border-t border-border px-5 py-5 font-sans text-[10px] tracking-[0.12em] text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-8 lg:px-12">
-          <span className="inline-flex items-center gap-2">
-            <ShieldCheck className="h-3.5 w-3.5 text-[#6ae4ff]" /> PUBLIC
-            CONTENT ONLY / PRIVATE ADMIN DATA HIDDEN
-          </span>
-          <span className="inline-flex items-center gap-2">
-            <Sparkles className="h-3.5 w-3.5 text-[#ff5a1f]" /> LIVE KNOWLEDGE
-            RETRIEVAL
-          </span>
-        </div>
       </section>
     </main>
   );

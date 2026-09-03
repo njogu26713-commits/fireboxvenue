@@ -324,7 +324,7 @@ export function AIChatBox({
       <form
         ref={inputAreaRef}
         onSubmit={handleSubmit}
-        className="flex gap-2 p-4 border-t bg-background/50 items-end"
+        className="flex items-end gap-3 border-t border-border bg-background/80 p-4 sm:p-5"
       >
         <Textarea
           ref={textareaRef}
@@ -332,20 +332,20 @@ export function AIChatBox({
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="flex-1 max-h-32 resize-none min-h-9"
+          className="min-h-[52px] flex-1 resize-none rounded-xl border-border bg-card px-4 py-3 text-sm leading-6 shadow-sm placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-[#ff5a1f]/60"
           rows={1}
         />
         <Button
           type="submit"
-          size="icon"
           disabled={!input.trim() || isLoading}
-          className="shrink-0 h-[38px] w-[38px]"
+          className="h-[52px] shrink-0 gap-2 rounded-xl px-4 font-sans text-[10px] font-semibold tracking-[0.12em] sm:px-5"
         >
           {isLoading ? (
             <Loader2 className="size-4 animate-spin" />
           ) : (
             <Send className="size-4" />
           )}
+          <span className="hidden sm:inline">SEND</span>
         </Button>
       </form>
     </div>
