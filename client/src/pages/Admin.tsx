@@ -99,6 +99,7 @@ const emptyDirectoryItem: DirectoryForm = {
   section: "products",
   title: "",
   description: "",
+  content: "",
   href: "",
   sortOrder: "0",
 };
@@ -125,6 +126,7 @@ type DirectoryForm = {
   section: DirectorySection;
   title: string;
   description: string;
+  content: string;
   href: string;
   sortOrder: string;
 };
@@ -382,6 +384,7 @@ export default function Admin() {
       section: directoryItem.section,
       title: directoryItem.title,
       description: directoryItem.description,
+      content: directoryItem.content,
       href: directoryItem.href || undefined,
       sortOrder: Number(directoryItem.sortOrder) || 0,
     };
@@ -1150,31 +1153,52 @@ export default function Admin() {
                     className="field-input resize-none"
                   />
                 </label>
-                <label className="block rounded-sm border border-[#6ae4ff]/25 bg-[#6ae4ff]/[0.04] p-4">
-                  <span className="field-label text-[#6ae4ff]">
-                    Resource URL / Link{" "}
-                    <span className="text-[#738094]">(optional)</span>
-                  </span>
-                  <p className="mb-3 font-sans text-[10px] leading-5 text-[#8491a2]">
-                    Add the page URL for this{" "}
-                    {directoryItem.section === "docs"
-                      ? "documentation entry"
-                      : "product"}
-                    .
-                  </p>
-                  <input
-                    value={directoryItem.href}
-                    onChange={event =>
-                      setDirectoryItem({
-                        ...directoryItem,
-                        href: event.target.value,
-                      })
-                    }
-                    placeholder="Paste https://... or /path here"
-                    aria-label="Resource URL or link"
-                    className="field-input"
-                  />
-                </label>
+                {directoryItem.section === "docs" && (
+                  <label className="block">
+                    <span className="field-label">Documentation content</span>
+                    <p className="mb-3 font-sans text-[10px] leading-5 text-[#8491a2]">
+                      Write the full documentation here. It will be published
+                      inside the Firebox website.
+                    </p>
+                    <textarea
+                      required
+                      maxLength={30000}
+                      rows={14}
+                      value={directoryItem.content}
+                      onChange={event =>
+                        setDirectoryItem({
+                          ...directoryItem,
+                          content: event.target.value,
+                        })
+                      }
+                      placeholder="# Getting started\n\nWrite your documentation here..."
+                      className="field-input resize-y font-mono text-xs leading-6"
+                    />
+                  </label>
+                )}
+                {directoryItem.section !== "docs" && (
+                  <label className="block rounded-sm border border-[#6ae4ff]/25 bg-[#6ae4ff]/[0.04] p-4">
+                    <span className="field-label text-[#6ae4ff]">
+                      Resource URL / Link{" "}
+                      <span className="text-[#738094]">(optional)</span>
+                    </span>
+                    <p className="mb-3 font-sans text-[10px] leading-5 text-[#8491a2]">
+                      Add the page URL for this product.
+                    </p>
+                    <input
+                      value={directoryItem.href}
+                      onChange={event =>
+                        setDirectoryItem({
+                          ...directoryItem,
+                          href: event.target.value,
+                        })
+                      }
+                      placeholder="Paste https://... or /path here"
+                      aria-label="Resource URL or link"
+                      className="field-input"
+                    />
+                  </label>
+                )}
                 <label className="block">
                   <span className="field-label">Display order</span>
                   <input
@@ -1559,6 +1583,7 @@ export default function Admin() {
                               section: item.section,
                               title: item.title,
                               description: item.description,
+                              content: item.content ?? "",
                               href: item.href ?? "",
                               sortOrder: String(item.sortOrder),
                             });

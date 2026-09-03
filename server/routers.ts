@@ -22,6 +22,7 @@ import {
   updateService,
   getBlogPostBySlug,
   getBlogPosts,
+  getDirectoryItem,
   getDirectoryItems,
   getFaqs,
   getProjects,
@@ -80,6 +81,7 @@ const directoryInput = z.object({
   section: z.enum(directorySections),
   title: z.string().trim().min(1).max(255),
   description: z.string().trim().min(1).max(2000),
+  content: z.string().trim().max(30000).default(""),
   href: z.string().trim().max(512).optional(),
   sortOrder: z.number().int().min(0).default(0),
 });
@@ -160,6 +162,7 @@ export const appRouter = router({
               section: item.section,
               title: item.title,
               description: item.description,
+              content: item.content,
             })),
           supportChannels: channels.map(channel => ({
             platform: channel.platform,
@@ -259,22 +262,29 @@ export const appRouter = router({
       .mutation(({ input }) => deleteBlogPost(input.id)),
   }),
   directory: router({
+    getById: publicProcedure
+      .input(z.object({ id: z.number().int().positive() }))
+      .query(({ input }) => getDirectoryItem(input.id)),
     list: publicProcedure
       .input(z.object({ section: z.enum(directorySections) }).optional())
       .query(({ input }) =>
         getDirectoryItems(input?.section as DirectorySection | undefined)
       ),
-    add: publicProcedure
-      .input(directoryInput)
-      .mutation(({ input }) =>
-        addDirectoryItem({ ...input, href: input.href || null })
-      ),
+    add: publicProcedure.input(directoryInput).mutation(({ input }) => {
+      const { content, ...values } = input;
+      return addDirectoryItem({
+        ...values,
+        ...(content ? { content } : {}),
+        href: input.href || null,
+      });
+    }),
     update: publicProcedure
       .input(directoryInput.extend({ id: z.number().int().positive() }))
       .mutation(({ input }) => {
-        const { id, ...values } = input;
+        const { id, content, ...values } = input;
         return updateDirectoryItem(id, {
           ...values,
+          ...(content ? { content } : {}),
           href: values.href || null,
         });
       }),

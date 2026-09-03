@@ -391,6 +391,16 @@ export async function getDirectoryItems(
     .toArray();
 }
 
+export async function getDirectoryItem(
+  id: number
+): Promise<DirectoryItem | null> {
+  const db = await getDb();
+  if (!db) return null;
+  return collection<DirectoryItem>(db, collectionNames.directory).findOne({
+    id,
+  });
+}
+
 export async function addDirectoryItem(
   item: InsertDirectoryItem
 ): Promise<void> {

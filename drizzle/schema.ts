@@ -130,6 +130,7 @@ export interface DirectoryItem {
   section: DirectorySection;
   title: string;
   description: string;
+  content: string;
   href: string | null;
   sortOrder: number;
   createdAt: Date;
@@ -138,8 +139,9 @@ export interface DirectoryItem {
 
 export type InsertDirectoryItem = Omit<
   DirectoryItem,
-  "id" | "createdAt" | "updatedAt"
->;
+  "id" | "createdAt" | "updatedAt" | "content"
+> &
+  Partial<Pick<DirectoryItem, "content">>;
 
 export interface TeamMember {
   id: number;

@@ -7,7 +7,7 @@ import {
   FileText,
   Sparkles,
 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
 import BrandMark from "@/components/BrandMark";
@@ -155,7 +155,15 @@ export default function Directory({ section }: DirectoryPageProps) {
                     {item.description}
                   </p>
                 </div>
-                {item.href && (
+                {section === "docs" ? (
+                  <Link
+                    href={`/docs/${item.id}`}
+                    className={`group/link mt-8 inline-flex w-fit items-center gap-3 border-b pb-2 font-sans text-[10px] font-semibold tracking-[0.14em] text-foreground transition ${copy.eyebrowClass}`}
+                  >
+                    {copy.linkLabel}{" "}
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
+                  </Link>
+                ) : item.href ? (
                   <a
                     href={item.href}
                     target={item.href.startsWith("http") ? "_blank" : undefined}
@@ -167,7 +175,7 @@ export default function Directory({ section }: DirectoryPageProps) {
                     {copy.linkLabel}{" "}
                     <ArrowUpRight className="h-4 w-4 transition-transform group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
                   </a>
-                )}
+                ) : null}
               </article>
             ))}
           </div>
@@ -192,4 +200,60 @@ export function Products() {
 
 export function Documentation() {
   return <Directory section="docs" />;
+}
+
+export function DocumentationDetail() {
+  const [, params] = useRoute("/docs/:id");
+  const id = Number(params?.id);
+  const {
+    data: item,
+    isLoading,
+    isError,
+  } = trpc.directory.getById.useQuery(
+    { id },
+    { enabled: Number.isInteger(id) && id > 0 }
+  );
+
+  return (
+    <main className="min-h-screen bg-background text-foreground">
+      <header className="sticky top-0 z-20 flex items-center justify-between border-b border-border bg-background/90 px-5 py-5 backdrop-blur-xl sm:px-8 lg:px-12">
+        <BrandMark />
+        <Link
+          href="/docs"
+          className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-muted-foreground transition hover:text-[#b69cff]"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" /> BACK TO DOCUMENTATION
+        </Link>
+        <ThemeToggle />
+      </header>
+      <article className="w-full px-5 py-14 sm:px-10 sm:py-20 lg:px-24">
+        {isLoading && (
+          <p className="font-sans text-xs tracking-[0.12em] text-muted-foreground">
+            LOADING DOCUMENT...
+          </p>
+        )}
+        {(isError || (!isLoading && !item)) && (
+          <p className="border border-[#ff5a1f]/30 bg-[#ff5a1f]/5 px-4 py-4 font-sans text-xs text-[#ffae8c]">
+            DOCUMENTATION NOT FOUND
+          </p>
+        )}
+        {item && (
+          <div className="mx-auto max-w-4xl">
+            <span className="font-sans text-[10px] tracking-[0.18em] text-[#b69cff]">
+              DOCUMENTATION / {item.id}
+            </span>
+            <h1 className="mt-4 font-sans text-4xl font-bold tracking-[-0.06em] sm:text-6xl">
+              {item.title}
+            </h1>
+            <p className="mt-6 border-b border-border pb-8 font-sans text-sm leading-7 text-muted-foreground">
+              {item.description}
+            </p>
+            <div className="prose prose-invert mt-10 max-w-none whitespace-pre-wrap font-sans text-sm leading-8">
+              {item.content || item.description}
+            </div>
+          </div>
+        )}
+      </article>
+    </main>
+  );
 }

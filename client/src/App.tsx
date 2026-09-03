@@ -14,7 +14,7 @@ import Admin from "@/pages/Admin";
 import AskAI from "@/pages/AskAI";
 import Team from "@/pages/Team";
 import Support from "@/pages/Support";
-import { Documentation } from "@/pages/Directory";
+import { Documentation, DocumentationDetail } from "@/pages/Directory";
 import Services from "@/pages/Services";
 import Products from "@/pages/Products";
 import Blog, { BlogPost } from "@/pages/Blog";
@@ -34,6 +34,7 @@ function Router() {
       <Route path="/blog/:slug" component={BlogPost} />
       <Route path="/blog" component={Blog} />
       <Route path="/docs" component={Documentation} />
+      <Route path="/docs/:id" component={DocumentationDetail} />
       <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
