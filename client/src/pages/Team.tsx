@@ -88,10 +88,10 @@ export default function Team() {
                   <img
                     src={member.imageUrl}
                     alt={member.name}
-                    className="mt-8 aspect-[4/3] w-full object-cover grayscale transition duration-300 hover:grayscale-0"
+                    className="mt-8 aspect-square w-full object-cover grayscale transition duration-300 hover:grayscale-0"
                   />
                 ) : (
-                  <div className="mt-8 grid aspect-[4/3] w-full place-items-center border border-border bg-card">
+                  <div className="mt-8 grid aspect-square w-full place-items-center border border-border bg-card">
                     <Users className="h-10 w-10 text-[#6ae4ff]/50" />
                   </div>
                 )}
