@@ -357,7 +357,7 @@ export default function Home() {
             <form
               role="search"
               onSubmit={event => event.preventDefault()}
-              className="hero-reveal hero-reveal-3 relative order-first mb-10 max-w-xl"
+              className="hero-reveal hero-reveal-3 relative z-40 order-first mb-10 max-w-xl"
             >
               <label
                 htmlFor="hero-site-search"
@@ -394,14 +394,14 @@ export default function Home() {
                       ? `hero-search-result-${highlightedSearchIndex}`
                       : undefined
                   }
-                  className="h-14 w-full border border-white/20 bg-[#070b11]/85 pl-12 pr-4 font-sans text-sm text-[#f7f4ef] outline-none backdrop-blur-xl transition placeholder:text-[#788597] hover:border-white/35 focus:border-[#6ae4ff] focus:ring-1 focus:ring-[#6ae4ff]/70"
+                  className="h-14 w-full border border-white/30 bg-[#070b11] pl-12 pr-4 font-sans text-sm text-[#f7f4ef] outline-none transition placeholder:text-[#788597] hover:border-white/45 focus:border-[#6ae4ff] focus:ring-1 focus:ring-[#6ae4ff]/70"
                 />
                 {showSearchDropdown && (
                   <div
                     id="hero-search-results"
                     role="listbox"
                     aria-label="Search results"
-                    className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden border border-white/15 bg-[#080c13]/95 p-2 shadow-[0_18px_60px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+                    className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-50 max-h-[min(28rem,calc(100svh-14rem))] overflow-y-auto overscroll-contain border border-[#6ae4ff]/60 bg-[#080c13] p-2 shadow-[0_18px_60px_rgba(0,0,0,0.75)]"
                   >
                     {isSearchLoading ? (
                       <p className="px-3 py-4 font-sans text-[10px] tracking-[0.12em] text-[#9ba7b7]">
@@ -422,8 +422,8 @@ export default function Home() {
                           onMouseEnter={() => setHighlightedSearchIndex(index)}
                           className={`group flex items-center justify-between gap-4 border-b border-white/10 px-3 py-3 last:border-b-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-[#6ae4ff] ${
                             highlightedSearchIndex === index
-                              ? "bg-white/10"
-                              : "hover:bg-white/5"
+                              ? "bg-[#17202c]"
+                              : "hover:bg-[#111922]"
                           }`}
                         >
                           <span className="min-w-0 text-left">
