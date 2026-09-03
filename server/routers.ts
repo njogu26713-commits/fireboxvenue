@@ -114,6 +114,74 @@ const projectInput = z.object({
 });
 
 export const appRouter = router({
+  search: router({
+    list: publicProcedure.query(async () => {
+      const [
+        productRecords,
+        serviceRecords,
+        posts,
+        faqs,
+        directoryItems,
+        teamMembers,
+      ] = await Promise.all([
+        getServices(),
+        getProjects(),
+        getBlogPosts(),
+        getFaqs(),
+        getDirectoryItems(),
+        getTeamMembers(),
+      ]);
+
+      return [
+        ...productRecords.map(item => ({
+          id: `product-${item.id}`,
+          title: item.title,
+          description: item.description,
+          category: "PRODUCT",
+          href: "/products",
+        })),
+        ...serviceRecords.map(item => ({
+          id: `service-${item.id}`,
+          title: item.title,
+          description: item.description,
+          category: "SERVICE",
+          href: "/services",
+        })),
+        ...posts.map(post => ({
+          id: `blog-${post.id}`,
+          title: post.title,
+          description: post.excerpt,
+          category: "BLOG",
+          href: `/blog/${post.slug}`,
+        })),
+        ...faqs.map(faq => ({
+          id: `faq-${faq.id}`,
+          title: faq.question,
+          description: faq.answer,
+          category: "FAQ",
+          href: "/support#faq",
+        })),
+        ...directoryItems.map(item => ({
+          id: `directory-${item.id}`,
+          title: item.title,
+          description: item.description,
+          category: item.section.toUpperCase(),
+          href:
+            item.section === "docs"
+              ? `/docs/${item.id}`
+              : item.href ||
+                (item.section === "products" ? "/products" : "/docs"),
+        })),
+        ...teamMembers.map(member => ({
+          id: `team-${member.id}`,
+          title: member.name,
+          description: `${member.role} — ${member.bio}`,
+          category: "TEAM",
+          href: "/team",
+        })),
+      ];
+    }),
+  }),
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),

@@ -219,6 +219,7 @@ export default function Support() {
         </section>
 
         <section
+          id="faq"
           className="mt-16 border-t border-white/10 pt-12"
           aria-labelledby="support-faq-heading"
         >

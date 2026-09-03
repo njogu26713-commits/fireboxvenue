@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 import BrandMark from "@/components/BrandMark";
+import { trpc } from "@/lib/trpc";
 
 const heroArtwork = "/manus-storage/firebox-hero-tech-city_a9b6b884.png";
 const headlineLines = ["MAKE THE", "SIGNAL", "UNMISSABLE."] as const;
@@ -23,76 +24,6 @@ const totalHeadlineLength = headlineLines.reduce(
   0
 );
 
-type SearchItem = {
-  title: string;
-  description: string;
-  category: string;
-  href: string;
-};
-
-const searchItems: SearchItem[] = [
-  {
-    title: "Signal Furnace",
-    description: "Enter the Firebox Studios command deck.",
-    category: "HOME",
-    href: "/",
-  },
-  {
-    title: "Services",
-    description: "Design, development, and digital systems.",
-    category: "CAPABILITY",
-    href: "/services",
-  },
-  {
-    title: "Solutions",
-    description: "Explore the studio’s products, services, and projects.",
-    category: "CAPABILITY",
-    href: "/solutions",
-  },
-  {
-    title: "Support",
-    description: "Open a channel with the Firebox team.",
-    category: "CHANNEL",
-    href: "/support",
-  },
-  {
-    title: "Start a Transmission",
-    description: "Tell us what you want to make next.",
-    category: "CONTACT",
-    href: "/support",
-  },
-  {
-    title: "Team",
-    description: "Meet the people behind the signal.",
-    category: "STUDIO",
-    href: "/team",
-  },
-  {
-    title: "Products",
-    description: "Browse Firebox-built digital products.",
-    category: "STUDIO",
-    href: "/products",
-  },
-  {
-    title: "Blog",
-    description: "Read field notes and build logs.",
-    category: "TRANSMISSION LOG",
-    href: "/blog",
-  },
-  {
-    title: "Ask AI",
-    description: "Ask the Firebox knowledge system.",
-    category: "INTELLIGENCE",
-    href: "/ask-ai",
-  },
-  {
-    title: "Docs",
-    description: "Browse product, developer, and documentation resources.",
-    category: "RESOURCES",
-    href: "/docs",
-  },
-];
-
 export default function Home() {
   const [typedCharacters, setTypedCharacters] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -100,6 +31,11 @@ export default function Home() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [highlightedSearchIndex, setHighlightedSearchIndex] = useState(0);
   const searchRef = useRef<HTMLDivElement>(null);
+  const {
+    data: siteSearchItems,
+    isLoading: isSearchLoading,
+    isError: isSearchError,
+  } = trpc.search.list.useQuery();
 
   useEffect(() => {
     const reducedMotion = window.matchMedia(
@@ -150,13 +86,13 @@ export default function Home() {
 
   const normalizedSearchQuery = searchQuery.trim().toLowerCase();
   const searchResults = normalizedSearchQuery
-    ? searchItems
-        .filter(
-          item =>
-            item.title.toLowerCase().startsWith(normalizedSearchQuery) ||
-            item.description.toLowerCase().includes(normalizedSearchQuery)
+    ? (siteSearchItems ?? [])
+        .filter(item =>
+          `${item.title} ${item.description} ${item.category}`
+            .toLowerCase()
+            .includes(normalizedSearchQuery)
         )
-        .slice(0, 6)
+        .slice(0, 8)
     : [];
   const showSearchDropdown = searchOpen && normalizedSearchQuery.length > 0;
 
@@ -384,7 +320,7 @@ export default function Home() {
         </header>
 
         <div className="relative z-10 flex flex-1 items-center px-5 pb-12 pt-14 sm:px-8 sm:pb-16 sm:pt-20 lg:px-12 lg:pb-20 lg:pt-24">
-          <div className="max-w-[48rem]">
+          <div className="flex max-w-[48rem] flex-col">
             <div className="hero-reveal hero-reveal-1 flex items-center gap-3 font-sans text-[10px] font-medium tracking-[0.2em] text-[#e7c6ba] sm:text-[11px]">
               <span className="inline-flex h-5 w-5 items-center justify-center border border-[#ff5a1f]/60 text-[#ff5a1f]">
                 <Crosshair className="h-3 w-3" />
@@ -421,7 +357,7 @@ export default function Home() {
             <form
               role="search"
               onSubmit={event => event.preventDefault()}
-              className="hero-reveal hero-reveal-3 relative mt-8 max-w-xl sm:mt-10"
+              className="hero-reveal hero-reveal-3 relative order-first mb-10 max-w-xl"
             >
               <label
                 htmlFor="hero-site-search"
@@ -467,11 +403,19 @@ export default function Home() {
                     aria-label="Search results"
                     className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden border border-white/15 bg-[#080c13]/95 p-2 shadow-[0_18px_60px_rgba(0,0,0,0.5)] backdrop-blur-xl"
                   >
-                    {searchResults.length > 0 ? (
+                    {isSearchLoading ? (
+                      <p className="px-3 py-4 font-sans text-[10px] tracking-[0.12em] text-[#9ba7b7]">
+                        SYNCING SITE CONTENT...
+                      </p>
+                    ) : isSearchError ? (
+                      <p className="px-3 py-4 font-sans text-[10px] tracking-[0.12em] text-[#ffae8c]">
+                        CONTENT NODE OFFLINE / TRY AGAIN
+                      </p>
+                    ) : searchResults.length > 0 ? (
                       searchResults.map((item, index) => (
                         <a
                           id={`hero-search-result-${index}`}
-                          key={`${item.href}-${item.title}`}
+                          key={item.id}
                           href={item.href}
                           role="option"
                           aria-selected={highlightedSearchIndex === index}
