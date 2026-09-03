@@ -36,8 +36,23 @@ export default function Team() {
               systems.
             </p>
           </div>
-          <div className="hidden aspect-square w-32 place-items-center border border-[#6ae4ff]/30 bg-[#6ae4ff]/[0.04] sm:grid lg:w-40">
-            <Users className="h-12 w-12 text-[#6ae4ff]" strokeWidth={1.2} />
+          <div className="relative hidden aspect-square w-44 overflow-hidden border border-[#6ae4ff]/30 bg-[radial-gradient(circle_at_75%_20%,rgba(106,228,255,0.28),transparent_38%),linear-gradient(145deg,#111b2a_0%,#080b11_65%)] p-5 sm:block lg:w-56">
+            <div className="absolute -right-8 -top-8 h-28 w-28 rounded-full border border-[#6ae4ff]/20" />
+            <div className="absolute -bottom-12 -left-10 h-32 w-32 rounded-full border border-[#ff5a1f]/20" />
+            <Users
+              className="absolute right-4 top-4 h-5 w-5 text-[#6ae4ff]"
+              strokeWidth={1.2}
+            />
+            <div className="relative flex h-full flex-col justify-end">
+              <span className="font-sans text-[9px] tracking-[0.18em] text-[#6ae4ff]">
+                FIREBOX / HUMAN SYSTEMS
+              </span>
+              <p className="mt-3 font-sans text-lg font-semibold leading-tight tracking-[-0.04em] text-[#f5f1eb]">
+                Build with purpose.
+                <br />
+                Ship with signal.
+              </p>
+            </div>
           </div>
         </div>
       </section>
