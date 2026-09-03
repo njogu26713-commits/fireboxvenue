@@ -9,6 +9,7 @@ import { Link, useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
 import BrandMark from "@/components/BrandMark";
+import { Streamdown } from "streamdown";
 
 function videoSource(url: string) {
   try {
@@ -243,8 +244,8 @@ export function BlogPost() {
           />
         )}
         {post.videoUrl && <VideoPlayer url={post.videoUrl} />}
-        <div className="mt-10 whitespace-pre-wrap border-t border-border pt-8 font-sans text-sm leading-8 text-muted-foreground">
-          {post.content}
+        <div className="prose prose-sm dark:prose-invert mt-10 max-w-none border-t border-border pt-8 font-sans leading-8 text-muted-foreground">
+          <Streamdown>{post.content}</Streamdown>
         </div>
       </article>
     </PageShell>
