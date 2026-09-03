@@ -43,15 +43,22 @@ export default function Team() {
               className="absolute right-4 top-4 h-5 w-5 text-[#6ae4ff]"
               strokeWidth={1.2}
             />
-            <div className="relative flex h-full flex-col justify-end">
+            <div className="relative flex h-full flex-col justify-between">
               <span className="font-sans text-[9px] tracking-[0.18em] text-[#6ae4ff]">
-                FIREBOX / HUMAN SYSTEMS
+                FIELD NOTE / 01
               </span>
-              <p className="mt-3 font-sans text-lg font-semibold leading-tight tracking-[-0.04em] text-[#f5f1eb]">
-                Build with purpose.
-                <br />
-                Ship with signal.
-              </p>
+              <div>
+                <span className="font-serif text-4xl leading-none text-[#ff5a1f]">
+                  “
+                </span>
+                <p className="mt-2 font-sans text-base font-semibold leading-tight tracking-[-0.03em] text-[#f5f1eb]">
+                  The Firebox team turns complex ideas into tools people can
+                  use.
+                </p>
+                <p className="mt-4 font-sans text-[9px] tracking-[0.14em] text-[#9da9b8]">
+                  — FIREBOX COMMUNITY
+                </p>
+              </div>
             </div>
           </div>
         </div>
