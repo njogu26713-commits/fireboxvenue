@@ -36,10 +36,9 @@ export default function Team() {
               systems.
             </p>
           </div>
-          <Users
-            className="hidden h-12 w-12 text-[#6ae4ff] sm:block"
-            strokeWidth={1.2}
-          />
+          <div className="hidden aspect-square w-32 place-items-center border border-[#6ae4ff]/30 bg-[#6ae4ff]/[0.04] sm:grid lg:w-40">
+            <Users className="h-12 w-12 text-[#6ae4ff]" strokeWidth={1.2} />
+          </div>
         </div>
       </section>
       <section className="w-full px-5 py-12 sm:px-8 lg:px-12">
