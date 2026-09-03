@@ -3,12 +3,13 @@
  * Cobalt-black space, Furnace Orange hierarchy, and compact sans-serif metadata
  * create a cinematic studio entry without decorative excess.
  */
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import {
   ArrowUpRight,
   Crosshair,
   Menu,
   MoveDown,
+  Search,
   Sparkles,
   X,
 } from "lucide-react";
@@ -22,9 +23,83 @@ const totalHeadlineLength = headlineLines.reduce(
   0
 );
 
+type SearchItem = {
+  title: string;
+  description: string;
+  category: string;
+  href: string;
+};
+
+const searchItems: SearchItem[] = [
+  {
+    title: "Signal Furnace",
+    description: "Enter the Firebox Studios command deck.",
+    category: "HOME",
+    href: "/",
+  },
+  {
+    title: "Services",
+    description: "Design, development, and digital systems.",
+    category: "CAPABILITY",
+    href: "/services",
+  },
+  {
+    title: "Solutions",
+    description: "Explore the studio’s products, services, and projects.",
+    category: "CAPABILITY",
+    href: "/solutions",
+  },
+  {
+    title: "Support",
+    description: "Open a channel with the Firebox team.",
+    category: "CHANNEL",
+    href: "/support",
+  },
+  {
+    title: "Start a Transmission",
+    description: "Tell us what you want to make next.",
+    category: "CONTACT",
+    href: "/support",
+  },
+  {
+    title: "Team",
+    description: "Meet the people behind the signal.",
+    category: "STUDIO",
+    href: "/team",
+  },
+  {
+    title: "Products",
+    description: "Browse Firebox-built digital products.",
+    category: "STUDIO",
+    href: "/products",
+  },
+  {
+    title: "Blog",
+    description: "Read field notes and build logs.",
+    category: "TRANSMISSION LOG",
+    href: "/blog",
+  },
+  {
+    title: "Ask AI",
+    description: "Ask the Firebox knowledge system.",
+    category: "INTELLIGENCE",
+    href: "/ask-ai",
+  },
+  {
+    title: "Docs",
+    description: "Browse product, developer, and documentation resources.",
+    category: "RESOURCES",
+    href: "/docs",
+  },
+];
+
 export default function Home() {
   const [typedCharacters, setTypedCharacters] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [highlightedSearchIndex, setHighlightedSearchIndex] = useState(0);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reducedMotion = window.matchMedia(
@@ -54,6 +129,67 @@ export default function Home() {
       if (intervalId) window.clearInterval(intervalId);
     };
   }, []);
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      ) {
+        setSearchOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    return () => document.removeEventListener("pointerdown", handlePointerDown);
+  }, []);
+
+  useEffect(() => {
+    setHighlightedSearchIndex(0);
+  }, [searchQuery]);
+
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+  const searchResults = normalizedSearchQuery
+    ? searchItems
+        .filter(
+          item =>
+            item.title.toLowerCase().startsWith(normalizedSearchQuery) ||
+            item.description.toLowerCase().includes(normalizedSearchQuery)
+        )
+        .slice(0, 6)
+    : [];
+  const showSearchDropdown = searchOpen && normalizedSearchQuery.length > 0;
+
+  const handleSearchKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      if (searchResults.length > 0) {
+        setSearchOpen(true);
+        setHighlightedSearchIndex(index =>
+          Math.min(index + 1, searchResults.length - 1)
+        );
+      }
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      if (searchResults.length > 0) {
+        setHighlightedSearchIndex(index => Math.max(index - 1, 0));
+      }
+      return;
+    }
+
+    if (event.key === "Escape") {
+      setSearchOpen(false);
+      return;
+    }
+
+    if (event.key === "Enter" && searchResults[highlightedSearchIndex]) {
+      event.preventDefault();
+      window.location.href = searchResults[highlightedSearchIndex].href;
+    }
+  };
 
   const visibleCharactersForLine = (lineIndex: number) => {
     const charactersBeforeLine = headlineLines
@@ -282,7 +418,94 @@ export default function Home() {
               </span>
             </h1>
 
-            <div className="hero-reveal hero-reveal-3 mt-8 flex max-w-xl flex-col gap-6 sm:mt-10 sm:flex-row sm:items-end sm:gap-8">
+            <form
+              role="search"
+              onSubmit={event => event.preventDefault()}
+              className="hero-reveal hero-reveal-3 relative mt-8 max-w-xl sm:mt-10"
+            >
+              <label
+                htmlFor="hero-site-search"
+                className="mb-3 block font-sans text-[10px] font-medium tracking-[0.18em] text-[#9ba7b7]"
+              >
+                SEARCH THE SIGNAL
+              </label>
+              <div ref={searchRef} className="relative">
+                <Search
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-4 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-[#6ae4ff]"
+                  strokeWidth={1.8}
+                />
+                <input
+                  id="hero-site-search"
+                  type="search"
+                  value={searchQuery}
+                  onChange={event => {
+                    setSearchQuery(event.target.value);
+                    setSearchOpen(true);
+                  }}
+                  onFocus={() => {
+                    if (normalizedSearchQuery) setSearchOpen(true);
+                  }}
+                  onKeyDown={handleSearchKeyDown}
+                  placeholder="Search services, products, support..."
+                  autoComplete="off"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  aria-expanded={showSearchDropdown}
+                  aria-controls="hero-search-results"
+                  aria-activedescendant={
+                    showSearchDropdown && searchResults[highlightedSearchIndex]
+                      ? `hero-search-result-${highlightedSearchIndex}`
+                      : undefined
+                  }
+                  className="h-14 w-full border border-white/20 bg-[#070b11]/85 pl-12 pr-4 font-sans text-sm text-[#f7f4ef] outline-none backdrop-blur-xl transition placeholder:text-[#788597] hover:border-white/35 focus:border-[#6ae4ff] focus:ring-1 focus:ring-[#6ae4ff]/70"
+                />
+                {showSearchDropdown && (
+                  <div
+                    id="hero-search-results"
+                    role="listbox"
+                    aria-label="Search results"
+                    className="absolute left-0 right-0 top-[calc(100%+0.5rem)] z-30 overflow-hidden border border-white/15 bg-[#080c13]/95 p-2 shadow-[0_18px_60px_rgba(0,0,0,0.5)] backdrop-blur-xl"
+                  >
+                    {searchResults.length > 0 ? (
+                      searchResults.map((item, index) => (
+                        <a
+                          id={`hero-search-result-${index}`}
+                          key={`${item.href}-${item.title}`}
+                          href={item.href}
+                          role="option"
+                          aria-selected={highlightedSearchIndex === index}
+                          onMouseEnter={() => setHighlightedSearchIndex(index)}
+                          className={`group flex items-center justify-between gap-4 border-b border-white/10 px-3 py-3 last:border-b-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-[#6ae4ff] ${
+                            highlightedSearchIndex === index
+                              ? "bg-white/10"
+                              : "hover:bg-white/5"
+                          }`}
+                        >
+                          <span className="min-w-0 text-left">
+                            <span className="block truncate font-sans text-xs font-semibold tracking-[0.08em] text-[#f7f4ef] transition group-hover:text-[#6ae4ff]">
+                              {item.title}
+                            </span>
+                            <span className="mt-1 block truncate font-sans text-[10px] leading-4 text-[#9ba7b7]">
+                              {item.description}
+                            </span>
+                          </span>
+                          <span className="shrink-0 font-sans text-[9px] tracking-[0.14em] text-[#ff5a1f]">
+                            {item.category}
+                          </span>
+                        </a>
+                      ))
+                    ) : (
+                      <p className="px-3 py-4 font-sans text-[10px] tracking-[0.12em] text-[#9ba7b7]">
+                        NO SIGNALS FOUND / TRY ANOTHER QUERY
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </form>
+
+            <div className="hero-reveal hero-reveal-3 mt-6 flex max-w-xl flex-col gap-6 sm:mt-8 sm:flex-row sm:items-end sm:gap-8">
               <p className="max-w-[23rem] border-l border-[#6ae4ff]/55 pl-4 font-sans text-[12px] leading-6 text-[#c7ced8] sm:text-[13px]">
                 We turn creative ambition into high-voltage digital worlds,
                 identities, and interactive experiences.
