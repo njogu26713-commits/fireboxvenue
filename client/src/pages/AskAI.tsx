@@ -109,7 +109,7 @@ export default function AskAI() {
       </header>
 
       <section
-        className="w-full px-4 py-4 sm:px-8 sm:py-6 lg:px-12 xl:px-20"
+        className="w-full px-0 py-4 sm:px-8 sm:py-6 lg:px-12 xl:px-20"
         aria-label="Ask Firebox AI"
       >
         <div className="w-full border-y border-border bg-card">

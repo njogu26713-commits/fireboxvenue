@@ -201,7 +201,7 @@ export function AIChatBox({
       {/* Messages Area */}
       <div ref={scrollAreaRef} className="flex-1 overflow-hidden">
         {displayMessages.length === 0 ? (
-          <div className="flex h-full flex-col p-4">
+          <div className="flex h-full flex-col p-0 sm:p-4">
             <div className="flex flex-1 flex-col items-center justify-center gap-6 text-muted-foreground">
               <div className="flex flex-col items-center gap-3">
                 <Sparkles className="size-12 opacity-20" />
@@ -226,7 +226,7 @@ export function AIChatBox({
           </div>
         ) : (
           <ScrollArea className="h-full">
-            <div className="flex flex-col space-y-4 p-4">
+            <div className="flex flex-col space-y-4 p-0 sm:p-4">
               {displayMessages.map((message, index) => {
                 // Apply min-height to last message only if NOT loading (when loading, the loading indicator gets it)
                 const isLastMessage = index === displayMessages.length - 1;
@@ -239,8 +239,8 @@ export function AIChatBox({
                     className={cn(
                       "flex gap-3",
                       message.role === "user"
-                        ? "justify-end items-start"
-                        : "justify-start items-start"
+                        ? "items-start justify-end"
+                        : "items-start justify-start flex-col sm:flex-row"
                     )}
                     style={
                       shouldApplyMinHeight
@@ -256,10 +256,10 @@ export function AIChatBox({
 
                     <div
                       className={cn(
-                        "max-w-[80%] rounded-lg px-4 py-2.5",
+                        "rounded-lg px-4 py-2.5 sm:max-w-[80%]",
                         message.role === "user"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-foreground"
+                          ? "max-w-[80%] bg-primary text-primary-foreground"
+                          : "w-full bg-muted text-foreground sm:w-auto"
                       )}
                     >
                       {message.role === "assistant" ? (
@@ -300,7 +300,7 @@ export function AIChatBox({
 
               {isLoading && (
                 <div
-                  className="flex items-start gap-3"
+                  className="flex flex-col items-start gap-2 sm:flex-row sm:gap-3"
                   style={
                     minHeightForLastMessage > 0
                       ? { minHeight: `${minHeightForLastMessage}px` }
@@ -310,7 +310,7 @@ export function AIChatBox({
                   <div className="size-8 shrink-0 mt-1 rounded-full bg-primary/10 flex items-center justify-center">
                     <Sparkles className="size-4 text-primary" />
                   </div>
-                  <div className="rounded-lg bg-muted px-4 py-2.5">
+                  <div className="w-full rounded-lg bg-muted px-4 py-2.5 sm:w-auto">
                     <Loader2 className="size-4 animate-spin text-muted-foreground" />
                   </div>
                 </div>
