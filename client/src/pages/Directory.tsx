@@ -11,6 +11,7 @@ import { Link, useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
 import BrandMark from "@/components/BrandMark";
+import { Streamdown } from "streamdown";
 
 type DirectorySection = "products" | "docs";
 
@@ -253,8 +254,8 @@ export function DocumentationDetail() {
             <p className="mt-6 border-b border-border pb-8 font-sans text-sm leading-7 text-muted-foreground">
               {item.description}
             </p>
-            <div className="prose prose-invert mt-10 max-w-none whitespace-pre-wrap font-sans text-sm leading-8">
-              {item.content || item.description}
+            <div className="prose prose-invert mt-10 max-w-none font-sans text-sm leading-8">
+              <Streamdown>{item.content || item.description}</Streamdown>
             </div>
           </div>
         )}
