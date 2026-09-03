@@ -17,6 +17,8 @@ import type {
   SupportChannel,
   SupportMessage,
   User,
+  InsertTeamMember,
+  TeamMember,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -33,6 +35,7 @@ const collectionNames = {
   faqs: "faqs",
   blogPosts: "blogPosts",
   directory: "directory",
+  team: "team",
 } as const;
 
 /** Lazily connect so local type-checking and tests work without MongoDB configured. */
@@ -421,6 +424,47 @@ export async function deleteDirectoryItem(id: number): Promise<void> {
   await collection<DirectoryItem>(db, collectionNames.directory).deleteOne({
     id,
   });
+}
+
+export async function getTeamMembers(): Promise<TeamMember[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return collection<TeamMember>(db, collectionNames.team)
+    .find({})
+    .sort({ sortOrder: 1, id: 1 })
+    .toArray();
+}
+
+export async function addTeamMember(member: InsertTeamMember): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await collection<TeamMember>(db, collectionNames.team).insertOne({
+    ...member,
+    id: await nextId(db, "team"),
+    imageUrl: member.imageUrl ?? null,
+    linkedinUrl: member.linkedinUrl ?? null,
+    createdAt: now,
+    updatedAt: now,
+  });
+}
+
+export async function updateTeamMember(
+  id: number,
+  member: Partial<InsertTeamMember>
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<TeamMember>(db, collectionNames.team).updateOne(
+    { id },
+    { $set: { ...clean(member), updatedAt: new Date() } }
+  );
+}
+
+export async function deleteTeamMember(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<TeamMember>(db, collectionNames.team).deleteOne({ id });
 }
 
 export async function closeDb(): Promise<void> {

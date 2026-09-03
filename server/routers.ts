@@ -30,6 +30,10 @@ import {
   getSupportMessages,
   addSupportMessage,
   upsertSupportChannel,
+  addTeamMember,
+  deleteTeamMember,
+  getTeamMembers,
+  updateTeamMember,
 } from "./db";
 
 const serviceInput = z.object({
@@ -300,6 +304,50 @@ export const appRouter = router({
     saveChannel: publicProcedure
       .input(supportChannelInput)
       .mutation(({ input }) => upsertSupportChannel(input)),
+  }),
+  team: router({
+    list: publicProcedure.query(() => getTeamMembers()),
+    add: publicProcedure
+      .input(
+        z.object({
+          name: z.string().trim().min(1).max(120),
+          role: z.string().trim().min(1).max(160),
+          bio: z.string().trim().min(1).max(2000),
+          imageUrl: z.string().trim().url().or(z.literal("")).optional(),
+          linkedinUrl: z.string().trim().url().or(z.literal("")).optional(),
+          sortOrder: z.number().int().min(0).default(0),
+        })
+      )
+      .mutation(({ input }) =>
+        addTeamMember({
+          ...input,
+          imageUrl: input.imageUrl || null,
+          linkedinUrl: input.linkedinUrl || null,
+        })
+      ),
+    update: publicProcedure
+      .input(
+        z.object({
+          id: z.number().int().positive(),
+          name: z.string().trim().min(1).max(120),
+          role: z.string().trim().min(1).max(160),
+          bio: z.string().trim().min(1).max(2000),
+          imageUrl: z.string().trim().url().or(z.literal("")).optional(),
+          linkedinUrl: z.string().trim().url().or(z.literal("")).optional(),
+          sortOrder: z.number().int().min(0).default(0),
+        })
+      )
+      .mutation(({ input }) => {
+        const { id, ...values } = input;
+        return updateTeamMember(id, {
+          ...values,
+          imageUrl: values.imageUrl || null,
+          linkedinUrl: values.linkedinUrl || null,
+        });
+      }),
+    delete: publicProcedure
+      .input(z.object({ id: z.number().int().positive() }))
+      .mutation(({ input }) => deleteTeamMember(input.id)),
   }),
   content: router({
     list: publicProcedure.query(async () => ({

@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
 import BrandMark from "@/components/BrandMark";
+import TeamAdminPanel from "@/components/TeamAdminPanel";
 
 type ServiceForm = {
   title: string;
@@ -148,6 +149,7 @@ const emptySupportForms = Object.fromEntries(
 const adminNavItems = [
   ["products", "01 / PRODUCTS"],
   ["services", "02 / SERVICES"],
+  ["team-editor", "03 / TEAM EDITOR"],
   ["blog-editor", "03 / BLOG EDITOR"],
   ["support-channels", "03 / SUPPORT CHANNELS"],
   ["faq-editor", "04 / FAQ EDITOR"],
@@ -487,6 +489,9 @@ export default function Admin() {
           <section
             className={`space-y-8 ${activeSection === "live-index" || activeSection === "blog-archive" || activeSection === "faq-archive" || activeSection === "directory-archive" || activeSection === "support-inbox" ? "xl:hidden" : ""}`}
           >
+            <div className={activeSection === "team-editor" ? "" : "hidden"}>
+              <TeamAdminPanel />
+            </div>
             <form
               id="products"
               onSubmit={submitService}

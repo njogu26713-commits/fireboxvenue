@@ -140,3 +140,23 @@ export type InsertDirectoryItem = Omit<
   DirectoryItem,
   "id" | "createdAt" | "updatedAt"
 >;
+
+export interface TeamMember {
+  id: number;
+  name: string;
+  role: string;
+  bio: string;
+  imageUrl: string | null;
+  linkedinUrl: string | null;
+  sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type InsertTeamMember = Omit<
+  TeamMember,
+  "id" | "createdAt" | "updatedAt" | "imageUrl" | "linkedinUrl"
+> & {
+  imageUrl?: string | null;
+  linkedinUrl?: string | null;
+};

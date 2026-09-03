@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import Solutions from "./pages/Solutions";
 import Admin from "@/pages/Admin";
 import AskAI from "@/pages/AskAI";
+import Team from "@/pages/Team";
 import Support from "@/pages/Support";
 import { Documentation } from "@/pages/Directory";
 import Services from "@/pages/Services";
@@ -26,6 +27,7 @@ function Router() {
       <Route path="/solutions" component={Solutions} />
       <Route path="/admin" component={Admin} />
       <Route path="/ask-ai" component={AskAI} />
+      <Route path="/team" component={Team} />
       <Route path="/support" component={Support} />
       <Route path="/products" component={Products} />
       <Route path="/services" component={Services} />
