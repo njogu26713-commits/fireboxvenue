@@ -86,7 +86,11 @@ export default function Team() {
           </div>
         )}
         {!isLoading && !isError && (members?.length ?? 0) > 0 && (
-          <div className="grid w-full gap-px bg-border md:grid-cols-2 xl:grid-cols-3">
+          <div
+            className={`grid w-full gap-px bg-border ${
+              (members?.length ?? 0) > 1 ? "md:grid-cols-2" : ""
+            } ${(members?.length ?? 0) > 2 ? "xl:grid-cols-3" : ""}`}
+          >
             {members?.map((member, index) => (
               <article key={member.id} className="bg-background p-6 sm:p-8">
                 <div className="flex items-start justify-between gap-4">
