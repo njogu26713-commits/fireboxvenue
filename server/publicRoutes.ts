@@ -24,7 +24,9 @@ const staticPages = [
 ];
 
 function baseUrl(req: Request) {
-  return (process.env.PUBLIC_SITE_URL || `${req.protocol}://${req.get("host")}`).replace(/\/$/, "");
+  const forwardedProtocol = req.get("x-forwarded-proto")?.split(",")[0]?.trim();
+  const protocol = forwardedProtocol || (process.env.NODE_ENV === "production" ? "https" : req.protocol);
+  return (process.env.PUBLIC_SITE_URL || `${protocol}://${req.get("host")}`).replace(/\/$/, "");
 }
 
 function xmlEscape(value: string) {
