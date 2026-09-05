@@ -1,4 +1,4 @@
-import type { Express, Request, Response } from "express";
+import type { Express, NextFunction, Request, Response } from "express";
 import {
   getBlogPosts,
   getBlogPostBySlug,
@@ -78,6 +78,12 @@ function renderPublicHtml(
   return `<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${htmlEscape(title)} — Firebox Studios</title><meta name="description" content="${htmlEscape(description)}" /><link rel="canonical" href="${htmlEscape(canonical)}" /></head><body><header><a href="${origin}/">Firebox Studios</a></header><main><h1>${htmlEscape(title)}</h1><p>${htmlEscape(description)}</p>${content}</main><footer><a href="${origin}/support">Support</a> · <a href="${origin}/api/public/content">Machine-readable public content</a></footer></body></html>`;
 }
 
+function isProgrammaticReader(req: Request) {
+  if (req.query.reader === "1" || req.query.format === "html") return true;
+  const userAgent = req.get("user-agent")?.toLowerCase() ?? "";
+  return /bot|crawler|spider|chatgpt|gptbot|claude|perplexity|google-extended|bytespider|facebookexternalhit|twitterbot|linkedinbot|slackbot|curl|wget|python|node-fetch|undici|go-http-client/.test(userAgent);
+}
+
 async function publicContent() {
   const [products, services, posts, faqs, resources, team, channels, quickHelp, categories] = await Promise.all([
     getServices(),
@@ -107,8 +113,9 @@ async function publicContent() {
 }
 
 export function registerPublicRoutes(app: Express) {
-  app.get("/docs", async (req, res, next) => {
+  app.get("/docs", async (req, res, next: NextFunction) => {
     try {
+      if (!isProgrammaticReader(req)) return next();
       const docs = await getDirectoryItems("docs");
       const content = docs
         .map(
@@ -130,8 +137,9 @@ export function registerPublicRoutes(app: Express) {
     }
   });
 
-  app.get("/docs/:id", async (req, res, next) => {
+  app.get("/docs/:id", async (req, res, next: NextFunction) => {
     try {
+      if (!isProgrammaticReader(req)) return next();
       const item = await getDirectoryItem(Number(req.params.id));
       if (!item || item.section !== "docs") {
         res.status(404).set("Cache-Control", "no-store").type("html").send(renderPublicHtml(req, "Documentation not found", "The requested documentation page could not be found.", "<p>Return to <a href=\"/docs\">Documentation</a>.</p>", "/docs"));
@@ -143,8 +151,9 @@ export function registerPublicRoutes(app: Express) {
     }
   });
 
-  app.get("/blog", async (req, res, next) => {
+  app.get("/blog", async (req, res, next: NextFunction) => {
     try {
+      if (!isProgrammaticReader(req)) return next();
       const posts = await getBlogPosts();
       const content = posts
         .map(
@@ -158,8 +167,9 @@ export function registerPublicRoutes(app: Express) {
     }
   });
 
-  app.get("/blog/:slug", async (req, res, next) => {
+  app.get("/blog/:slug", async (req, res, next: NextFunction) => {
     try {
+      if (!isProgrammaticReader(req)) return next();
       const post = await getBlogPostBySlug(req.params.slug);
       if (!post) {
         res.status(404).set("Cache-Control", "no-store").type("html").send(renderPublicHtml(req, "Article not found", "The requested blog article could not be found.", "<p>Return to <a href=\"/blog\">Blog</a>.</p>", "/blog"));
