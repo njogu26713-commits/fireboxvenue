@@ -240,7 +240,7 @@ export function BlogPost() {
           <img
             src={post.imageUrl}
             alt=""
-            className="mt-10 max-h-[32rem] w-full object-cover"
+            className="mx-auto mt-10 max-h-[28rem] w-full max-w-3xl object-cover"
           />
         )}
         {post.videoUrl && <VideoPlayer url={post.videoUrl} />}
