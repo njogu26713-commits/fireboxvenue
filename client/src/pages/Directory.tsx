@@ -6,7 +6,9 @@ import {
   Code2,
   FileText,
   Sparkles,
+  Search,
 } from "lucide-react";
+import { useMemo, useState } from "react";
 import { Link, useRoute } from "wouter";
 import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -68,11 +70,21 @@ const sectionCopy: Record<DirectorySection, SectionCopy> = {
 export default function Directory({ section }: DirectoryPageProps) {
   const copy = sectionCopy[section];
   const Icon = copy.icon;
+  const [search, setSearch] = useState("");
   const {
     data: items,
     isLoading,
     isError,
   } = trpc.directory.list.useQuery({ section });
+  const filteredItems = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return items ?? [];
+    return (items ?? []).filter(item =>
+      [item.title, item.description, item.content].some(value =>
+        value.toLowerCase().includes(query)
+      )
+    );
+  }, [items, search]);
 
   return (
     <main
@@ -112,6 +124,30 @@ export default function Directory({ section }: DirectoryPageProps) {
           />
         </div>
 
+        {section === "docs" && (
+          <div className="mt-8 max-w-2xl">
+            <label className="sr-only" htmlFor="documentation-search">
+              Search documentation
+            </label>
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#b69cff]" />
+              <input
+                id="documentation-search"
+                type="search"
+                value={search}
+                onChange={event => setSearch(event.target.value)}
+                placeholder="Search documentation..."
+                className="field-input pl-11"
+              />
+            </div>
+            {search.trim() && !isLoading && !isError && (
+              <p className="mt-3 font-sans text-[10px] tracking-[0.12em] text-muted-foreground">
+                {filteredItems.length} DOCUMENT{filteredItems.length === 1 ? "" : "S"} FOUND
+              </p>
+            )}
+          </div>
+        )}
+
         {isLoading && (
           <p className="mt-10 font-sans text-xs tracking-[0.12em] text-muted-foreground">
             SYNCING {copy.title} NODE...
@@ -133,9 +169,19 @@ export default function Directory({ section }: DirectoryPageProps) {
             </p>
           </div>
         )}
-        {!isLoading && !isError && (items?.length ?? 0) > 0 && (
+        {!isLoading && !isError && filteredItems.length === 0 && search.trim() && (
+          <div className="mt-10 border border-border bg-card p-6 sm:p-8">
+            <p className="font-sans text-[10px] tracking-[0.14em] text-muted-foreground">
+              NO DOCUMENTATION MATCHES
+            </p>
+            <p className="mt-3 font-sans text-xs leading-6 text-muted-foreground">
+              Try a different title, topic, or keyword.
+            </p>
+          </div>
+        )}
+        {!isLoading && !isError && filteredItems.length > 0 && (
           <div className={`mt-10 grid gap-5 ${copy.gridClass}`}>
-            {items?.map((item, index) => (
+            {filteredItems.map((item, index) => (
               <article
                 key={item.id}
                 className={`group flex min-h-56 flex-col justify-between border p-6 transition sm:p-8 ${copy.cardClass}`}
