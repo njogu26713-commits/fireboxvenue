@@ -116,7 +116,7 @@ export function registerPublicRoutes(app: Express) {
             `<article><h2><a href="/docs/${item.id}">${htmlEscape(item.title)}</a></h2><p>${htmlEscape(item.description)}</p></article>`
         )
         .join("\n");
-      res.type("html").send(
+      res.set("Cache-Control", "no-store").type("html").send(
         renderPublicHtml(
           req,
           "Documentation",
@@ -134,10 +134,10 @@ export function registerPublicRoutes(app: Express) {
     try {
       const item = await getDirectoryItem(Number(req.params.id));
       if (!item || item.section !== "docs") {
-        res.status(404).type("html").send(renderPublicHtml(req, "Documentation not found", "The requested documentation page could not be found.", "<p>Return to <a href=\"/docs\">Documentation</a>.</p>", "/docs"));
+        res.status(404).set("Cache-Control", "no-store").type("html").send(renderPublicHtml(req, "Documentation not found", "The requested documentation page could not be found.", "<p>Return to <a href=\"/docs\">Documentation</a>.</p>", "/docs"));
         return;
       }
-      res.type("html").send(renderPublicHtml(req, item.title, item.description, markdownToHtml(item.content || item.description), `/docs/${item.id}`));
+      res.set("Cache-Control", "no-store").type("html").send(renderPublicHtml(req, item.title, item.description, markdownToHtml(item.content || item.description), `/docs/${item.id}`));
     } catch (error) {
       next(error);
     }
@@ -152,7 +152,7 @@ export function registerPublicRoutes(app: Express) {
             `<article><h2><a href="/blog/${post.slug}">${htmlEscape(post.title)}</a></h2><p>${htmlEscape(post.excerpt)}</p><p>Category: ${htmlEscape(post.category)} · Author: ${htmlEscape(post.author)}</p></article>`
         )
         .join("\n");
-      res.type("html").send(renderPublicHtml(req, "Blog", "Ideas, field notes, and build logs from Firebox Studios.", content || "<p>No published blog posts are available yet.</p>", "/blog"));
+      res.set("Cache-Control", "no-store").type("html").send(renderPublicHtml(req, "Blog", "Ideas, field notes, and build logs from Firebox Studios.", content || "<p>No published blog posts are available yet.</p>", "/blog"));
     } catch (error) {
       next(error);
     }
@@ -162,11 +162,11 @@ export function registerPublicRoutes(app: Express) {
     try {
       const post = await getBlogPostBySlug(req.params.slug);
       if (!post) {
-        res.status(404).type("html").send(renderPublicHtml(req, "Article not found", "The requested blog article could not be found.", "<p>Return to <a href=\"/blog\">Blog</a>.</p>", "/blog"));
+        res.status(404).set("Cache-Control", "no-store").type("html").send(renderPublicHtml(req, "Article not found", "The requested blog article could not be found.", "<p>Return to <a href=\"/blog\">Blog</a>.</p>", "/blog"));
         return;
       }
       const content = `${post.imageUrl ? `<img src="${htmlEscape(post.imageUrl)}" alt="" />` : ""}${post.videoUrl ? `<p>Video tutorial available: ${htmlEscape(post.videoUrl)}</p>` : ""}${markdownToHtml(post.content)}`;
-      res.type("html").send(renderPublicHtml(req, post.title, post.excerpt, content, `/blog/${post.slug}`));
+      res.set("Cache-Control", "no-store").type("html").send(renderPublicHtml(req, post.title, post.excerpt, content, `/blog/${post.slug}`));
     } catch (error) {
       next(error);
     }
