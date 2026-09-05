@@ -102,6 +102,35 @@ export interface Faq {
 
 export type InsertFaq = Omit<Faq, "id" | "createdAt" | "updatedAt">;
 
+export interface QuickHelp {
+  id: number;
+  title: string;
+  description: string;
+  href: string | null;
+  sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type InsertQuickHelp = Omit<
+  QuickHelp,
+  "id" | "createdAt" | "updatedAt"
+>;
+
+export interface SupportCategory {
+  id: number;
+  title: string;
+  description: string;
+  sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type InsertSupportCategory = Omit<
+  SupportCategory,
+  "id" | "createdAt" | "updatedAt"
+>;
+
 export type BlogPostStatus = "draft" | "published";
 export type BlogPostCategory = "article" | "tutorial" | "case-study";
 

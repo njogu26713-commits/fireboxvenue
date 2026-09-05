@@ -95,6 +95,17 @@ const emptyBlog: BlogForm = {
   status: "draft",
 };
 const emptyFaq: FaqForm = { question: "", answer: "", sortOrder: "0" };
+const emptyQuickHelp: SupportContentForm = {
+  title: "",
+  description: "",
+  href: "",
+  sortOrder: "0",
+};
+const emptySupportCategory: SupportContentForm = {
+  title: "",
+  description: "",
+  sortOrder: "0",
+};
 const emptyDirectoryItem: DirectoryForm = {
   section: "products",
   title: "",
@@ -121,6 +132,12 @@ type SupportPlatform =
   | "youtube";
 type SupportForm = { label: string; value: string };
 type FaqForm = { question: string; answer: string; sortOrder: string };
+type SupportContentForm = {
+  title: string;
+  description: string;
+  href?: string;
+  sortOrder: string;
+};
 type DirectorySection = "products" | "developers" | "docs";
 type DirectoryForm = {
   section: DirectorySection;
@@ -152,9 +169,11 @@ const adminNavItems = [
   ["products", "01 / PRODUCTS"],
   ["services", "02 / SERVICES"],
   ["team-editor", "03 / TEAM EDITOR"],
-  ["blog-editor", "03 / BLOG EDITOR"],
-  ["support-channels", "03 / SUPPORT CHANNELS"],
-  ["faq-editor", "04 / FAQ EDITOR"],
+    ["blog-editor", "03 / BLOG EDITOR"],
+    ["support-channels", "03 / SUPPORT CHANNELS"],
+    ["quick-help-editor", "04 / QUICK HELP"],
+    ["support-category-editor", "05 / SUPPORT CATEGORIES"],
+    ["faq-editor", "04 / FAQ EDITOR"],
   ["directory-editor", "05 / RESOURCE EDITOR + URL"],
   ["live-index", "LIVE INDEX"],
   ["blog-archive", "BLOG ARCHIVE"],
@@ -171,6 +190,10 @@ export default function Admin() {
   const { data: supportMessages, isLoading: supportMessagesLoading } =
     trpc.support.messages.useQuery();
   const { data: faqs, isLoading: faqsLoading } = trpc.faq.list.useQuery();
+  const { data: quickHelp, isLoading: quickHelpLoading } =
+    trpc.supportContent.quickHelp.useQuery();
+  const { data: supportCategories, isLoading: supportCategoriesLoading } =
+    trpc.supportContent.categories.useQuery();
   const { data: directoryItems, isLoading: directoryItemsLoading } =
     trpc.directory.list.useQuery();
   const { data: blogPosts, isLoading: blogPostsLoading } =
@@ -184,6 +207,16 @@ export default function Admin() {
   const [supportForms, setSupportForms] =
     useState<Record<SupportPlatform, SupportForm>>(emptySupportForms);
   const [faq, setFaq] = useState<FaqForm>(emptyFaq);
+  const [quickHelpItem, setQuickHelpItem] =
+    useState<SupportContentForm>(emptyQuickHelp);
+  const [editingQuickHelpId, setEditingQuickHelpId] = useState<number | null>(
+    null
+  );
+  const [supportCategory, setSupportCategory] =
+    useState<SupportContentForm>(emptySupportCategory);
+  const [editingSupportCategoryId, setEditingSupportCategoryId] = useState<
+    number | null
+  >(null);
   const [editingFaqId, setEditingFaqId] = useState<number | null>(null);
   const [directoryItem, setDirectoryItem] =
     useState<DirectoryForm>(emptyDirectoryItem);
@@ -306,6 +339,48 @@ export default function Admin() {
     onSuccess: () => utils.faq.list.invalidate(),
     onError: error => toast.error(error.message),
   });
+  const addQuickHelp = trpc.supportContent.addQuickHelp.useMutation({
+    onSuccess: async () => {
+      await utils.supportContent.quickHelp.invalidate();
+      setQuickHelpItem(emptyQuickHelp);
+      toast.success("Quick help added");
+    },
+    onError: error => toast.error(error.message),
+  });
+  const updateQuickHelp = trpc.supportContent.updateQuickHelp.useMutation({
+    onSuccess: async () => {
+      await utils.supportContent.quickHelp.invalidate();
+      setQuickHelpItem(emptyQuickHelp);
+      setEditingQuickHelpId(null);
+      toast.success("Quick help updated");
+    },
+    onError: error => toast.error(error.message),
+  });
+  const deleteQuickHelp = trpc.supportContent.deleteQuickHelp.useMutation({
+    onSuccess: () => utils.supportContent.quickHelp.invalidate(),
+    onError: error => toast.error(error.message),
+  });
+  const addSupportCategory = trpc.supportContent.addCategory.useMutation({
+    onSuccess: async () => {
+      await utils.supportContent.categories.invalidate();
+      setSupportCategory(emptySupportCategory);
+      toast.success("Support category added");
+    },
+    onError: error => toast.error(error.message),
+  });
+  const updateSupportCategory = trpc.supportContent.updateCategory.useMutation({
+    onSuccess: async () => {
+      await utils.supportContent.categories.invalidate();
+      setSupportCategory(emptySupportCategory);
+      setEditingSupportCategoryId(null);
+      toast.success("Support category updated");
+    },
+    onError: error => toast.error(error.message),
+  });
+  const deleteSupportCategory = trpc.supportContent.deleteCategory.useMutation({
+    onSuccess: () => utils.supportContent.categories.invalidate(),
+    onError: error => toast.error(error.message),
+  });
   const createDirectoryItem = trpc.directory.add.useMutation({
     onSuccess: async () => {
       await utils.directory.list.invalidate();
@@ -376,6 +451,30 @@ export default function Admin() {
     };
     if (editingFaqId) updateFaqMutation.mutate({ ...input, id: editingFaqId });
     else createFaq.mutate(input);
+  };
+
+  const submitQuickHelp = (event: FormEvent) => {
+    event.preventDefault();
+    const input = {
+      ...quickHelpItem,
+      href: quickHelpItem.href || undefined,
+      sortOrder: Number(quickHelpItem.sortOrder) || 0,
+    };
+    if (editingQuickHelpId)
+      updateQuickHelp.mutate({ ...input, id: editingQuickHelpId });
+    else addQuickHelp.mutate(input);
+  };
+
+  const submitSupportCategory = (event: FormEvent) => {
+    event.preventDefault();
+    const input = {
+      title: supportCategory.title,
+      description: supportCategory.description,
+      sortOrder: Number(supportCategory.sortOrder) || 0,
+    };
+    if (editingSupportCategoryId)
+      updateSupportCategory.mutate({ ...input, id: editingSupportCategoryId });
+    else addSupportCategory.mutate(input);
   };
 
   const submitDirectoryItem = (event: FormEvent) => {
@@ -746,6 +845,45 @@ export default function Admin() {
                     ? "UPDATE SERVICE"
                     : "WRITE SERVICE"}
               </button>
+            </form>
+
+            <form
+              id="quick-help-editor"
+              onSubmit={submitQuickHelp}
+              className={`scroll-mt-28 border border-white/10 bg-[#0a0e15] p-6 sm:p-8 ${activeSection === "quick-help-editor" ? "" : "hidden"}`}
+            >
+              <span className="font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff]">
+                04 / QUICK HELP NODE
+              </span>
+              <h2 className="mt-2 font-sans text-2xl font-semibold">
+                {editingQuickHelpId ? "EDIT QUICK HELP" : "ADD QUICK HELP"}
+              </h2>
+              <div className="mt-7 space-y-4">
+                <label className="block"><span className="field-label">Title</span><input required value={quickHelpItem.title} onChange={event => setQuickHelpItem({ ...quickHelpItem, title: event.target.value })} className="field-input" placeholder="e.g. Reset your account access" /></label>
+                <label className="block"><span className="field-label">Description</span><textarea required rows={4} value={quickHelpItem.description} onChange={event => setQuickHelpItem({ ...quickHelpItem, description: event.target.value })} className="field-input resize-none" placeholder="Short guidance for visitors..." /></label>
+                <label className="block"><span className="field-label">Help URL <span className="text-[#738094]">(optional)</span></span><input type="url" value={quickHelpItem.href} onChange={event => setQuickHelpItem({ ...quickHelpItem, href: event.target.value })} className="field-input" placeholder="https://..." /></label>
+                <label className="block"><span className="field-label">Display order</span><input type="number" min="0" value={quickHelpItem.sortOrder} onChange={event => setQuickHelpItem({ ...quickHelpItem, sortOrder: event.target.value })} className="field-input" /></label>
+              </div>
+              <button disabled={addQuickHelp.isPending || updateQuickHelp.isPending} className="action-button mt-6"><Check className="h-4 w-4" /> {editingQuickHelpId ? "UPDATE QUICK HELP" : "WRITE QUICK HELP"}</button>
+            </form>
+
+            <form
+              id="support-category-editor"
+              onSubmit={submitSupportCategory}
+              className={`scroll-mt-28 border border-white/10 bg-[#0a0e15] p-6 sm:p-8 ${activeSection === "support-category-editor" ? "" : "hidden"}`}
+            >
+              <span className="font-sans text-[10px] tracking-[0.16em] text-[#ff5a1f]">
+                05 / CATEGORY NODE
+              </span>
+              <h2 className="mt-2 font-sans text-2xl font-semibold">
+                {editingSupportCategoryId ? "EDIT SUPPORT CATEGORY" : "ADD SUPPORT CATEGORY"}
+              </h2>
+              <div className="mt-7 space-y-4">
+                <label className="block"><span className="field-label">Category name</span><input required value={supportCategory.title} onChange={event => setSupportCategory({ ...supportCategory, title: event.target.value })} className="field-input" placeholder="e.g. Billing and account" /></label>
+                <label className="block"><span className="field-label">Description</span><textarea required rows={4} value={supportCategory.description} onChange={event => setSupportCategory({ ...supportCategory, description: event.target.value })} className="field-input resize-none" placeholder="Explain what belongs in this category..." /></label>
+                <label className="block"><span className="field-label">Display order</span><input type="number" min="0" value={supportCategory.sortOrder} onChange={event => setSupportCategory({ ...supportCategory, sortOrder: event.target.value })} className="field-input" /></label>
+              </div>
+              <button disabled={addSupportCategory.isPending || updateSupportCategory.isPending} className="action-button mt-6"><Check className="h-4 w-4" /> {editingSupportCategoryId ? "UPDATE CATEGORY" : "WRITE CATEGORY"}</button>
             </form>
 
             <form

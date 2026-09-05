@@ -72,6 +72,10 @@ export default function Support() {
     isLoading: faqsLoading,
     isError: faqsError,
   } = trpc.faq.list.useQuery();
+  const { data: quickHelp, isLoading: quickHelpLoading } =
+    trpc.supportContent.quickHelp.useQuery();
+  const { data: supportCategories, isLoading: supportCategoriesLoading } =
+    trpc.supportContent.categories.useQuery();
   const submitMessage = trpc.support.submitMessage.useMutation({
     onSuccess: () => toast.success("Support signal received"),
     onError: error => toast.error(error.message),
@@ -103,6 +107,10 @@ export default function Support() {
     { value: "Services", label: "Services" },
     { value: "Products", label: "Products" },
     { value: "Support", label: "Support" },
+    ...(supportCategories ?? []).map(category => ({
+      value: `Category: ${category.title}`,
+      label: category.title,
+    })),
     ...(directoryItems ?? [])
       .filter(item => item.section === "products")
       .map(item => ({
@@ -129,12 +137,113 @@ export default function Support() {
 
       <div className="w-full px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
         <section
+          className="border-t border-white/10 pt-12"
+          aria-labelledby="support-help-heading"
+        >
+          <div className="flex items-end justify-between gap-5 border-b border-white/10 pb-5">
+            <div>
+              <span className="font-sans text-[10px] tracking-[0.18em] text-[#6ae4ff]">
+                01 / QUICK HELP
+              </span>
+              <h2
+                id="support-help-heading"
+                className="mt-3 font-sans text-3xl font-semibold tracking-[-0.05em] sm:text-4xl"
+              >
+                START HERE.
+              </h2>
+              <p className="mt-4 max-w-2xl font-sans text-xs leading-6 text-[#9eabbc]">
+                Fast paths for the most common support requests, maintained from
+                the Admin workspace.
+              </p>
+            </div>
+            <HelpCircle className="h-7 w-7 text-[#6ae4ff]" />
+          </div>
+          {quickHelpLoading && (
+            <p className="mt-7 font-sans text-xs text-[#9eabbc]">
+              SYNCING QUICK HELP...
+            </p>
+          )}
+          {!quickHelpLoading && (quickHelp?.length ?? 0) === 0 && (
+            <p className="mt-7 border border-white/10 bg-[#090d14] px-4 py-5 font-sans text-[10px] tracking-[0.14em] text-[#768397]">
+              NO QUICK HELP ENTRIES PUBLISHED YET
+            </p>
+          )}
+          {(quickHelp?.length ?? 0) > 0 && (
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {quickHelp?.map(item => (
+                <a
+                  key={item.id}
+                  href={item.href || "#support-form-heading"}
+                  className="border border-white/10 bg-[#090d14] p-5 transition hover:border-[#ff5a1f]/70 hover:bg-[#0d141d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6ae4ff]"
+                >
+                  <h3 className="font-sans text-lg font-semibold">{item.title}</h3>
+                  <p className="mt-3 font-sans text-xs leading-6 text-[#9eabbc]">
+                    {item.description}
+                  </p>
+                  {item.href && (
+                    <span className="mt-5 inline-block font-sans text-[10px] tracking-[0.12em] text-[#6ae4ff]">
+                      OPEN HELP PATH →
+                    </span>
+                  )}
+                </a>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section
+          className="mt-16 border-t border-white/10 pt-12"
+          aria-labelledby="support-categories-heading"
+        >
+          <div className="border-b border-white/10 pb-5">
+            <span className="font-sans text-[10px] tracking-[0.18em] text-[#ff5a1f]">
+              02 / SUPPORT CATEGORIES
+            </span>
+            <h2
+              id="support-categories-heading"
+              className="mt-3 font-sans text-3xl font-semibold tracking-[-0.05em] sm:text-4xl"
+            >
+              CHOOSE A CHANNEL.
+            </h2>
+          </div>
+          {supportCategoriesLoading && (
+            <p className="mt-7 font-sans text-xs text-[#9eabbc]">
+              SYNCING SUPPORT CATEGORIES...
+            </p>
+          )}
+          {!supportCategoriesLoading && (supportCategories?.length ?? 0) === 0 && (
+            <p className="mt-7 border border-white/10 bg-[#090d14] px-4 py-5 font-sans text-[10px] tracking-[0.14em] text-[#768397]">
+              NO SUPPORT CATEGORIES CONFIGURED YET
+            </p>
+          )}
+          {(supportCategories?.length ?? 0) > 0 && (
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {supportCategories?.map(category => (
+                <a
+                  key={category.id}
+                  href="#support-form-heading"
+                  className="border border-[#ff5a1f]/25 bg-[#0d1119] p-5 transition hover:border-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6ae4ff]"
+                >
+                  <h3 className="font-sans text-lg font-semibold">{category.title}</h3>
+                  <p className="mt-3 font-sans text-xs leading-6 text-[#9eabbc]">
+                    {category.description}
+                  </p>
+                  <span className="mt-5 inline-block font-sans text-[10px] tracking-[0.12em] text-[#ffae8c]">
+                    SELECT CATEGORY →
+                  </span>
+                </a>
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section
           className="mt-16 grid gap-10 border-t border-white/10 pt-12 lg:grid-cols-[0.7fr_1.3fr]"
           aria-labelledby="support-form-heading"
         >
           <div>
             <span className="font-sans text-[10px] tracking-[0.18em] text-[#6ae4ff]">
-              02 / MESSAGE INTAKE
+              03 / MESSAGE INTAKE
             </span>
             <h2
               id="support-form-heading"
@@ -226,7 +335,7 @@ export default function Support() {
           <div className="flex items-end justify-between gap-5 border-b border-white/10 pb-5">
             <div>
               <span className="font-sans text-[10px] tracking-[0.18em] text-[#ff5a1f]">
-                03 / KNOWLEDGE NODE
+                04 / KNOWLEDGE NODE
               </span>
               <h2
                 id="support-faq-heading"
@@ -288,7 +397,7 @@ export default function Support() {
           <div className="flex items-end justify-between gap-5 border-b border-white/10 pb-5">
             <div>
               <span className="font-sans text-[10px] tracking-[0.18em] text-[#ff5a1f]">
-                04 / DIRECT CHANNELS
+                05 / DIRECT CHANNELS
               </span>
               <h2
                 id="support-channels-heading"

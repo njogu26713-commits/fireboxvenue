@@ -19,6 +19,10 @@ import type {
   User,
   InsertTeamMember,
   TeamMember,
+  InsertQuickHelp,
+  QuickHelp,
+  InsertSupportCategory,
+  SupportCategory,
 } from "../drizzle/schema";
 import { ENV } from "./_core/env";
 
@@ -33,6 +37,8 @@ const collectionNames = {
   supportChannels: "supportChannels",
   supportMessages: "supportMessages",
   faqs: "faqs",
+  quickHelp: "quickHelp",
+  supportCategories: "supportCategories",
   blogPosts: "blogPosts",
   directory: "directory",
   team: "team",
@@ -319,6 +325,92 @@ export async function deleteFaq(id: number): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await collection<Faq>(db, collectionNames.faqs).deleteOne({ id });
+}
+
+export async function getQuickHelp(): Promise<QuickHelp[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return collection<QuickHelp>(db, collectionNames.quickHelp)
+    .find({})
+    .sort({ sortOrder: 1, id: 1 })
+    .toArray();
+}
+
+export async function addQuickHelp(item: InsertQuickHelp): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await collection<QuickHelp>(db, collectionNames.quickHelp).insertOne({
+    ...item,
+    id: await nextId(db, "quickHelp"),
+    createdAt: now,
+    updatedAt: now,
+  });
+}
+
+export async function updateQuickHelp(
+  id: number,
+  item: Partial<InsertQuickHelp>
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<QuickHelp>(db, collectionNames.quickHelp).updateOne(
+    { id },
+    { $set: { ...clean(item), updatedAt: new Date() } }
+  );
+}
+
+export async function deleteQuickHelp(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<QuickHelp>(db, collectionNames.quickHelp).deleteOne({ id });
+}
+
+export async function getSupportCategories(): Promise<SupportCategory[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return collection<SupportCategory>(db, collectionNames.supportCategories)
+    .find({})
+    .sort({ sortOrder: 1, id: 1 })
+    .toArray();
+}
+
+export async function addSupportCategory(
+  item: InsertSupportCategory
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await collection<SupportCategory>(
+    db,
+    collectionNames.supportCategories
+  ).insertOne({
+    ...item,
+    id: await nextId(db, "supportCategories"),
+    createdAt: now,
+    updatedAt: now,
+  });
+}
+
+export async function updateSupportCategory(
+  id: number,
+  item: Partial<InsertSupportCategory>
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<SupportCategory>(
+    db,
+    collectionNames.supportCategories
+  ).updateOne({ id }, { $set: { ...clean(item), updatedAt: new Date() } });
+}
+
+export async function deleteSupportCategory(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<SupportCategory>(
+    db,
+    collectionNames.supportCategories
+  ).deleteOne({ id });
 }
 
 export async function getBlogPosts(includeDrafts = false): Promise<BlogPost[]> {

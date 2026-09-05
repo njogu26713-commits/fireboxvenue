@@ -25,6 +25,14 @@ import {
   getDirectoryItem,
   getDirectoryItems,
   getFaqs,
+  getQuickHelp,
+  addQuickHelp,
+  updateQuickHelp,
+  deleteQuickHelp,
+  getSupportCategories,
+  addSupportCategory,
+  updateSupportCategory,
+  deleteSupportCategory,
   getProjects,
   getServices,
   getSupportChannels,
@@ -73,6 +81,16 @@ const faqInput = z.object({
   question: z.string().trim().min(1).max(255),
   answer: z.string().trim().min(1).max(5000),
   sortOrder: z.number().int().min(0).default(0),
+});
+
+const supportContentInput = z.object({
+  title: z.string().trim().min(1).max(255),
+  description: z.string().trim().min(1).max(2000),
+  sortOrder: z.number().int().min(0).default(0),
+});
+
+const quickHelpInput = supportContentInput.extend({
+  href: z.string().trim().max(512).optional(),
 });
 
 const directorySections = ["products", "developers", "docs"] as const;
@@ -372,6 +390,34 @@ export const appRouter = router({
     delete: publicProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteFaq(input.id)),
+  }),
+  supportContent: router({
+    quickHelp: publicProcedure.query(() => getQuickHelp()),
+    addQuickHelp: publicProcedure.input(quickHelpInput).mutation(({ input }) =>
+      addQuickHelp({ ...input, href: input.href || null })
+    ),
+    updateQuickHelp: publicProcedure
+      .input(quickHelpInput.extend({ id: z.number().int().positive() }))
+      .mutation(({ input }) => {
+        const { id, ...values } = input;
+        return updateQuickHelp(id, { ...values, href: values.href || null });
+      }),
+    deleteQuickHelp: publicProcedure
+      .input(z.object({ id: z.number().int().positive() }))
+      .mutation(({ input }) => deleteQuickHelp(input.id)),
+    categories: publicProcedure.query(() => getSupportCategories()),
+    addCategory: publicProcedure
+      .input(supportContentInput)
+      .mutation(({ input }) => addSupportCategory(input)),
+    updateCategory: publicProcedure
+      .input(supportContentInput.extend({ id: z.number().int().positive() }))
+      .mutation(({ input }) => {
+        const { id, ...values } = input;
+        return updateSupportCategory(id, values);
+      }),
+    deleteCategory: publicProcedure
+      .input(z.object({ id: z.number().int().positive() }))
+      .mutation(({ input }) => deleteSupportCategory(input.id)),
   }),
   support: router({
     channels: publicProcedure.query(() => getSupportChannels()),
