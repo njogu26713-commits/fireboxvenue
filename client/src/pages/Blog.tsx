@@ -34,7 +34,7 @@ function VideoPlayer({ url }: { url: string }) {
   return isDirect ? (
     <video
       controls
-      className="mt-10 w-full border border-border bg-black"
+      className="mx-auto mt-10 max-h-[28rem] w-full max-w-3xl border border-border bg-black"
       src={url}
     >
       Your browser does not support video playback.
@@ -43,7 +43,7 @@ function VideoPlayer({ url }: { url: string }) {
     <iframe
       title="Blog tutorial video"
       src={embedUrl}
-      className="mt-10 aspect-video w-full border border-border bg-black"
+      className="mx-auto mt-10 aspect-video w-full max-w-3xl border border-border bg-black"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
       allowFullScreen
     />
