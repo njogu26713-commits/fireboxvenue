@@ -1300,7 +1300,7 @@ export default function Admin() {
                     </p>
                     <textarea
                       required
-                      maxLength={30000}
+                      maxLength={100000}
                       rows={14}
                       value={directoryItem.content}
                       onChange={event =>

@@ -99,7 +99,7 @@ const directoryInput = z.object({
   section: z.enum(directorySections),
   title: z.string().trim().min(1).max(255),
   description: z.string().trim().min(1).max(2000),
-  content: z.string().trim().max(30000).default(""),
+  content: z.string().trim().max(100000).default(""),
   href: z.string().trim().max(512).optional(),
   sortOrder: z.number().int().min(0).default(0),
 });
