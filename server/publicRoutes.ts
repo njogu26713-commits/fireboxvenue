@@ -1,7 +1,9 @@
 import type { Express, Request, Response } from "express";
 import {
   getBlogPosts,
+  getBlogPostBySlug,
   getDirectoryItems,
+  getDirectoryItem,
   getFaqs,
   getProjects,
   getQuickHelp,
@@ -39,6 +41,43 @@ function xmlEscape(value: string) {
   })[character] ?? character);
 }
 
+function htmlEscape(value: string) {
+  return value.replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[character] ?? character);
+}
+
+function markdownToHtml(markdown: string) {
+  return markdown
+    .split(/\n\s*\n/)
+    .map(block => {
+      const text = htmlEscape(block.trim())
+        .replace(/^###\s+(.+)$/gm, "<h3>$1</h3>")
+        .replace(/^##\s+(.+)$/gm, "<h2>$1</h2>")
+        .replace(/^#\s+(.+)$/gm, "<h1>$1</h1>")
+        .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+        .replace(/\n/g, "<br />");
+      return /^<h[1-3]>/.test(text) ? text : `<p>${text}</p>`;
+    })
+    .join("\n");
+}
+
+function renderPublicHtml(
+  req: Request,
+  title: string,
+  description: string,
+  content: string,
+  canonicalPath: string
+) {
+  const origin = baseUrl(req);
+  const canonical = `${origin}${canonicalPath}`;
+  return `<!doctype html><html lang="en"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /><title>${htmlEscape(title)} — Firebox Studios</title><meta name="description" content="${htmlEscape(description)}" /><link rel="canonical" href="${htmlEscape(canonical)}" /></head><body><header><a href="${origin}/">Firebox Studios</a></header><main><h1>${htmlEscape(title)}</h1><p>${htmlEscape(description)}</p>${content}</main><footer><a href="${origin}/support">Support</a> · <a href="${origin}/api/public/content">Machine-readable public content</a></footer></body></html>`;
+}
+
 async function publicContent() {
   const [products, services, posts, faqs, resources, team, channels, quickHelp, categories] = await Promise.all([
     getServices(),
@@ -68,6 +107,71 @@ async function publicContent() {
 }
 
 export function registerPublicRoutes(app: Express) {
+  app.get("/docs", async (req, res, next) => {
+    try {
+      const docs = await getDirectoryItems("docs");
+      const content = docs
+        .map(
+          item =>
+            `<article><h2><a href="/docs/${item.id}">${htmlEscape(item.title)}</a></h2><p>${htmlEscape(item.description)}</p></article>`
+        )
+        .join("\n");
+      res.type("html").send(
+        renderPublicHtml(
+          req,
+          "Documentation",
+          "Internal guides, setup notes, and practical documentation written and published directly by Firebox.",
+          content || "<p>No published documentation is available yet.</p>",
+          "/docs"
+        )
+      );
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/docs/:id", async (req, res, next) => {
+    try {
+      const item = await getDirectoryItem(Number(req.params.id));
+      if (!item || item.section !== "docs") {
+        res.status(404).type("html").send(renderPublicHtml(req, "Documentation not found", "The requested documentation page could not be found.", "<p>Return to <a href=\"/docs\">Documentation</a>.</p>", "/docs"));
+        return;
+      }
+      res.type("html").send(renderPublicHtml(req, item.title, item.description, markdownToHtml(item.content || item.description), `/docs/${item.id}`));
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/blog", async (req, res, next) => {
+    try {
+      const posts = await getBlogPosts();
+      const content = posts
+        .map(
+          post =>
+            `<article><h2><a href="/blog/${post.slug}">${htmlEscape(post.title)}</a></h2><p>${htmlEscape(post.excerpt)}</p><p>Category: ${htmlEscape(post.category)} · Author: ${htmlEscape(post.author)}</p></article>`
+        )
+        .join("\n");
+      res.type("html").send(renderPublicHtml(req, "Blog", "Ideas, field notes, and build logs from Firebox Studios.", content || "<p>No published blog posts are available yet.</p>", "/blog"));
+    } catch (error) {
+      next(error);
+    }
+  });
+
+  app.get("/blog/:slug", async (req, res, next) => {
+    try {
+      const post = await getBlogPostBySlug(req.params.slug);
+      if (!post) {
+        res.status(404).type("html").send(renderPublicHtml(req, "Article not found", "The requested blog article could not be found.", "<p>Return to <a href=\"/blog\">Blog</a>.</p>", "/blog"));
+        return;
+      }
+      const content = `${post.imageUrl ? `<img src="${htmlEscape(post.imageUrl)}" alt="" />` : ""}${post.videoUrl ? `<p>Video tutorial available: ${htmlEscape(post.videoUrl)}</p>` : ""}${markdownToHtml(post.content)}`;
+      res.type("html").send(renderPublicHtml(req, post.title, post.excerpt, content, `/blog/${post.slug}`));
+    } catch (error) {
+      next(error);
+    }
+  });
+
   app.get("/api/public/pages", async (_req, res) => {
     res.json({ pages: staticPages });
   });
