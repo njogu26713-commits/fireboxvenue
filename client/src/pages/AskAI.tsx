@@ -1,4 +1,12 @@
-import { ArrowLeft } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  BookOpen,
+  Check,
+  MessageCircleQuestion,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 import { Link } from "wouter";
 import { useEffect, useRef, useState } from "react";
 import { AIChatBox, type Message } from "@/components/AIChatBox";
@@ -109,37 +117,85 @@ export default function AskAI() {
       </header>
 
       <section
-        className="w-full px-0 py-4 sm:px-8 sm:py-6 lg:px-12 xl:px-20"
+        className="w-full px-5 py-12 sm:px-8 sm:py-20 lg:px-12 xl:px-20"
         aria-label="Ask Firebox AI"
       >
-        <div className="w-full border-y border-border bg-card">
-          <div className="flex items-center justify-between border-b border-border px-5 py-4 sm:px-8 lg:px-10">
-            <div>
-              <p className="font-sans text-[10px] font-semibold tracking-[0.16em] text-foreground">
-                ASK AI
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-[0.72fr_1.28fr] lg:items-start lg:gap-16">
+            <div className="pt-2">
+              <div className="inline-flex items-center gap-2 border border-[#6ae4ff]/30 bg-[#6ae4ff]/[0.06] px-3 py-2 font-sans text-[9px] font-semibold tracking-[0.16em] text-[#6ae4ff]">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6ae4ff]" />
+                FIREBOX INTELLIGENCE / ONLINE
+              </div>
+              <h1 className="mt-7 max-w-xl font-sans text-5xl font-bold leading-[0.94] tracking-[-0.07em] sm:text-7xl">
+                Find the signal.
+              </h1>
+              <p className="mt-7 max-w-md font-sans text-sm leading-7 text-muted-foreground">
+                Ask about Firebox products, services, documentation, support,
+                and the latest ideas from our public knowledge base.
               </p>
-              <p className="mt-1 font-sans text-[9px] tracking-[0.12em] text-muted-foreground">
-                FIREBOX PUBLIC KNOWLEDGE
-              </p>
+
+              <div className="mt-10 space-y-4 border-t border-border pt-6">
+                <p className="font-sans text-[9px] font-semibold tracking-[0.16em] text-muted-foreground">
+                  WHAT I CAN HELP WITH
+                </p>
+                {[
+                  [BookOpen, "Products & services"],
+                  [MessageCircleQuestion, "Support & documentation"],
+                  [Zap, "Tutorials & latest updates"],
+                ].map(([Icon, label]) => (
+                  <div key={label as string} className="flex items-center gap-3 font-sans text-xs text-foreground">
+                    <span className="flex h-7 w-7 items-center justify-center border border-border bg-card text-[#b69cff]">
+                      <Icon className="h-3.5 w-3.5" />
+                    </span>
+                    {label as string}
+                    <Check className="ml-auto h-3.5 w-3.5 text-[#6ae4ff]" />
+                  </div>
+                ))}
+              </div>
+
+              <a
+                href="/docs"
+                className="mt-10 inline-flex items-center gap-2 font-sans text-[10px] font-semibold tracking-[0.14em] text-[#b69cff] transition hover:text-white"
+              >
+                BROWSE DOCUMENTATION <ArrowUpRight className="h-3.5 w-3.5" />
+              </a>
             </div>
-            <span className="inline-flex items-center gap-2 font-sans text-[9px] tracking-[0.12em] text-[#6ae4ff]">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6ae4ff]" />
-              ONLINE
-            </span>
+
+            <div className="overflow-hidden border border-border bg-card shadow-2xl shadow-black/20">
+              <div className="flex items-center justify-between border-b border-border bg-background/70 px-5 py-4 sm:px-7">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center border border-[#b69cff]/40 bg-[#b69cff]/10 text-[#b69cff]">
+                    <Sparkles className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="font-sans text-[10px] font-semibold tracking-[0.16em] text-foreground">
+                      ASK FIREBOX AI
+                    </p>
+                    <p className="mt-1 font-sans text-[9px] tracking-[0.12em] text-muted-foreground">
+                      PUBLIC KNOWLEDGE ASSISTANT
+                    </p>
+                  </div>
+                </div>
+                <span className="font-sans text-[9px] tracking-[0.12em] text-[#6ae4ff]">
+                  READY
+                </span>
+              </div>
+              <AIChatBox
+                messages={messages}
+                onSendMessage={handleSend}
+                isLoading={ask.isPending || isTyping}
+                className="h-[min(680px,calc(100vh-11rem))] w-full rounded-none border-0 bg-transparent shadow-none"
+                placeholder="Ask a question about Firebox..."
+                emptyStateMessage="What would you like to discover?"
+                suggestedPrompts={[
+                  "What services does Firebox offer?",
+                  "Show me the latest tutorials",
+                  "How can I contact Support?",
+                ]}
+              />
+            </div>
           </div>
-          <AIChatBox
-            messages={messages}
-            onSendMessage={handleSend}
-            isLoading={ask.isPending || isTyping}
-            className="h-[min(700px,calc(100vh-12rem))] w-full rounded-none border-0 bg-transparent shadow-none"
-            placeholder="Ask about Firebox..."
-            emptyStateMessage="Ask a question about Firebox"
-            suggestedPrompts={[
-              "What services does Firebox offer?",
-              "Show me the latest tutorials",
-              "How can I contact Support?",
-            ]}
-          />
         </div>
         {(ask.isPending || isTyping) && (
           <div className="flex h-10 items-center gap-2 border-b border-border px-5 font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff] sm:px-8 lg:px-10">
