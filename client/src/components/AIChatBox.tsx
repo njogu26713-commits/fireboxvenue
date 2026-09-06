@@ -256,7 +256,9 @@ export function AIChatBox({
                     className={cn(
                       "flex gap-3",
                       plain
-                        ? "items-start"
+                        ? message.role === "user"
+                          ? "items-start justify-end"
+                          : "items-start"
                         : message.role === "user"
                           ? "items-start justify-end"
                           : "items-start justify-start flex-col sm:flex-row"
@@ -275,8 +277,10 @@ export function AIChatBox({
 
                     <div
                       className={cn(
-                        plain
-                          ? "w-full max-w-none bg-transparent px-0 py-2.5"
+                        plain && message.role === "user"
+                          ? "max-w-[80%] rounded-2xl bg-primary px-4 py-3 text-primary-foreground"
+                          : plain
+                            ? "w-full max-w-none bg-transparent px-0 py-2.5"
                           : "rounded-lg px-4 py-2.5 sm:max-w-[80%]",
                         !plain &&
                           (message.role === "user"
