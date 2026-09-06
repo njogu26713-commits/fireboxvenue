@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Loader2, Send, User, Sparkles } from "lucide-react";
+import { Loader2, Mic, Plus, Send, User, Sparkles } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Streamdown } from "streamdown";
 
@@ -357,7 +357,7 @@ export function AIChatBox({
         className={cn(
           "flex items-end gap-3",
           plain
-            ? "border-t-0 bg-transparent p-0 pt-5"
+            ? "flex-col gap-2 rounded-2xl border border-border bg-card/80 p-3 shadow-sm backdrop-blur-sm"
             : "border-t border-border bg-background/80 p-4 sm:p-5"
         )}
       >
@@ -367,21 +367,53 @@ export function AIChatBox({
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="min-h-[52px] flex-1 resize-none rounded-xl border-border bg-card px-4 py-3 text-sm leading-6 shadow-sm placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-[#ff5a1f]/60"
-          rows={1}
-        />
-        <Button
-          type="submit"
-          disabled={!input.trim() || isLoading}
-          className="h-[52px] shrink-0 gap-2 rounded-xl px-4 font-sans text-[10px] font-semibold tracking-[0.12em] sm:px-5"
-        >
-          {isLoading ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            <Send className="size-4" />
+          className={cn(
+            "min-h-[52px] flex-1 resize-none text-sm leading-6 placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-[#ff5a1f]/60",
+            plain
+              ? "w-full rounded-xl border-0 bg-transparent px-2 py-1 shadow-none focus-visible:ring-0"
+              : "rounded-xl border-border bg-card px-4 py-3 shadow-sm"
           )}
-          <span className="hidden sm:inline">SEND</span>
-        </Button>
+          rows={plain ? 2 : 1}
+        />
+        {plain && (
+          <div className="flex w-full items-center justify-between px-1">
+            <button
+              type="button"
+              aria-label="Add attachment"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition hover:bg-accent hover:text-foreground"
+            >
+              <Plus className="size-5" />
+            </button>
+            <div className="flex items-center gap-1.5 text-muted-foreground">
+              <span className="px-2 font-sans text-xs">Free</span>
+              <button
+                type="button"
+                aria-label="Voice input"
+                className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-accent hover:text-foreground"
+              >
+                <Mic className="size-4" />
+              </button>
+              <Button
+                type="submit"
+                aria-label="Send message"
+                disabled={!input.trim() || isLoading}
+                className="flex h-8 w-8 items-center justify-center rounded-full bg-primary p-0 text-primary-foreground"
+              >
+                {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+              </Button>
+            </div>
+          </div>
+        )}
+        {!plain && (
+          <Button
+            type="submit"
+            disabled={!input.trim() || isLoading}
+            className="h-[52px] shrink-0 gap-2 rounded-xl px-4 font-sans text-[10px] font-semibold tracking-[0.12em] sm:px-5"
+          >
+            {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+            <span className="hidden sm:inline">SEND</span>
+          </Button>
+        )}
       </form>
     </div>
   );
