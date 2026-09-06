@@ -60,12 +60,19 @@ export default function AskAI() {
   const handleSend = (question: string) => {
     if (animationRef.current) clearInterval(animationRef.current);
     setIsTyping(false);
+    const history = messages
+      .filter(message =>
+        (message.role === "user" || message.role === "assistant") &&
+        message.content.trim().length > 0
+      )
+      .slice(-12)
+      .map(message => ({ role: message.role as "user" | "assistant", content: message.content }));
     setMessages(current => [
       ...current,
       { role: "user", content: question },
       { role: "assistant", activity: "Thinking…", content: "" },
     ]);
-    ask.mutate({ question });
+    ask.mutate({ question, history });
   };
 
   useEffect(
