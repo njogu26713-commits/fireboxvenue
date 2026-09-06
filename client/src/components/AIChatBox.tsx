@@ -132,8 +132,14 @@ export function AIChatBox({
 
   // Calculate min-height for last assistant message to push user message to top
   const [minHeightForLastMessage, setMinHeightForLastMessage] = useState(0);
+  const [isCompactViewport, setIsCompactViewport] = useState(false);
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 639px)");
+    const updateViewportMode = () => setIsCompactViewport(mediaQuery.matches);
+    updateViewportMode();
+    mediaQuery.addEventListener("change", updateViewportMode);
+
     if (containerRef.current && inputAreaRef.current) {
       const containerHeight = containerRef.current.offsetHeight;
       const inputHeight = inputAreaRef.current.offsetHeight;
@@ -149,6 +155,8 @@ export function AIChatBox({
 
       setMinHeightForLastMessage(Math.max(0, calculatedHeight));
     }
+
+    return () => mediaQuery.removeEventListener("change", updateViewportMode);
   }, []);
 
   // Scroll to bottom helper function with smooth animation
@@ -231,7 +239,10 @@ export function AIChatBox({
                 // Apply min-height to last message only if NOT loading (when loading, the loading indicator gets it)
                 const isLastMessage = index === displayMessages.length - 1;
                 const shouldApplyMinHeight =
-                  isLastMessage && !isLoading && minHeightForLastMessage > 0;
+                  isLastMessage &&
+                  !isCompactViewport &&
+                  !isLoading &&
+                  minHeightForLastMessage > 0;
 
                 return (
                   <div
@@ -302,7 +313,7 @@ export function AIChatBox({
                 <div
                   className="flex flex-col items-start gap-2 sm:flex-row sm:gap-3"
                   style={
-                    minHeightForLastMessage > 0
+                    !isCompactViewport && minHeightForLastMessage > 0
                       ? { minHeight: `${minHeightForLastMessage}px` }
                       : undefined
                   }
