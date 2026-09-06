@@ -333,33 +333,40 @@ ${JSON.stringify(knowledge)}`,
             answer = content;
           }
         }
+        const question = input.question.toLowerCase();
+        const stopWords = new Set(["what", "which", "where", "when", "who", "how", "does", "about", "tell", "give", "show", "this", "that", "with", "from", "have", "firebox"]);
+        const terms = question.split(/[^a-z0-9]+/).filter(term => term.length > 2 && !stopWords.has(term));
+        const candidates = [
+          ...products.map(item => ({ title: item.title, description: item.description, kind: "product", href: item.liveUrl || "/products", mediaUrl: undefined })),
+          ...services.map(item => ({ title: item.title, description: item.description, kind: "service", href: item.liveUrl || "/services", mediaUrl: undefined })),
+          ...posts.map(item => ({ title: item.title, description: item.excerpt, kind: item.category, href: `/blog/${item.slug}`, mediaUrl: item.videoUrl || undefined })),
+          ...directoryItems.filter(item => item.section !== "developers").map(item => ({ title: item.title, description: item.description, kind: item.section, href: item.section === "docs" ? `/docs/${item.id}` : item.href || "/docs", mediaUrl: undefined })),
+          ...faqs.map(item => ({ title: item.question, description: item.answer, kind: "faq", href: "/support#faq", mediaUrl: undefined })),
+        ];
+        const rankedCandidates = candidates
+          .map(item => {
+            const title = item.title.toLowerCase();
+            const text = `${title} ${item.description.toLowerCase()}`;
+            const score = terms.reduce((total, term) => total + (title.includes(term) ? 5 : text.includes(term) ? 1 : 0), 0);
+            return { ...item, score };
+          })
+          .filter(item => item.score > 0)
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 5);
+        if (relatedTitles.length === 0 && rankedCandidates.length > 0) relatedTitles = rankedCandidates.map(item => item.title);
         if (!content) {
-          const question = input.question.toLowerCase();
-          const needsKnowledge = /firebox|product|service|documentation|doc|tutorial|video|support|faq|blog|platform|bot|academy|deploy|contact|what is|who is|what are|how does|how do|where is|which|tell me about/.test(question);
+          const needsKnowledge = terms.length > 0 || /firebox|product|service|documentation|doc|tutorial|video|support|faq|blog|platform|bot|academy|deploy|contact|what is|who is|what are|how does|how do|where is|which|tell me about/.test(question);
           if (!needsKnowledge) {
             activity = "";
             answer = "I’m here and ready to help. Ask me anything, or ask about Firebox products, services, documentation, tutorials, and support.";
           }
-          const matchingProducts = products.filter(item =>
-            item.title.toLowerCase().split(/\s+/).some(word => word.length > 3 && question.includes(word))
-          );
-          const matchingServices = services.filter(item =>
-            item.title.toLowerCase().split(/\s+/).some(word => word.length > 3 && question.includes(word))
-          );
-          const matchingTutorials = posts.filter(post =>
-            post.category === "tutorial" && (/tutorial|video|guide|how to|learn/.test(question) || question.includes(post.title.toLowerCase()))
-          );
-          relatedTitles = needsKnowledge ? [...matchingProducts, ...matchingServices, ...matchingTutorials].map(item => item.title).slice(0, 5) : [];
-          const matches = needsKnowledge ? [...matchingProducts, ...matchingServices, ...matchingTutorials].slice(0, 3) : [];
-          const matchSummaries = matches.map(item => ({
-            title: item.title,
-            description: "description" in item ? item.description : item.excerpt,
-          }));
+          const matches = needsKnowledge ? rankedCandidates.slice(0, 3) : [];
+          relatedTitles = needsKnowledge ? matches.map(item => item.title) : [];
           activity = needsKnowledge ? "Searched Firebox public products, services, tutorials, and documentation." : "";
           answer = !needsKnowledge
             ? answer
             : matches.length > 0
-            ? `I found these relevant public resources:\n\n${matchSummaries.map(item => `- **${item.title}** — ${item.description}`).join("\n")}`
+            ? `I found these relevant public resources:\n\n${matches.map(item => `- **${item.title}** — ${item.description}`).join("\n")}`
             : "I searched Firebox’s public products, services, tutorials, and documentation but could not find a direct match. Try a more specific question or open Support.";
         }
         const topic = `${input.question} ${answer}`.toLowerCase();
