@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Loader2, Mic, Plus, Send, User, Sparkles } from "lucide-react";
+import { Loader2, Send, User, Sparkles } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { Streamdown } from "streamdown";
 
@@ -376,32 +376,15 @@ export function AIChatBox({
           rows={plain ? 2 : 1}
         />
         {plain && (
-          <div className="flex w-full items-center justify-between px-1">
-            <button
-              type="button"
-              aria-label="Add attachment"
-              className="flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition hover:bg-accent hover:text-foreground"
+          <div className="flex w-full justify-end px-1">
+            <Button
+              type="submit"
+              aria-label="Send message"
+              disabled={!input.trim() || isLoading}
+              className="flex h-8 w-8 items-center justify-center rounded-full bg-primary p-0 text-primary-foreground"
             >
-              <Plus className="size-5" />
-            </button>
-            <div className="flex items-center gap-1.5 text-muted-foreground">
-              <span className="px-2 font-sans text-xs">Free</span>
-              <button
-                type="button"
-                aria-label="Voice input"
-                className="flex h-8 w-8 items-center justify-center rounded-full transition hover:bg-accent hover:text-foreground"
-              >
-                <Mic className="size-4" />
-              </button>
-              <Button
-                type="submit"
-                aria-label="Send message"
-                disabled={!input.trim() || isLoading}
-                className="flex h-8 w-8 items-center justify-center rounded-full bg-primary p-0 text-primary-foreground"
-              >
-                {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-              </Button>
-            </div>
+              {isLoading ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
+            </Button>
           </div>
         )}
         {!plain && (
