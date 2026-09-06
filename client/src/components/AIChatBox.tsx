@@ -12,6 +12,7 @@ import { Streamdown } from "streamdown";
 export type Message = {
   role: "system" | "user" | "assistant";
   content: string;
+  activity?: string;
   actions?: Array<{ label: string; href: string }>;
 };
 
@@ -285,6 +286,11 @@ export function AIChatBox({
                     >
                       {message.role === "assistant" ? (
                         <div className="prose prose-sm dark:prose-invert max-w-none">
+                          {message.activity && (
+                            <p className="mb-2 font-sans text-[11px] text-muted-foreground">
+                              {message.activity}
+                            </p>
+                          )}
                           <Streamdown>{message.content}</Streamdown>
                           {message.actions && message.actions.length > 0 && (
                             <div className="mt-4 flex flex-wrap gap-2 not-prose">

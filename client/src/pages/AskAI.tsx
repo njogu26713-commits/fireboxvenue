@@ -12,26 +12,23 @@ import { trpc } from "@/lib/trpc";
 export default function AskAI() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [statusText, setStatusText] = useState("");
   const animationRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const statusRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const ask = trpc.ai.ask.useMutation({
     onSuccess: result => {
-      if (statusRef.current) clearInterval(statusRef.current);
-      setStatusText("");
       setIsTyping(true);
       const answer = result.answer;
       const startedAt = Date.now();
       let index = 0;
-      setMessages(current => [...current, { role: "assistant", content: "" }]);
       animationRef.current = setInterval(
         () => {
           index += 1;
           setMessages(current => {
             const next = [...current];
             const last = next[next.length - 1];
-            if (last?.role === "assistant")
+            if (last?.role === "assistant") {
               last.content = answer.slice(0, index);
+              last.activity = result.activity;
+            }
             return next;
           });
           if (Date.now() - startedAt >= 3000) {
@@ -52,15 +49,10 @@ export default function AskAI() {
       );
     },
     onError: error => {
-      if (statusRef.current) clearInterval(statusRef.current);
-      setStatusText("");
       setIsTyping(false);
       setMessages(current => [
-        ...current,
-        {
-          role: "assistant",
-          content: `I could not answer that right now. ${error.message}`,
-        },
+        ...current.slice(0, -1),
+        { role: "assistant", activity: "Unable to complete the public knowledge search.", content: `I could not answer that right now. ${error.message}` },
       ]);
     },
   });
@@ -68,28 +60,17 @@ export default function AskAI() {
   const handleSend = (question: string) => {
     if (animationRef.current) clearInterval(animationRef.current);
     setIsTyping(false);
-    setStatusText("");
-    setMessages(current => [...current, { role: "user", content: question }]);
+    setMessages(current => [
+      ...current,
+      { role: "user", content: question },
+      { role: "assistant", activity: "Checking Firebox public knowledge…", content: "" },
+    ]);
     ask.mutate({ question });
   };
-
-  useEffect(() => {
-    if (!ask.isPending) return;
-    const narration = "SEARCHING PUBLIC KNOWLEDGE...";
-    let index = 0;
-    statusRef.current = setInterval(() => {
-      index = (index + 1) % (narration.length + 1);
-      setStatusText(narration.slice(0, index));
-    }, 100);
-    return () => {
-      if (statusRef.current) clearInterval(statusRef.current);
-    };
-  }, [ask.isPending]);
 
   useEffect(
     () => () => {
       if (animationRef.current) clearInterval(animationRef.current);
-      if (statusRef.current) clearInterval(statusRef.current);
     },
     []
   );
@@ -140,12 +121,6 @@ export default function AskAI() {
             ]}
           />
         </div>
-        {(ask.isPending || isTyping) && (
-          <div className="mx-auto flex max-w-5xl items-center justify-center gap-2 px-5 pt-2 font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff]">
-            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6ae4ff]" />
-            {ask.isPending ? statusText : "NARRATING ANSWER..."}
-          </div>
-        )}
       </section>
     </main>
   );
