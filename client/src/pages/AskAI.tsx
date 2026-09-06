@@ -63,7 +63,7 @@ export default function AskAI() {
     setMessages(current => [
       ...current,
       { role: "user", content: question },
-      { role: "assistant", activity: "Checking Firebox public knowledge…", content: "" },
+      { role: "assistant", activity: "Thinking…", content: "" },
     ]);
     ask.mutate({ question });
   };
