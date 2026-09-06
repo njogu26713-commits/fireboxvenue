@@ -115,7 +115,7 @@ export default function AskAI() {
         className="w-full px-4 pb-6 pt-16 sm:px-8 sm:pt-24"
         aria-label="Ask Firebox AI"
       >
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-5xl">
           <div className="mb-8 flex flex-col items-center text-center">
             <Sparkles className="h-6 w-6 text-[#b69cff]" />
             <h1 className="mt-5 font-sans text-3xl font-semibold tracking-[-0.05em] sm:text-4xl">
@@ -141,7 +141,7 @@ export default function AskAI() {
           />
         </div>
         {(ask.isPending || isTyping) && (
-          <div className="mx-auto flex max-w-3xl items-center justify-center gap-2 px-5 pt-2 font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff]">
+          <div className="mx-auto flex max-w-5xl items-center justify-center gap-2 px-5 pt-2 font-sans text-[10px] tracking-[0.16em] text-[#6ae4ff]">
             <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#6ae4ff]" />
             {ask.isPending ? statusText : "NARRATING ANSWER..."}
           </div>
