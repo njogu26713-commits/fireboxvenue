@@ -239,6 +239,7 @@ export const appRouter = router({
             excerpt: post.excerpt,
             content: post.content,
             author: post.author,
+            videoUrl: post.videoUrl,
           })),
           faqs: faqs.map(faq => ({
             question: faq.question,
@@ -313,10 +314,10 @@ ${JSON.stringify(knowledge)}`,
           }
         }
         const topic = `${input.question} ${answer}`.toLowerCase();
-        const actions: Array<{ label: string; href: string }> = [];
-        const addAction = (label: string, href: string) => {
+        const actions: Array<{ label: string; href: string; kind?: "link" | "video"; mediaUrl?: string }> = [];
+        const addAction = (label: string, href: string, options?: { kind?: "link" | "video"; mediaUrl?: string }) => {
           if (!actions.some(action => action.href === href))
-            actions.push({ label, href });
+            actions.push({ label, href, ...options });
         };
         const normalizedTitles = relatedTitles.map(title => title.trim().toLowerCase());
         const addMatchingItemActions = (
@@ -329,6 +330,18 @@ ${JSON.stringify(knowledge)}`,
         };
         addMatchingItemActions(products, "products");
         addMatchingItemActions(services, "services");
+        posts
+          .filter(post =>
+            normalizedTitles.includes(post.title.toLowerCase()) &&
+            post.category === "tutorial" &&
+            Boolean(post.videoUrl)
+          )
+          .forEach(post =>
+            addAction(`PLAY ${post.title.toUpperCase()}`, `/blog/${post.slug}`, {
+              kind: "video",
+              mediaUrl: post.videoUrl ?? undefined,
+            })
+          );
         if (/product|platform|tool|app|bot/.test(topic))
           addAction("VIEW PRODUCTS", "/products");
         if (/service|develop|build|deploy|api|database|automation/.test(topic))

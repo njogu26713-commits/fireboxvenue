@@ -13,8 +13,30 @@ export type Message = {
   role: "system" | "user" | "assistant";
   content: string;
   activity?: string;
-  actions?: Array<{ label: string; href: string }>;
+  actions?: Array<{
+    label: string;
+    href: string;
+    kind?: "link" | "video";
+    mediaUrl?: string;
+  }>;
 };
+
+function videoEmbedUrl(url: string) {
+  try {
+    const parsed = new URL(url);
+    if (parsed.hostname.includes("youtube.com")) {
+      const id = parsed.searchParams.get("v");
+      return id ? `https://www.youtube.com/embed/${id}` : url;
+    }
+    if (parsed.hostname === "youtu.be")
+      return `https://www.youtube.com/embed/${parsed.pathname.slice(1)}`;
+    if (parsed.hostname.includes("vimeo.com"))
+      return `https://player.vimeo.com/video/${parsed.pathname.split("/").filter(Boolean).pop()}`;
+  } catch {
+    return url;
+  }
+  return url;
+}
 
 export type AIChatBoxProps = {
   /**
@@ -299,16 +321,38 @@ export function AIChatBox({
                           {message.actions && message.actions.length > 0 && (
                             <div className="mt-4 flex flex-wrap gap-2 not-prose">
                               {message.actions.map(action => (
-                                <button
-                                  key={action.href}
-                                  type="button"
-                                  onClick={() => {
-                                    window.location.href = action.href;
-                                  }}
-                                  className="inline-flex items-center gap-2 border border-[#ff5a1f]/50 px-3 py-2 font-sans text-[10px] font-semibold tracking-[0.12em] text-[#ff5a1f] transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f] hover:text-[#07090d]"
-                                >
-                                  {action.label}
-                                </button>
+                                action.kind === "video" && action.mediaUrl ? (
+                                  <div key={action.href} className="w-full space-y-2">
+                                    <p className="font-sans text-[10px] font-semibold tracking-[0.12em] text-[#ff5a1f]">
+                                      {action.label}
+                                    </p>
+                                    {/\.(mp4|webm|ogg)(\?.*)?$/i.test(action.mediaUrl) ? (
+                                      <video controls className="aspect-video w-full bg-black" src={action.mediaUrl} />
+                                    ) : (
+                                      <iframe
+                                        title={action.label}
+                                        src={videoEmbedUrl(action.mediaUrl)}
+                                        className="aspect-video w-full bg-black"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                      />
+                                    )}
+                                    <a href={action.href} className="inline-flex font-sans text-[10px] text-muted-foreground hover:text-foreground">
+                                      OPEN TUTORIAL
+                                    </a>
+                                  </div>
+                                ) : (
+                                  <button
+                                    key={action.href}
+                                    type="button"
+                                    onClick={() => {
+                                      window.location.href = action.href;
+                                    }}
+                                    className="inline-flex items-center gap-2 border border-[#ff5a1f]/50 px-3 py-2 font-sans text-[10px] font-semibold tracking-[0.12em] text-[#ff5a1f] transition hover:border-[#ff5a1f] hover:bg-[#ff5a1f] hover:text-[#07090d]"
+                                  >
+                                    {action.label}
+                                  </button>
+                                )
                               ))}
                             </div>
                           )}
