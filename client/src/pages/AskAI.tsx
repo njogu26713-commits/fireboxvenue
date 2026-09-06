@@ -129,6 +129,7 @@ export default function AskAI() {
             messages={messages}
             onSendMessage={handleSend}
             isLoading={ask.isPending || isTyping}
+            plain
             className="h-[min(680px,calc(100vh-13rem))] w-full rounded-none border-0 bg-transparent shadow-none"
             placeholder="Message Firebox AI..."
             emptyStateMessage="Start a conversation"

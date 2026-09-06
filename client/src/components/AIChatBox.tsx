@@ -58,6 +58,9 @@ export type AIChatBoxProps = {
    * Click to send directly
    */
   suggestedPrompts?: string[];
+
+  /** Render messages as full-width text rows instead of chat bubbles. */
+  plain?: boolean;
 };
 
 /**
@@ -120,6 +123,7 @@ export function AIChatBox({
   height = "600px",
   emptyStateMessage = "Start a conversation with AI",
   suggestedPrompts,
+  plain = false,
 }: AIChatBoxProps) {
   const [input, setInput] = useState("");
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -201,7 +205,8 @@ export function AIChatBox({
     <div
       ref={containerRef}
       className={cn(
-        "flex flex-col bg-card text-card-foreground rounded-lg border shadow-sm",
+        "flex flex-col text-card-foreground",
+        !plain && "rounded-lg border bg-card shadow-sm",
         className
       )}
       style={{ height }}
@@ -249,9 +254,11 @@ export function AIChatBox({
                     key={index}
                     className={cn(
                       "flex gap-3",
-                      message.role === "user"
-                        ? "items-start justify-end"
-                        : "items-start justify-start flex-col sm:flex-row"
+                      plain
+                        ? "items-start"
+                        : message.role === "user"
+                          ? "items-start justify-end"
+                          : "items-start justify-start flex-col sm:flex-row"
                     )}
                     style={
                       shouldApplyMinHeight
@@ -259,7 +266,7 @@ export function AIChatBox({
                         : undefined
                     }
                   >
-                    {message.role === "assistant" && (
+                    {message.role === "assistant" && !plain && (
                       <div className="size-8 shrink-0 mt-1 rounded-full bg-primary/10 flex items-center justify-center">
                         <Sparkles className="size-4 text-primary" />
                       </div>
@@ -267,10 +274,13 @@ export function AIChatBox({
 
                     <div
                       className={cn(
-                        "rounded-lg px-4 py-2.5 sm:max-w-[80%]",
-                        message.role === "user"
-                          ? "max-w-[80%] bg-primary text-primary-foreground"
-                          : "w-full bg-muted text-foreground sm:w-auto"
+                        plain
+                          ? "w-full max-w-none bg-transparent px-0 py-2.5"
+                          : "rounded-lg px-4 py-2.5 sm:max-w-[80%]",
+                        !plain &&
+                          (message.role === "user"
+                            ? "max-w-[80%] bg-primary text-primary-foreground"
+                            : "w-full bg-muted text-foreground sm:w-auto")
                       )}
                     >
                       {message.role === "assistant" ? (
@@ -300,7 +310,7 @@ export function AIChatBox({
                       )}
                     </div>
 
-                    {message.role === "user" && (
+                    {message.role === "user" && !plain && (
                       <div className="size-8 shrink-0 mt-1 rounded-full bg-secondary flex items-center justify-center">
                         <User className="size-4 text-secondary-foreground" />
                       </div>
@@ -311,17 +321,26 @@ export function AIChatBox({
 
               {isLoading && (
                 <div
-                  className="flex flex-col items-start gap-2 sm:flex-row sm:gap-3"
+                  className={cn(
+                    "flex items-start gap-2",
+                    !plain && "flex-col sm:flex-row sm:gap-3"
+                  )}
                   style={
                     !isCompactViewport && minHeightForLastMessage > 0
                       ? { minHeight: `${minHeightForLastMessage}px` }
                       : undefined
                   }
                 >
-                  <div className="size-8 shrink-0 mt-1 rounded-full bg-primary/10 flex items-center justify-center">
+                  {!plain && (
+                    <div className="size-8 shrink-0 mt-1 rounded-full bg-primary/10 flex items-center justify-center">
                     <Sparkles className="size-4 text-primary" />
-                  </div>
-                  <div className="w-full rounded-lg bg-muted px-4 py-2.5 sm:w-auto">
+                    </div>
+                  )}
+                  <div className={cn(
+                    plain
+                      ? "w-full bg-transparent px-0 py-2.5"
+                      : "w-full rounded-lg bg-muted px-4 py-2.5 sm:w-auto"
+                  )}>
                     <Loader2 className="size-4 animate-spin text-muted-foreground" />
                   </div>
                 </div>
@@ -335,7 +354,12 @@ export function AIChatBox({
       <form
         ref={inputAreaRef}
         onSubmit={handleSubmit}
-        className="flex items-end gap-3 border-t border-border bg-background/80 p-4 sm:p-5"
+        className={cn(
+          "flex items-end gap-3",
+          plain
+            ? "border-t-0 bg-transparent p-0 pt-5"
+            : "border-t border-border bg-background/80 p-4 sm:p-5"
+        )}
       >
         <Textarea
           ref={textareaRef}
