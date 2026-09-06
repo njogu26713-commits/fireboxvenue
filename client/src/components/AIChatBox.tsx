@@ -370,7 +370,7 @@ export function AIChatBox({
           className={cn(
             "min-h-[52px] flex-1 resize-none text-sm leading-6 placeholder:text-muted-foreground/70 focus-visible:ring-1 focus-visible:ring-[#ff5a1f]/60",
             plain
-              ? "w-full rounded-xl border-0 bg-transparent px-2 py-1 shadow-none focus-visible:ring-0"
+              ? "!w-full !rounded-xl !border-0 !bg-transparent !px-2 !py-1 !shadow-none outline-none focus-visible:!ring-0"
               : "rounded-xl border-border bg-card px-4 py-3 shadow-sm"
           )}
           rows={plain ? 2 : 1}
