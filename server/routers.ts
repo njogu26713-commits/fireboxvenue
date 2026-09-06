@@ -259,7 +259,6 @@ export const appRouter = router({
           })),
         };
         const apiKey = process.env.GROQ_API_KEY;
-        if (!apiKey) throw new Error("Groq AI is not configured yet.");
         const endpoint = "https://api.groq.com/openai/v1/chat/completions";
         const headers = {
           Authorization: `Bearer ${apiKey}`,
@@ -282,24 +281,31 @@ ${JSON.stringify(knowledge)}`,
                 { role: "user", content: input.question },
           ],
         };
-        let response = await fetch(endpoint, {
-          method: "POST",
-          headers,
-          body: JSON.stringify({ ...payload, response_format: { type: "json_object" } }),
-        });
-        if (!response.ok) {
-          response = await fetch(endpoint, {
-            method: "POST",
-            headers,
-            body: JSON.stringify(payload),
-          });
+        let content: string | null = null;
+        if (apiKey) {
+          try {
+            let response = await fetch(endpoint, {
+              method: "POST",
+              headers,
+              body: JSON.stringify({ ...payload, response_format: { type: "json_object" } }),
+            });
+            if (!response.ok) {
+              response = await fetch(endpoint, {
+                method: "POST",
+                headers,
+                body: JSON.stringify(payload),
+              });
+            }
+            if (response.ok) {
+              const completion = (await response.json()) as {
+                choices?: Array<{ message?: { content?: string | null } }>;
+              };
+              content = completion.choices?.[0]?.message?.content ?? null;
+            }
+          } catch {
+            content = null;
+          }
         }
-        if (!response.ok)
-          throw new Error("Groq AI could not answer right now.");
-        const completion = (await response.json()) as {
-          choices?: Array<{ message?: { content?: string | null } }>;
-        };
-        const content = completion.choices?.[0]?.message?.content;
         let activity = "Reviewed Firebox public knowledge.";
         let answer = "I could not generate an answer right now. Please contact Support.";
         let relatedTitles: string[] = [];
@@ -312,6 +318,28 @@ ${JSON.stringify(knowledge)}`,
           } catch {
             answer = content;
           }
+        }
+        if (!content) {
+          const question = input.question.toLowerCase();
+          const matchingProducts = products.filter(item =>
+            item.title.toLowerCase().split(/\s+/).some(word => word.length > 3 && question.includes(word))
+          );
+          const matchingServices = services.filter(item =>
+            item.title.toLowerCase().split(/\s+/).some(word => word.length > 3 && question.includes(word))
+          );
+          const matchingTutorials = posts.filter(post =>
+            post.category === "tutorial" && (/tutorial|video|guide|how to|learn/.test(question) || question.includes(post.title.toLowerCase()))
+          );
+          relatedTitles = [...matchingProducts, ...matchingServices, ...matchingTutorials].map(item => item.title).slice(0, 5);
+          const matches = [...matchingProducts, ...matchingServices, ...matchingTutorials].slice(0, 3);
+          const matchSummaries = matches.map(item => ({
+            title: item.title,
+            description: "description" in item ? item.description : item.excerpt,
+          }));
+          activity = "Searched Firebox public products, services, tutorials, and documentation.";
+          answer = matches.length > 0
+            ? `I found these relevant public resources:\n\n${matchSummaries.map(item => `- **${item.title}** — ${item.description}`).join("\n")}`
+            : "I searched Firebox’s public products, services, tutorials, and documentation but could not find a direct match. Try a more specific question or open Support.";
         }
         const topic = `${input.question} ${answer}`.toLowerCase();
         const actions: Array<{ label: string; href: string; kind?: "link" | "video"; mediaUrl?: string }> = [];
