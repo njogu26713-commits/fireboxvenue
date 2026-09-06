@@ -12,9 +12,11 @@ import { trpc } from "@/lib/trpc";
 export default function AskAI() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
+  const sendGuardRef = useRef(false);
   const animationRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const ask = trpc.ai.ask.useMutation({
     onSuccess: result => {
+      sendGuardRef.current = false;
       setIsTyping(true);
       const answer = result.answer;
       const startedAt = Date.now();
@@ -49,6 +51,7 @@ export default function AskAI() {
       );
     },
     onError: error => {
+      sendGuardRef.current = false;
       setIsTyping(false);
       setMessages(current => [
         ...current.slice(0, -1),
@@ -58,6 +61,8 @@ export default function AskAI() {
   });
 
   const handleSend = (question: string) => {
+    if (sendGuardRef.current || ask.isPending || isTyping) return;
+    sendGuardRef.current = true;
     if (animationRef.current) clearInterval(animationRef.current);
     setIsTyping(false);
     const history = messages

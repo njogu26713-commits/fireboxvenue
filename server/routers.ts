@@ -335,7 +335,7 @@ ${JSON.stringify(knowledge)}`,
         }
         if (!content) {
           const question = input.question.toLowerCase();
-          const needsKnowledge = /firebox|product|service|documentation|doc|tutorial|video|support|faq|blog|platform|bot|academy|deploy|contact/.test(question);
+          const needsKnowledge = /firebox|product|service|documentation|doc|tutorial|video|support|faq|blog|platform|bot|academy|deploy|contact|what is|who is|what are|how does|how do|where is|which|tell me about/.test(question);
           if (!needsKnowledge) {
             activity = "";
             answer = "I’m here and ready to help. Ask me anything, or ask about Firebox products, services, documentation, tutorials, and support.";
@@ -402,10 +402,7 @@ ${JSON.stringify(knowledge)}`,
         return {
           activity,
           answer,
-          actions:
-            actions.length > 0
-              ? actions.slice(0, 3)
-              : [{ label: "OPEN SUPPORT", href: "/support" }],
+          actions: actions.slice(0, 3),
         };
       }),
   }),
