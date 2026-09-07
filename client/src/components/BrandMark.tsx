@@ -9,19 +9,13 @@ export default function BrandMark({ className = "" }: BrandMarkProps) {
     <Link
       href="/"
       aria-label="FireboxStudios home"
-      className={`relative z-10 inline-flex shrink-0 items-center gap-3 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] ${className}`}
+      className={`relative z-10 inline-flex shrink-0 items-center transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] ${className}`}
     >
-      <span className="grid h-9 w-9 place-items-center bg-gradient-to-br from-[#ff5a1f] via-[#ff7c3d] to-[#6ae4ff] font-sans text-sm font-black tracking-[-0.12em] text-[#05070b] shadow-[0_0_22px_rgba(255,90,31,0.22)] sm:h-10 sm:w-10">
-        FB
-      </span>
-      <span className="leading-none">
-        <span className="block font-sans text-sm font-bold tracking-[-0.03em] text-foreground sm:text-base">
-          Firebox<span className="text-[#ff5a1f]">Studios</span>
-        </span>
-        <span className="mt-1 block font-sans text-[8px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:text-[9px]">
-          Creative technology unit
-        </span>
-      </span>
+      <img
+        src="/firebox-logo.png"
+        alt="FireboxStudios — Creative technology unit"
+        className="h-10 w-auto max-w-[min(218px,75vw)] object-contain sm:h-11"
+      />
     </Link>
   );
 }
