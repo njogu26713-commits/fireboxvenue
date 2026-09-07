@@ -14,7 +14,7 @@ export default function BrandMark({ className = "" }: BrandMarkProps) {
       <img
         src="/firebox-logo.png"
         alt="FireboxStudios — Creative technology unit"
-        className="h-10 w-auto max-w-[min(218px,75vw)] object-contain sm:h-11"
+        className="h-12 w-auto max-w-[min(260px,78vw)] rounded-none object-contain object-left select-none sm:h-14"
       />
     </Link>
   );
