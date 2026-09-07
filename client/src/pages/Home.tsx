@@ -463,6 +463,12 @@ export default function Home() {
                   <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                 </span>
               </a>
+              <a
+                href="/reviews"
+                className="inline-flex w-fit items-center gap-2 border-b border-white/35 pb-2 font-sans text-[11px] font-semibold tracking-[0.16em] text-[#c7ced8] outline-none transition duration-200 hover:border-[#6ae4ff] hover:text-[#6ae4ff] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[#6ae4ff] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b]"
+              >
+                READ REVIEWS
+              </a>
             </div>
           </div>
         </div>

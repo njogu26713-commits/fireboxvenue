@@ -18,6 +18,7 @@ import { Documentation, DocumentationDetail } from "@/pages/Directory";
 import Services from "@/pages/Services";
 import Products from "@/pages/Products";
 import Blog, { BlogPost } from "@/pages/Blog";
+import Reviews from "@/pages/Reviews";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -28,6 +29,7 @@ function Router() {
       <Route path="/admin" component={Admin} />
       <Route path="/ask-ai" component={AskAI} />
       <Route path="/team" component={Team} />
+      <Route path="/reviews" component={Reviews} />
       <Route path="/support" component={Support} />
       <Route path="/products" component={Products} />
       <Route path="/services" component={Services} />
