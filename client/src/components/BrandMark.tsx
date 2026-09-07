@@ -12,7 +12,7 @@ export default function BrandMark({ className = "" }: BrandMarkProps) {
       className={`relative z-10 inline-flex shrink-0 items-center transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] ${className}`}
     >
       <img
-        src="/firebox-logo.jpeg"
+        src="/firebox-logo.png"
         alt="FireboxTechs logo"
         className="h-14 w-14 rounded-full object-cover select-none sm:h-16 sm:w-16"
       />
