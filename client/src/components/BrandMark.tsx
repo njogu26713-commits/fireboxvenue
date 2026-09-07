@@ -18,10 +18,10 @@ export default function BrandMark({ className = "" }: BrandMarkProps) {
       />
       <span className="ml-3 leading-none">
         <span className="block font-sans text-sm font-bold tracking-[-0.03em] text-foreground sm:text-base">
-          Firebox<span className="text-[#9b35ff]">Techs</span>
+          Firebox<span className="text-[#ff5a1f]">Studios</span>
         </span>
         <span className="mt-1 block font-sans text-[8px] font-medium uppercase tracking-[0.16em] text-muted-foreground sm:text-[9px]">
-          Build · Code · Innovate
+          Creative technology unit
         </span>
       </span>
     </Link>
