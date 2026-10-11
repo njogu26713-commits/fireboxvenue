@@ -490,11 +490,6 @@ export default function Home() {
               <source src={heroVideo} type="video/mp4" />
             </video>
             <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(3,5,8,0.22)_72%,rgba(3,5,8,0.58)_100%)]" />
-            <img
-              src="/firebox-ai-icon.svg"
-              alt="Firebox"
-              className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 object-contain opacity-95 drop-shadow-[0_0_22px_rgba(255,255,255,0.28)] sm:h-24 sm:w-24"
-            />
           </div>
         </div>
 
