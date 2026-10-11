@@ -18,6 +18,7 @@ import BrandMark from "@/components/BrandMark";
 import { trpc } from "@/lib/trpc";
 
 const heroArtwork = "/manus-storage/firebox-hero-tech-city_a9b6b884.png";
+const heroVideo = "/firebox-tech-loop.mp4";
 const headlineLines = ["MAKE THE", "SIGNAL", "UNMISSABLE."] as const;
 const totalHeadlineLength = headlineLines.reduce(
   (total, line) => total + line.length,
@@ -319,7 +320,7 @@ export default function Home() {
           )}
         </header>
 
-        <div className="relative z-10 flex flex-1 items-center px-5 pb-12 pt-14 sm:px-8 sm:pb-16 sm:pt-20 lg:px-12 lg:pb-20 lg:pt-24">
+        <div className="relative z-10 flex flex-1 items-center px-5 pb-12 pt-14 sm:px-8 sm:pb-16 sm:pt-20 lg:px-12 lg:pb-20 lg:pt-24 lg:pr-[46vw]">
           <div className="flex max-w-[48rem] flex-col">
             <div className="hero-reveal hero-reveal-1 flex items-center gap-3 font-sans text-[10px] font-medium tracking-[0.2em] text-[#e7c6ba] sm:text-[11px]">
               <span className="inline-flex h-5 w-5 items-center justify-center border border-[#ff5a1f]/60 text-[#ff5a1f]">
@@ -470,6 +471,30 @@ export default function Home() {
                 READ REVIEWS
               </a>
             </div>
+          </div>
+
+          <div
+            aria-label="Firebox atmospheric technology loop"
+            className="absolute right-5 top-1/2 z-20 hidden aspect-video w-[min(42vw,42rem)] -translate-y-1/2 overflow-hidden border-2 border-[#ff2a1f] bg-black/70 shadow-[0_0_40px_rgba(255,42,31,0.12)] lg:right-12 lg:block"
+          >
+            <video
+              className="absolute inset-0 h-full w-full object-cover opacity-90"
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster={heroArtwork}
+              aria-hidden="true"
+            >
+              <source src={heroVideo} type="video/mp4" />
+            </video>
+            <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(3,5,8,0.22)_72%,rgba(3,5,8,0.58)_100%)]" />
+            <img
+              src="/firebox-ai-icon.svg"
+              alt="Firebox"
+              className="absolute left-1/2 top-1/2 h-20 w-20 -translate-x-1/2 -translate-y-1/2 object-contain opacity-95 drop-shadow-[0_0_22px_rgba(255,255,255,0.28)] sm:h-24 sm:w-24"
+            />
           </div>
         </div>
 
