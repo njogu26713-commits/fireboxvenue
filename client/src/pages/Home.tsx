@@ -181,43 +181,43 @@ export default function Home() {
             <div className="flex items-center gap-4 sm:gap-5 lg:gap-6">
               <a
                 href="/services"
-                className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+                className="hidden items-center font-sans text-[11px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
               >
                 SERVICES
               </a>
               <a
                 href="/products"
-                className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+                className="hidden items-center font-sans text-[11px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
               >
                 PRODUCTS
               </a>
               <a
                 href="/blog"
-                className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+                className="hidden items-center font-sans text-[11px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
               >
                 BLOG
               </a>
               <a
                 href="/ask-ai"
-                className="hidden items-center gap-2 font-sans text-[10px] font-medium tracking-[0.12em] text-[#6ae4ff] transition hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+                className="hidden items-center gap-2 font-sans text-[11px] font-medium tracking-[0.12em] text-[#6ae4ff] transition hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
               >
                 ASK AI
               </a>
               <a
                 href="/team"
-                className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+                className="hidden items-center font-sans text-[11px] font-medium tracking-[0.12em] text-white transition hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
               >
                 TEAM
               </a>
               <a
                 href="/docs"
-                className="hidden items-center font-sans text-[10px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+                className="hidden items-center font-sans text-[11px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
               >
                 DOCS
               </a>
               <a
                 href="/support"
-                className="group hidden items-center gap-2 font-sans text-[10px] font-medium tracking-[0.14em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:inline-flex"
+                className="group hidden items-center gap-2 font-sans text-[11px] font-medium tracking-[0.14em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] sm:inline-flex"
               >
                 SUPPORT
                 <ArrowUpRight
@@ -248,7 +248,7 @@ export default function Home() {
               <a
                 href="/support"
                 onClick={() => setMenuOpen(false)}
-                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[11px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 SUPPORT
                 <ArrowUpRight
@@ -259,7 +259,7 @@ export default function Home() {
               <a
                 href="/services"
                 onClick={() => setMenuOpen(false)}
-                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[11px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 SERVICES
                 <ArrowUpRight
@@ -270,7 +270,7 @@ export default function Home() {
               <a
                 href="/products"
                 onClick={() => setMenuOpen(false)}
-                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[11px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 PRODUCTS
                 <ArrowUpRight
@@ -281,7 +281,7 @@ export default function Home() {
               <a
                 href="/blog"
                 onClick={() => setMenuOpen(false)}
-                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[11px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 BLOG
                 <ArrowUpRight
@@ -292,7 +292,7 @@ export default function Home() {
               <a
                 href="/ask-ai"
                 onClick={() => setMenuOpen(false)}
-                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-[#6ae4ff] transition hover:text-white"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[11px] font-semibold tracking-[0.14em] text-[#6ae4ff] transition hover:text-white"
               >
                 ASK AI
                 <ArrowUpRight className="h-4 w-4" strokeWidth={2.2} />
@@ -300,7 +300,7 @@ export default function Home() {
               <a
                 href="/team"
                 onClick={() => setMenuOpen(false)}
-                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[11px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 TEAM
                 <ArrowUpRight className="h-4 w-4" strokeWidth={2.2} />
@@ -308,7 +308,7 @@ export default function Home() {
               <a
                 href="/docs"
                 onClick={() => setMenuOpen(false)}
-                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[10px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[11px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 DOCS
                 <ArrowUpRight
@@ -322,7 +322,7 @@ export default function Home() {
 
         <div className="relative z-10 flex flex-1 items-center px-5 pb-12 pt-14 sm:px-8 sm:pb-16 sm:pt-20 lg:px-12 lg:pb-20 lg:pt-24 lg:pr-[46vw]">
           <div className="flex max-w-[48rem] flex-col">
-            <div className="hero-reveal hero-reveal-1 flex items-center gap-3 font-sans text-[10px] font-medium tracking-[0.2em] text-[#e7c6ba] sm:text-[11px]">
+            <div className="hero-reveal hero-reveal-1 flex items-center gap-3 font-sans text-[11px] font-medium tracking-[0.2em] text-[#e7c6ba] sm:text-[11px]">
               <span className="inline-flex h-5 w-5 items-center justify-center border border-[#ff5a1f]/60 text-[#ff5a1f]">
                 <Crosshair className="h-3 w-3" />
               </span>
@@ -362,7 +362,7 @@ export default function Home() {
             >
               <label
                 htmlFor="hero-site-search"
-                className="mb-3 block font-sans text-[10px] font-medium tracking-[0.18em] text-[#9ba7b7]"
+                className="mb-3 block font-sans text-[11px] font-medium tracking-[0.18em] text-[#9ba7b7]"
               >
                 SEARCH THE SIGNAL
               </label>
@@ -451,13 +451,13 @@ export default function Home() {
             </form>
 
             <div className="hero-reveal hero-reveal-3 mt-6 flex max-w-xl flex-col gap-6 sm:mt-8 sm:flex-row sm:items-end sm:gap-8">
-              <p className="max-w-[23rem] border-l border-[#6ae4ff]/55 pl-4 font-sans text-[12px] leading-6 text-[#c7ced8] sm:text-[13px]">
+              <p className="max-w-[23rem] border-l border-[#6ae4ff]/55 pl-4 font-sans text-sm leading-6 text-[#c7ced8] sm:text-[13px]">
                 We turn creative ambition into high-voltage digital worlds,
                 identities, and interactive experiences.
               </p>
               <a
                 href="/support"
-                className="group inline-flex w-fit items-center gap-4 border-b border-[#ff5a1f] pb-2 font-sans text-[11px] font-semibold tracking-[0.16em] text-[#fff7f2] outline-none transition duration-200 hover:border-[#6ae4ff] hover:text-[#6ae4ff] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b]"
+                className="group inline-flex w-fit items-center gap-4 border-b border-[#ff5a1f] pb-2 font-sans text-xs font-semibold tracking-[0.16em] text-[#fff7f2] outline-none transition duration-200 hover:border-[#6ae4ff] hover:text-[#6ae4ff] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[#ff5a1f] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b]"
               >
                 START A TRANSMISSION
                 <span className="grid h-7 w-7 place-items-center bg-[#ff5a1f] text-[#07090d] transition duration-200 group-hover:translate-x-1 group-hover:bg-[#6ae4ff]">
@@ -466,7 +466,7 @@ export default function Home() {
               </a>
               <a
                 href="/reviews"
-                className="inline-flex w-fit items-center gap-2 border-b border-white/35 pb-2 font-sans text-[11px] font-semibold tracking-[0.16em] text-[#c7ced8] outline-none transition duration-200 hover:border-[#6ae4ff] hover:text-[#6ae4ff] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[#6ae4ff] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b]"
+                className="inline-flex w-fit items-center gap-2 border-b border-white/35 pb-2 font-sans text-xs font-semibold tracking-[0.16em] text-[#c7ced8] outline-none transition duration-200 hover:border-[#6ae4ff] hover:text-[#6ae4ff] active:scale-[0.97] focus-visible:ring-2 focus-visible:ring-[#6ae4ff] focus-visible:ring-offset-4 focus-visible:ring-offset-[#05070b]"
               >
                 READ REVIEWS
               </a>
@@ -475,7 +475,7 @@ export default function Home() {
 
           <div
             aria-label="Firebox atmospheric technology loop"
-            className="absolute right-5 top-1/2 z-20 hidden aspect-video w-[min(42vw,42rem)] -translate-y-1/2 overflow-hidden border-2 border-[#ff2a1f] bg-black/70 shadow-[0_0_40px_rgba(255,42,31,0.12)] lg:right-12 lg:block"
+            className="absolute right-5 top-1/2 z-20 hidden aspect-video w-[min(42vw,42rem)] -translate-y-1/2 overflow-hidden rounded-2xl border-2 border-[#ff2a1f] bg-black/70 shadow-[0_0_40px_rgba(255,42,31,0.12)] lg:right-12 lg:block"
           >
             <video
               className="absolute inset-0 h-full w-full object-cover opacity-90"
@@ -494,7 +494,7 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 flex flex-col border-t border-border bg-background/72 px-5 py-4 backdrop-blur-md sm:px-8 md:flex-row md:items-center md:justify-between lg:px-12">
-          <div className="flex min-w-0 items-center gap-3 font-sans text-[10px] tracking-[0.16em] text-[#9ba7b7]">
+          <div className="flex min-w-0 items-center gap-3 font-sans text-[11px] tracking-[0.16em] text-[#9ba7b7]">
             <span className="relative flex h-2 w-2 shrink-0">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#ff5a1f] opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[#ff5a1f]" />
@@ -506,7 +506,7 @@ export default function Home() {
               </span>
             </span>
           </div>
-          <div className="hero-marquee-viewport mt-4 min-w-0 overflow-hidden font-sans text-[10px] tracking-[0.14em] text-[#8a96a7] md:mt-0 md:overflow-visible">
+          <div className="hero-marquee-viewport mt-4 min-w-0 overflow-hidden font-sans text-[11px] tracking-[0.14em] text-[#8a96a7] md:mt-0 md:overflow-visible">
             <div className="hero-marquee-track hero-marquee-track--capabilities">
               <span className="hero-marquee-set">
                 <span>01 / DESIGN</span>
@@ -522,7 +522,7 @@ export default function Home() {
           </div>
           <a
             href="#top"
-            className="group mt-4 inline-flex items-center gap-2 self-start font-sans text-[10px] tracking-[0.16em] text-[#dce3ec] outline-none transition hover:text-[#ff5a1f] focus-visible:ring-2 focus-visible:ring-[#ff5a1f] md:mt-0 md:self-auto"
+            className="group mt-4 inline-flex items-center gap-2 self-start font-sans text-[11px] tracking-[0.16em] text-[#dce3ec] outline-none transition hover:text-[#ff5a1f] focus-visible:ring-2 focus-visible:ring-[#ff5a1f] md:mt-0 md:self-auto"
           >
             SCROLL TO IGNITE
             <MoveDown className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-y-0.5" />
