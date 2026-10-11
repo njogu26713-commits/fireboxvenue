@@ -16,6 +16,7 @@ import { trpc } from "@/lib/trpc";
 import ThemeToggle from "@/components/ThemeToggle";
 import BrandMark from "@/components/BrandMark";
 import TeamAdminPanel from "@/components/TeamAdminPanel";
+import ProjectTrackerAdminPanel from "@/components/ProjectTrackerAdminPanel";
 
 type ServiceForm = {
   title: string;
@@ -168,6 +169,7 @@ const emptySupportForms = Object.fromEntries(
 const adminNavItems = [
   ["products", "01 / PRODUCTS"],
   ["services", "02 / SERVICES"],
+  ["project-tracker", "03 / PROJECT TRACKER"],
   ["team-editor", "03 / TEAM EDITOR"],
     ["blog-editor", "03 / BLOG EDITOR"],
     ["support-channels", "03 / SUPPORT CHANNELS"],
@@ -524,8 +526,8 @@ export default function Admin() {
             </h1>
             <p className="mt-5 max-w-2xl font-sans text-xs leading-6 text-[#99a6b7]">
               Manage products, services, support channels, and incoming support
-              messages. Authentication is intentionally deferred for this
-              prototype.
+              messages. Project lifecycle records are admin-managed, and only
+              records you explicitly publish appear on the public Projects page.
             </p>
           </div>
           <div className="inline-flex items-center gap-3 border border-[#6ae4ff]/30 bg-[#6ae4ff]/5 px-4 py-3 font-sans text-[10px] tracking-[0.14em] text-[#6ae4ff]">
@@ -593,6 +595,9 @@ export default function Admin() {
           >
             <div className={activeSection === "team-editor" ? "" : "hidden"}>
               <TeamAdminPanel />
+            </div>
+            <div className={activeSection === "project-tracker" ? "" : "hidden"}>
+              <ProjectTrackerAdminPanel />
             </div>
             <form
               id="products"

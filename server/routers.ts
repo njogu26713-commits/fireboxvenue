@@ -3,7 +3,7 @@ import type { DirectorySection } from "../drizzle/schema";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
+import { adminProcedure, publicProcedure, router } from "./_core/trpc";
 import {
   addBlogPost,
   addDirectoryItem,
@@ -35,6 +35,11 @@ import {
   deleteSupportCategory,
   getProjects,
   getServices,
+  getTrackedProjects,
+  getPublishedTrackedProjects,
+  addTrackedProject,
+  updateTrackedProject,
+  deleteTrackedProject,
   getSupportChannels,
   getSupportMessages,
   addSupportMessage,
@@ -129,6 +134,59 @@ const projectInput = z.object({
   liveUrl: z.string().trim().url().or(z.literal("")).optional(),
   githubUrl: z.string().trim().url().or(z.literal("")).optional(),
   sortOrder: z.number().int().min(0).default(0),
+});
+
+const projectTrackerFields = z.object({
+    title: z.string().trim().min(1).max(255),
+    description: z.string().trim().min(1).max(2000),
+    status: z.enum(["active", "upcoming", "completed", "abandoned"]),
+    releasedVersion: z.string().trim().max(64).optional(),
+    plannedVersion: z.string().trim().max(64).optional(),
+    plannedReleaseDate: z
+      .string()
+      .trim()
+      .regex(/^\d{4}-\d{2}-\d{2}$/)
+      .or(z.literal(""))
+      .optional(),
+    abandonmentReason: z.string().trim().max(2000).optional(),
+    imageUrl: z.string().trim().url().or(z.literal("")).optional(),
+    liveUrl: z.string().trim().url().or(z.literal("")).optional(),
+    githubUrl: z.string().trim().url().or(z.literal("")).optional(),
+    published: z.boolean().default(false),
+    sortOrder: z.number().int().min(0).default(0),
+  });
+
+const validateAbandonmentReason = (
+  project: { status: string; abandonmentReason?: string },
+  context: z.RefinementCtx
+) => {
+  if (project.status === "abandoned" && !project.abandonmentReason?.trim()) {
+    context.addIssue({
+      code: "custom",
+      path: ["abandonmentReason"],
+      message: "Add a reason before marking a project abandoned.",
+    });
+  }
+};
+
+const projectTrackerInput = projectTrackerFields.superRefine(
+  validateAbandonmentReason
+);
+const projectTrackerUpdateInput = projectTrackerFields
+  .extend({ id: z.number().int().positive() })
+  .superRefine(validateAbandonmentReason);
+
+const normalizeTrackedProject = (
+  input: z.infer<typeof projectTrackerFields>
+) => ({
+  ...input,
+  releasedVersion: input.releasedVersion || null,
+  plannedVersion: input.plannedVersion || null,
+  plannedReleaseDate: input.plannedReleaseDate || null,
+  abandonmentReason: input.abandonmentReason || null,
+  imageUrl: input.imageUrl || null,
+  liveUrl: input.liveUrl || null,
+  githubUrl: input.githubUrl || null,
 });
 
 export const appRouter = router({
@@ -573,6 +631,22 @@ ${JSON.stringify(knowledge)}`,
     delete: publicProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteTeamMember(input.id)),
+  }),
+  projectTracker: router({
+    publicList: publicProcedure.query(() => getPublishedTrackedProjects()),
+    adminList: adminProcedure.query(() => getTrackedProjects()),
+    add: adminProcedure
+      .input(projectTrackerInput)
+      .mutation(({ input }) => addTrackedProject(normalizeTrackedProject(input))),
+    update: adminProcedure
+      .input(projectTrackerUpdateInput)
+      .mutation(({ input }) => {
+        const { id, ...values } = input;
+        return updateTrackedProject(id, normalizeTrackedProject(values));
+      }),
+    delete: adminProcedure
+      .input(z.object({ id: z.number().int().positive() }))
+      .mutation(({ input }) => deleteTrackedProject(input.id)),
   }),
   content: router({
     list: publicProcedure.query(async () => ({

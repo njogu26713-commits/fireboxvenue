@@ -192,6 +192,12 @@ export default function Home() {
                 PRODUCTS
               </a>
               <a
+                href="/projects"
+                className="hidden items-center font-sans text-[11px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
+              >
+                PROJECTS
+              </a>
+              <a
                 href="/blog"
                 className="hidden items-center font-sans text-[11px] font-medium tracking-[0.12em] text-white transition duration-200 hover:text-[#ff5a1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff5a1f] lg:inline-flex"
               >
@@ -273,6 +279,17 @@ export default function Home() {
                 className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[11px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
               >
                 PRODUCTS
+                <ArrowUpRight
+                  className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  strokeWidth={2.2}
+                />
+              </a>
+              <a
+                href="/projects"
+                onClick={() => setMenuOpen(false)}
+                className="group flex h-12 w-full items-center justify-between px-1 text-left font-sans text-[11px] font-semibold tracking-[0.14em] text-white transition hover:text-[#6ae4ff]"
+              >
+                PROJECTS
                 <ArrowUpRight
                   className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                   strokeWidth={2.2}

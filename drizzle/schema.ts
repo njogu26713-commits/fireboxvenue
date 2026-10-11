@@ -65,6 +65,35 @@ export type InsertProject = Omit<
   githubUrl?: string | null;
 };
 
+export type ProjectTrackerStatus =
+  | "active"
+  | "upcoming"
+  | "completed"
+  | "abandoned";
+
+export interface TrackedProject {
+  id: number;
+  title: string;
+  description: string;
+  status: ProjectTrackerStatus;
+  releasedVersion: string | null;
+  plannedVersion: string | null;
+  plannedReleaseDate: string | null;
+  abandonmentReason: string | null;
+  imageUrl: string | null;
+  liveUrl: string | null;
+  githubUrl: string | null;
+  published: boolean;
+  sortOrder: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export type InsertTrackedProject = Omit<
+  TrackedProject,
+  "id" | "createdAt" | "updatedAt"
+>;
+
 export interface SupportChannel {
   id: number;
   platform: SupportPlatform;

@@ -3,6 +3,7 @@ import type {
   InsertFaq,
   InsertBlogPost,
   InsertProject,
+  InsertTrackedProject,
   InsertService,
   InsertSupportChannel,
   InsertSupportMessage,
@@ -13,6 +14,7 @@ import type {
   BlogPost,
   InsertDirectoryItem,
   Project,
+  TrackedProject,
   Service,
   SupportChannel,
   SupportMessage,
@@ -34,6 +36,7 @@ const collectionNames = {
   users: "users",
   services: "services",
   projects: "projects",
+  projectTracker: "projectTracker",
   supportChannels: "supportChannels",
   supportMessages: "supportMessages",
   faqs: "faqs",
@@ -228,6 +231,56 @@ export async function deleteProject(id: number): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await collection<Project>(db, collectionNames.projects).deleteOne({ id });
+}
+
+export async function getTrackedProjects(): Promise<TrackedProject[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return collection<TrackedProject>(db, collectionNames.projectTracker)
+    .find({})
+    .sort({ sortOrder: 1, updatedAt: -1 })
+    .toArray();
+}
+
+export async function getPublishedTrackedProjects(): Promise<TrackedProject[]> {
+  const db = await getDb();
+  if (!db) return [];
+  return collection<TrackedProject>(db, collectionNames.projectTracker)
+    .find({ published: true })
+    .sort({ sortOrder: 1, updatedAt: -1 })
+    .toArray();
+}
+
+export async function addTrackedProject(
+  project: InsertTrackedProject
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await collection<TrackedProject>(db, collectionNames.projectTracker).insertOne({
+    ...project,
+    id: await nextId(db, "projectTracker"),
+    createdAt: now,
+    updatedAt: now,
+  });
+}
+
+export async function updateTrackedProject(
+  id: number,
+  project: Partial<InsertTrackedProject>
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<TrackedProject>(db, collectionNames.projectTracker).updateOne(
+    { id },
+    { $set: { ...clean(project), updatedAt: new Date() } }
+  );
+}
+
+export async function deleteTrackedProject(id: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await collection<TrackedProject>(db, collectionNames.projectTracker).deleteOne({ id });
 }
 
 export async function getSupportChannels(): Promise<SupportChannel[]> {
