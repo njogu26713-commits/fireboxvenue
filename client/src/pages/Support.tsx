@@ -1,15 +1,16 @@
 import { FormEvent, useState } from "react";
+import { ArrowLeft, HelpCircle, MessageCircle, Send } from "lucide-react";
 import {
-  ArrowLeft,
-  Camera,
-  Facebook,
-  HelpCircle,
-  Instagram,
-  MessageCircle,
-  Music2,
-  Play,
-  Send,
-} from "lucide-react";
+  siDiscord,
+  siFacebook,
+  siGithub,
+  siInstagram,
+  siTelegram,
+  siTiktok,
+  siWhatsapp,
+  siX,
+  siYoutube,
+} from "simple-icons";
 import { Link } from "wouter";
 import { toast } from "sonner";
 import { trpc } from "@/lib/trpc";
@@ -28,7 +29,10 @@ type SupportPlatform =
   | "telegram"
   | "facebook"
   | "instagram"
-  | "youtube";
+  | "youtube"
+  | "github"
+  | "x"
+  | "discord";
 
 const platformLabels: Record<SupportPlatform, string> = {
   whatsapp: "WhatsApp",
@@ -37,19 +41,36 @@ const platformLabels: Record<SupportPlatform, string> = {
   facebook: "Facebook",
   instagram: "Instagram",
   youtube: "YouTube",
+  github: "GitHub",
+  x: "X",
+  discord: "Discord",
 };
 
+const platformIcons = {
+  whatsapp: siWhatsapp,
+  tiktok: siTiktok,
+  telegram: siTelegram,
+  facebook: siFacebook,
+  instagram: siInstagram,
+  youtube: siYoutube,
+  github: siGithub,
+  x: siX,
+  discord: siDiscord,
+} satisfies Record<SupportPlatform, { path: string; hex: string }>;
+
 function platformIcon(platform: SupportPlatform) {
-  const icons = {
-    whatsapp: MessageCircle,
-    tiktok: Music2,
-    telegram: Send,
-    facebook: Facebook,
-    instagram: Instagram,
-    youtube: Play,
-  };
-  const Icon = icons[platform];
-  return <Icon className="h-5 w-5" strokeWidth={1.8} />;
+  const icon = platformIcons[platform] ?? siDiscord;
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      role="img"
+      aria-hidden="true"
+      className="h-11 w-11 fill-current sm:h-12 sm:w-12"
+      style={{ color: `#${icon.hex}` }}
+    >
+      <path d={icon.path} />
+    </svg>
+  );
 }
 
 function channelHref(platform: SupportPlatform, value: string) {
@@ -437,12 +458,12 @@ export default function Support() {
                     rel="noreferrer"
                     title={`Open ${channel.label}`}
                     aria-label={`Open ${channel.label}`}
-                    className="group flex min-h-28 flex-col justify-between border border-white/10 bg-[#090d14] p-4 transition hover:border-[#ff5a1f]/70 hover:bg-[#0d141d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6ae4ff]"
+                    className="group flex min-h-32 flex-col justify-between rounded-xl border border-white/10 bg-[#090d14] p-4 transition hover:border-[#ff5a1f]/70 hover:bg-[#0d141d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6ae4ff]"
                   >
-                    <span className="text-[#ff5a1f] transition group-hover:text-[#6ae4ff]">
+                    <span className="flex min-h-12 items-center text-[#ff5a1f] transition group-hover:text-[#6ae4ff]">
                       {platformIcon(platform)}
                     </span>
-                    <span className="font-sans text-[10px] tracking-[0.12em] text-[#d5dce6]">
+                    <span className="font-sans text-xs font-medium tracking-[0.08em] text-[#d5dce6]">
                       {channel.label || platformLabels[platform]}
                     </span>
                   </a>
