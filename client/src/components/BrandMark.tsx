@@ -16,8 +16,13 @@ export default function BrandMark({ className = "" }: BrandMarkProps) {
         alt="FireboxTechs icon"
         className="h-14 w-14 object-contain select-none sm:h-16 sm:w-16"
       />
-      <span className="ml-3 font-sans text-sm font-bold tracking-[-0.03em] text-foreground sm:text-base">
-        FIREBOXTECHS
+      <span className="ml-3 flex flex-col leading-none">
+        <span className="font-sans text-lg font-bold tracking-[-0.04em] text-[#0b0b0b] dark:text-[#f7f4ef] sm:text-xl">
+          Firebox<span className="font-medium text-[#ff5a1f]">Techs</span>
+        </span>
+        <span className="mt-1 font-sans text-[8px] font-medium tracking-[0.12em] text-muted-foreground sm:text-[9px]">
+          Building intelligent technology.
+        </span>
       </span>
     </Link>
   );
