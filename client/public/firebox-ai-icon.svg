@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">FIREBOX AI icon</title>
+  <desc id="desc">A monochrome geometric flame inside a rounded box, representing Firebox AI.</desc>
+  <defs>
+    <clipPath id="box-clip">
+      <rect x="28" y="28" width="200" height="200" rx="48" />
+    </clipPath>
+  </defs>
+
+  <!-- Outer mark -->
+  <rect x="28" y="28" width="200" height="200" rx="48" fill="#000" />
+  <rect x="39" y="39" width="178" height="178" rx="38" fill="#fff" />
+
+  <!-- Structured firebox grid -->
+  <g clip-path="url(#box-clip)" fill="none" stroke="#000" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M28 88h42" />
+    <path d="M186 88h42" />
+    <path d="M28 168h42" />
+    <path d="M186 168h42" />
+    <path d="M88 28v42" />
+    <path d="M168 28v42" />
+    <path d="M88 186v42" />
+    <path d="M168 186v42" />
+  </g>
+
+  <!-- Flame / intelligence core -->
+  <path d="M128 64c9 22 31 31 31 59 0 10-3 19-9 27 1-18-8-29-19-38 1 17-14 23-14 40 0 8 3 15 8 21-22-5-37-24-37-46 0-24 16-40 40-63Z" fill="#000" />
+  <path d="M128 115c8 10 13 18 13 28 0 11-5 19-13 25-8-6-13-14-13-25 0-10 5-18 13-28Z" fill="#fff" />
+
+  <!-- Small signal dots -->
+  <circle cx="82" cy="128" r="5" fill="#000" />
+  <circle cx="174" cy="128" r="5" fill="#000" />
+</svg>
