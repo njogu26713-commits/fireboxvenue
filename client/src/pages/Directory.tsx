@@ -307,6 +307,7 @@ export function DocumentationDetail() {
                   [
                     harden,
                     {
+                      defaultOrigin: window.location.origin,
                       allowedImagePrefixes: ["https://"],
                       allowedLinkPrefixes: ["https://", "http://", "mailto:"],
                       allowDataImages: false,

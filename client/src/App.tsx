@@ -11,7 +11,7 @@ import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Solutions from "./pages/Solutions";
 import Admin from "@/pages/Admin";
-import AskAI from "@/pages/AskAI";
+import AskAIPage from "@/pages/AskAIPage";
 import Team from "@/pages/Team";
 import Support from "@/pages/Support";
 import { Documentation, DocumentationDetail } from "@/pages/Directory";
@@ -27,7 +27,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/solutions" component={Solutions} />
       <Route path="/admin" component={Admin} />
-      <Route path="/ask-ai" component={AskAI} />
+      <Route path="/ask-ai" component={AskAIPage} />
       <Route path="/team" component={Team} />
       <Route path="/reviews" component={Reviews} />
       <Route path="/support" component={Support} />

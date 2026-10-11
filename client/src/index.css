@@ -533,3 +533,78 @@
   border-radius: 0.4rem;
   object-fit: contain;
 }
+
+.ask-ai-answer p {
+  margin: 0.55rem 0;
+}
+
+.ask-ai-answer h1,
+.ask-ai-answer h2,
+.ask-ai-answer h3 {
+  margin: 1rem 0 0.5rem;
+  color: #f5f1eb;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.ask-ai-answer h1 {
+  font-size: 1.35rem;
+}
+
+.ask-ai-answer h2 {
+  font-size: 1.2rem;
+}
+
+.ask-ai-answer h3 {
+  font-size: 1.05rem;
+}
+
+.ask-ai-answer ul,
+.ask-ai-answer ol {
+  margin: 0.65rem 0;
+  padding-left: 1.35rem;
+}
+
+.ask-ai-answer ul {
+  list-style: disc;
+}
+
+.ask-ai-answer ol {
+  list-style: decimal;
+}
+
+.ask-ai-answer li {
+  margin: 0.3rem 0;
+  padding-left: 0.15rem;
+}
+
+.ask-ai-answer li::marker {
+  color: #b69cff;
+}
+
+.ask-ai-answer code {
+  border-radius: 0.25rem;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.1rem 0.3rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.ask-ai-answer pre {
+  overflow-x: auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.5rem;
+  background: #080c12;
+  padding: 0.9rem 1rem;
+}
+
+.ask-ai-answer pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.ask-ai-answer a {
+  color: #cbb8ff;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
