@@ -224,12 +224,8 @@ export default function AskAIPage() {
                                   harden,
                                   {
                                     defaultOrigin: window.location.origin,
-                                    allowedImagePrefixes: ["https://"],
-                                    allowedLinkPrefixes: [
-                                      "https://",
-                                      "http://",
-                                      "mailto:",
-                                    ],
+                                    allowedImagePrefixes: ["*"],
+                                    allowedLinkPrefixes: ["*"],
                                     allowDataImages: false,
                                   },
                                 ],
