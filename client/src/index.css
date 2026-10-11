@@ -5,10 +5,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --radius-sm: 0px;
-  --radius-md: 0px;
-  --radius-lg: 0px;
-  --radius-xl: 0px;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -361,6 +361,11 @@
   background: color-mix(in oklch, var(--accent) 7%, transparent);
 }
 
+/* Apply a consistent soft corner to card-like, bordered surfaces site-wide. */
+:where(article, [class~="border"][class*="bg-"][class*="p-"]) {
+  border-radius: var(--radius-lg);
+}
+
 @keyframes hero-enter {
   from {
     opacity: 0;
@@ -419,4 +424,112 @@
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* Documentation Markdown needs explicit typography because Tailwind preflight resets browser defaults. */
+.documentation-markdown h1 {
+  margin: 2.25rem 0 1rem;
+  color: var(--foreground);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+}
+
+.documentation-markdown h2 {
+  margin: 2rem 0 0.75rem;
+  color: var(--foreground);
+  font-size: clamp(1.5rem, 3.5vw, 2rem);
+  font-weight: 650;
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+}
+
+.documentation-markdown h3 {
+  margin: 1.5rem 0 0.5rem;
+  color: var(--foreground);
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.documentation-markdown p {
+  margin: 0.9rem 0;
+  color: var(--muted-foreground);
+}
+
+.documentation-markdown ul,
+.documentation-markdown ol {
+  margin: 0.9rem 0;
+  padding-left: 1.6rem;
+  color: var(--muted-foreground);
+}
+
+.documentation-markdown ul {
+  list-style-type: disc;
+}
+
+.documentation-markdown ol {
+  list-style-type: decimal;
+}
+
+.documentation-markdown li {
+  margin: 0.35rem 0;
+  padding-left: 0.2rem;
+}
+
+.documentation-markdown li::marker {
+  color: #b69cff;
+}
+
+.documentation-markdown :not(pre) > code,
+.documentation-markdown [data-streamdown="inline-code"] {
+  border: 1px solid var(--border);
+  border-radius: 0.25rem;
+  background: color-mix(in oklch, var(--foreground) 7%, transparent);
+  padding: 0.12rem 0.35rem;
+  color: var(--foreground);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.documentation-markdown [data-streamdown="code-block"] {
+  margin: 1rem 0 1.5rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  background: color-mix(in oklch, var(--foreground) 5%, var(--background));
+}
+
+.documentation-markdown pre {
+  overflow-x: auto;
+  padding: 1rem 1.25rem;
+  color: var(--foreground);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85rem;
+  line-height: 1.65;
+}
+
+.documentation-markdown blockquote {
+  margin: 1rem 0;
+  border-left: 2px solid #b69cff;
+  padding-left: 1rem;
+  color: var(--muted-foreground);
+}
+
+.documentation-markdown a {
+  color: #b69cff;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.documentation-markdown img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 40rem;
+  margin: 1.5rem 0;
+  border: 1px solid var(--border);
+  border-radius: 0.4rem;
+  object-fit: contain;
 }
