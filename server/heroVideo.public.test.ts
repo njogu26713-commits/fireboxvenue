@@ -4,17 +4,16 @@ import { appRouter } from "./routers";
 const serviceMocks = vi.hoisted(() => ({
   getHomepageHeroVideoUrl: vi.fn().mockResolvedValue("/firebox-tech-loop.mp4"),
   updateHomepageHeroVideoUrl: vi.fn().mockResolvedValue(undefined),
-  storagePut: vi.fn().mockResolvedValue({
-    key: "homepage/hero-loop_test.mp4",
-    url: "/manus-storage/homepage/hero-loop_test.mp4",
-  }),
+  storeHomepageHeroVideo: vi
+    .fn()
+    .mockResolvedValue("/api/homepage-hero-video?v=0123456789abcdef01234567"),
 }));
 
 vi.mock("./db", () => ({
   getHomepageHeroVideoUrl: serviceMocks.getHomepageHeroVideoUrl,
   updateHomepageHeroVideoUrl: serviceMocks.updateHomepageHeroVideoUrl,
+  storeHomepageHeroVideo: serviceMocks.storeHomepageHeroVideo,
 }));
-vi.mock("./storage", () => ({ storagePut: serviceMocks.storagePut }));
 
 const anonymousCaller = () =>
   appRouter.createCaller({ user: null, req: {} as never, res: {} as never });
@@ -67,7 +66,7 @@ describe("homepage loop video settings", () => {
     );
   });
 
-  it("uploads a valid MP4 to project storage and activates it", async () => {
+  it("stores a valid MP4 through the app database and activates it", async () => {
     const mp4Header = Buffer.alloc(12);
     mp4Header.writeUInt32BE(12, 0);
     mp4Header.write("ftyp", 4, "ascii");
@@ -77,15 +76,11 @@ describe("homepage loop video settings", () => {
         mimeType: "video/mp4",
         dataBase64: mp4Header.toString("base64"),
       })
-    ).resolves.toBe("/manus-storage/homepage/hero-loop_test.mp4");
+    ).resolves.toBe("/api/homepage-hero-video?v=0123456789abcdef01234567");
 
-    expect(serviceMocks.storagePut).toHaveBeenCalledWith(
-      "homepage/hero-loop.mp4",
+    expect(serviceMocks.storeHomepageHeroVideo).toHaveBeenCalledWith(
       mp4Header,
       "video/mp4"
-    );
-    expect(serviceMocks.updateHomepageHeroVideoUrl).toHaveBeenCalledWith(
-      "/manus-storage/homepage/hero-loop_test.mp4"
     );
   });
 
@@ -96,6 +91,6 @@ describe("homepage loop video settings", () => {
         dataBase64: Buffer.from("not an mp4 file").toString("base64"),
       })
     ).rejects.toMatchObject({ code: "BAD_REQUEST" });
-    expect(serviceMocks.storagePut).not.toHaveBeenCalled();
+    expect(serviceMocks.storeHomepageHeroVideo).not.toHaveBeenCalled();
   });
 });

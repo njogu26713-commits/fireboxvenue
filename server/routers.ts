@@ -40,6 +40,7 @@ import {
   getPublishedTrackedProjects,
   getHomepageHeroVideoUrl,
   updateHomepageHeroVideoUrl,
+  storeHomepageHeroVideo,
   addTrackedProject,
   updateTrackedProject,
   deleteTrackedProject,
@@ -52,7 +53,6 @@ import {
   getTeamMembers,
   updateTeamMember,
 } from "./db";
-import { storagePut } from "./storage";
 import {
   ADMIN_PASSCODE_MIN_LENGTH,
   adminPasscodeRetryAfterMs,
@@ -73,6 +73,7 @@ const heroVideoUrlInput = z.object({
     .refine(
       value =>
         value === "/firebox-tech-loop.mp4" ||
+        /^\/api\/homepage-hero-video\?v=[a-f\d]{24}$/i.test(value) ||
         /^\/manus-storage\/[a-zA-Z0-9/_\-.]+$/.test(value) ||
         (() => {
           try {
@@ -81,7 +82,7 @@ const heroVideoUrlInput = z.object({
             return false;
           }
         })(),
-      "Use an HTTPS video URL or a site storage path."
+      "Use an HTTPS video URL, the bundled video, or an app video path."
     ),
 });
 
@@ -751,14 +752,7 @@ ${JSON.stringify(knowledge)}`,
           });
         }
 
-        const extension = input.mimeType === "video/webm" ? "webm" : "mp4";
-        const upload = await storagePut(
-          `homepage/hero-loop.${extension}`,
-          video,
-          input.mimeType
-        );
-        await updateHomepageHeroVideoUrl(upload.url);
-        return upload.url;
+        return storeHomepageHeroVideo(video, input.mimeType);
       }),
   }),
   projectTracker: router({

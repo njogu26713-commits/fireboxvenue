@@ -1,4 +1,7 @@
-import { MongoClient, type Collection, type Db } from "mongodb";
+import { GridFSBucket, MongoClient, type Collection, type Db } from "mongodb";
+import { randomUUID } from "node:crypto";
+import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
 import type {
   InsertFaq,
   InsertBlogPost,
@@ -250,17 +253,70 @@ export async function updateHomepageHeroVideoUrl(url: string): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const now = new Date();
+  const storedFileId =
+    /^\/api\/homepage-hero-video\?v=([a-f\d]{24})$/i.exec(url)?.[1]?.toLowerCase();
+  const update: Record<string, unknown> = {
+    $set: {
+      value: url,
+      updatedAt: now,
+      ...(storedFileId ? { fileId: storedFileId } : {}),
+    },
+    $setOnInsert: { key: "homepageHeroVideoUrl", createdAt: now },
+  };
+  if (!storedFileId) update.$unset = { fileId: "" };
   await collection<{ key: string; value: string }>(
+    db,
+    collectionNames.siteSettings
+  ).updateOne({ key: "homepageHeroVideoUrl" }, update as never, {
+    upsert: true,
+  });
+}
+
+export async function storeHomepageHeroVideo(
+  video: Buffer,
+  contentType: "video/mp4" | "video/webm"
+): Promise<string> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const extension = contentType === "video/webm" ? "webm" : "mp4";
+  const bucket = new GridFSBucket(db, { bucketName: "siteMedia" });
+  const upload = bucket.openUploadStream(
+    `homepage-hero-loop-${randomUUID()}.${extension}`,
+    { metadata: { contentType, purpose: "homepageHeroVideo" } }
+  );
+  await pipeline(Readable.from([video]), upload);
+
+  const fileId = upload.id.toString();
+  const url = `/api/homepage-hero-video?v=${fileId}`;
+  const now = new Date();
+  await collection<{ key: string; value: string; fileId?: string }>(
     db,
     collectionNames.siteSettings
   ).updateOne(
     { key: "homepageHeroVideoUrl" },
     {
-      $set: { value: url, updatedAt: now },
+      $set: { value: url, fileId, updatedAt: now },
       $setOnInsert: { key: "homepageHeroVideoUrl", createdAt: now },
     },
     { upsert: true }
   );
+  return url;
+}
+
+export async function getActiveHomepageHeroVideoFileId(): Promise<string | null> {
+  const db = await getDb();
+  if (!db) return null;
+  const setting = await collection<{
+    key: string;
+    value: string;
+    fileId?: string;
+  }>(db, collectionNames.siteSettings).findOne({
+    key: "homepageHeroVideoUrl",
+  });
+  return setting?.fileId && /^[a-f\d]{24}$/i.test(setting.fileId)
+    ? setting.fileId.toLowerCase()
+    : null;
 }
 
 export async function getTrackedProjects(): Promise<TrackedProject[]> {
