@@ -17,6 +17,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import BrandMark from "@/components/BrandMark";
 import TeamAdminPanel from "@/components/TeamAdminPanel";
 import ProjectTrackerAdminPanel from "@/components/ProjectTrackerAdminPanel";
+import HeroVideoAdminPanel from "@/components/HeroVideoAdminPanel";
 
 type ServiceForm = {
   title: string;
@@ -170,6 +171,7 @@ const adminNavItems = [
   ["products", "01 / PRODUCTS"],
   ["services", "02 / SERVICES"],
   ["project-tracker", "03 / PROJECT TRACKER"],
+  ["hero-video", "04 / HOMEPAGE LOOP VIDEO"],
   ["team-editor", "03 / TEAM EDITOR"],
     ["blog-editor", "03 / BLOG EDITOR"],
     ["support-channels", "03 / SUPPORT CHANNELS"],
@@ -598,6 +600,9 @@ export default function Admin() {
             </div>
             <div className={activeSection === "project-tracker" ? "" : "hidden"}>
               <ProjectTrackerAdminPanel />
+            </div>
+            <div className={activeSection === "hero-video" ? "" : "hidden"}>
+              <HeroVideoAdminPanel />
             </div>
             <form
               id="products"

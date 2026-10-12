@@ -37,6 +37,7 @@ const collectionNames = {
   services: "services",
   projects: "projects",
   projectTracker: "projectTracker",
+  siteSettings: "siteSettings",
   supportChannels: "supportChannels",
   supportMessages: "supportMessages",
   faqs: "faqs",
@@ -231,6 +232,35 @@ export async function deleteProject(id: number): Promise<void> {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await collection<Project>(db, collectionNames.projects).deleteOne({ id });
+}
+
+export const defaultHomepageHeroVideoUrl = "/firebox-tech-loop.mp4";
+
+export async function getHomepageHeroVideoUrl(): Promise<string> {
+  const db = await getDb();
+  if (!db) return defaultHomepageHeroVideoUrl;
+  const setting = await collection<{ key: string; value: string }>(
+    db,
+    collectionNames.siteSettings
+  ).findOne({ key: "homepageHeroVideoUrl" });
+  return setting?.value || defaultHomepageHeroVideoUrl;
+}
+
+export async function updateHomepageHeroVideoUrl(url: string): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const now = new Date();
+  await collection<{ key: string; value: string }>(
+    db,
+    collectionNames.siteSettings
+  ).updateOne(
+    { key: "homepageHeroVideoUrl" },
+    {
+      $set: { value: url, updatedAt: now },
+      $setOnInsert: { key: "homepageHeroVideoUrl", createdAt: now },
+    },
+    { upsert: true }
+  );
 }
 
 export async function getTrackedProjects(): Promise<TrackedProject[]> {

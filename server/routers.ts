@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import type { DirectorySection } from "../drizzle/schema";
 import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
@@ -37,6 +38,8 @@ import {
   getServices,
   getTrackedProjects,
   getPublishedTrackedProjects,
+  getHomepageHeroVideoUrl,
+  updateHomepageHeroVideoUrl,
   addTrackedProject,
   updateTrackedProject,
   deleteTrackedProject,
@@ -49,6 +52,37 @@ import {
   getTeamMembers,
   updateTeamMember,
 } from "./db";
+import { storagePut } from "./storage";
+
+const heroVideoUrlInput = z.object({
+  url: z
+    .string()
+    .trim()
+    .min(1)
+    .max(2048)
+    .refine(
+      value =>
+        value === "/firebox-tech-loop.mp4" ||
+        /^\/manus-storage\/[a-zA-Z0-9/_\-.]+$/.test(value) ||
+        (() => {
+          try {
+            return new URL(value).protocol === "https:";
+          } catch {
+            return false;
+          }
+        })(),
+      "Use an HTTPS video URL or a site storage path."
+    ),
+});
+
+const heroVideoUploadInput = z.object({
+  mimeType: z.enum(["video/mp4", "video/webm"]),
+  dataBase64: z
+    .string()
+    .min(16)
+    .max(35_000_000)
+    .regex(/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/),
+});
 
 const serviceInput = z.object({
   title: z.string().trim().min(1).max(255),
@@ -631,6 +665,50 @@ ${JSON.stringify(knowledge)}`,
     delete: publicProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteTeamMember(input.id)),
+  }),
+  siteSettings: router({
+    heroVideo: publicProcedure.query(() => getHomepageHeroVideoUrl()),
+    updateHeroVideo: adminProcedure
+      .input(heroVideoUrlInput)
+      .mutation(async ({ input }) => {
+        await updateHomepageHeroVideoUrl(input.url);
+        return input.url;
+      }),
+    uploadHeroVideo: adminProcedure
+      .input(heroVideoUploadInput)
+      .mutation(async ({ input }) => {
+        const video = Buffer.from(input.dataBase64, "base64");
+        const maxBytes = 25 * 1024 * 1024;
+        if (video.length > maxBytes) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "The video must be 25 MB or smaller.",
+          });
+        }
+        const isMp4 =
+          input.mimeType === "video/mp4" &&
+          video.length >= 12 &&
+          video.toString("ascii", 4, 8) === "ftyp";
+        const isWebm =
+          input.mimeType === "video/webm" &&
+          video.length >= 4 &&
+          video.readUInt32BE(0) === 0x1a45dfa3;
+        if (!isMp4 && !isWebm) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Choose a valid MP4 or WebM video file.",
+          });
+        }
+
+        const extension = input.mimeType === "video/webm" ? "webm" : "mp4";
+        const upload = await storagePut(
+          `homepage/hero-loop.${extension}`,
+          video,
+          input.mimeType
+        );
+        await updateHomepageHeroVideoUrl(upload.url);
+        return upload.url;
+      }),
   }),
   projectTracker: router({
     publicList: publicProcedure.query(() => getPublishedTrackedProjects()),

@@ -18,7 +18,7 @@ import BrandMark from "@/components/BrandMark";
 import { trpc } from "@/lib/trpc";
 
 const heroArtwork = "/manus-storage/firebox-hero-tech-city_a9b6b884.png";
-const heroVideo = "/firebox-tech-loop.mp4";
+const heroVideoFallback = "/firebox-tech-loop.mp4";
 const headlineLines = ["MAKE THE", "SIGNAL", "UNMISSABLE."] as const;
 const totalHeadlineLength = headlineLines.reduce(
   (total, line) => total + line.length,
@@ -27,6 +27,7 @@ const totalHeadlineLength = headlineLines.reduce(
 
 export default function Home() {
   const [typedCharacters, setTypedCharacters] = useState(0);
+  const [heroVideoAspectRatio, setHeroVideoAspectRatio] = useState(16 / 9);
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
@@ -37,6 +38,12 @@ export default function Home() {
     isLoading: isSearchLoading,
     isError: isSearchError,
   } = trpc.search.list.useQuery();
+  const { data: configuredHeroVideo } = trpc.siteSettings.heroVideo.useQuery();
+  const heroVideo = configuredHeroVideo ?? heroVideoFallback;
+  const heroVideoFrameWidth =
+    heroVideoAspectRatio < 1
+      ? "w-[min(22vw,20rem)]"
+      : "w-[min(42vw,42rem)]";
 
   useEffect(() => {
     const reducedMotion = window.matchMedia(
@@ -492,20 +499,27 @@ export default function Home() {
 
           <div
             aria-label="Firebox atmospheric technology loop"
-            className="absolute right-5 top-1/2 z-20 hidden aspect-video w-[min(42vw,42rem)] -translate-y-1/2 overflow-hidden rounded-2xl border-2 border-[#ff2a1f] bg-black/70 shadow-[0_0_40px_rgba(255,42,31,0.12)] lg:right-12 lg:block"
+            style={{ aspectRatio: heroVideoAspectRatio }}
+            className={`absolute right-5 top-1/2 z-20 hidden max-h-[74svh] -translate-y-1/2 overflow-hidden rounded-2xl border-2 border-[#ff2a1f] bg-black/70 shadow-[0_0_40px_rgba(255,42,31,0.12)] lg:right-12 lg:block ${heroVideoFrameWidth}`}
           >
             <video
+              key={heroVideo}
               className="absolute inset-0 h-full w-full object-contain object-center opacity-90"
+              src={heroVideo}
               autoPlay
               muted
               loop
               playsInline
               preload="metadata"
               poster={heroArtwork}
+              onLoadedMetadata={event => {
+                const { videoWidth, videoHeight } = event.currentTarget;
+                if (videoWidth > 0 && videoHeight > 0) {
+                  setHeroVideoAspectRatio(videoWidth / videoHeight);
+                }
+              }}
               aria-hidden="true"
-            >
-              <source src={heroVideo} type="video/mp4" />
-            </video>
+            />
             <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(3,5,8,0.22)_72%,rgba(3,5,8,0.58)_100%)]" />
           </div>
         </div>
