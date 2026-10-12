@@ -492,10 +492,10 @@ export default function Home() {
 
           <div
             aria-label="Firebox atmospheric technology loop"
-            className="absolute right-5 top-1/2 z-20 hidden aspect-[9/16] w-[min(22vw,20rem)] -translate-y-1/2 overflow-hidden rounded-2xl border-2 border-[#ff2a1f] bg-black/70 shadow-[0_0_40px_rgba(255,42,31,0.12)] lg:right-12 lg:block"
+            className="absolute right-5 top-1/2 z-20 hidden aspect-video w-[min(42vw,42rem)] -translate-y-1/2 overflow-hidden rounded-2xl border-2 border-[#ff2a1f] bg-black/70 shadow-[0_0_40px_rgba(255,42,31,0.12)] lg:right-12 lg:block"
           >
             <video
-              className="absolute inset-0 h-full w-full object-cover object-center opacity-90"
+              className="absolute inset-0 h-full w-full object-contain object-center opacity-90"
               autoPlay
               muted
               loop
