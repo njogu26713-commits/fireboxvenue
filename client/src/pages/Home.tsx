@@ -500,7 +500,7 @@ export default function Home() {
           <div
             aria-label="Firebox atmospheric technology loop"
             style={{ aspectRatio: heroVideoAspectRatio }}
-            className={`absolute right-5 top-1/2 z-20 hidden max-h-[74svh] -translate-y-1/2 overflow-hidden rounded-2xl border-2 border-[#ff2a1f] bg-black/70 shadow-[0_0_40px_rgba(255,42,31,0.12)] lg:right-12 lg:block ${heroVideoFrameWidth}`}
+            className={`absolute right-5 top-[calc(50%-1.5rem)] z-20 hidden max-h-[74svh] -translate-y-1/2 overflow-hidden rounded-2xl border-2 border-[#ff2a1f] bg-black/70 shadow-[0_0_40px_rgba(255,42,31,0.12)] lg:right-12 lg:block ${heroVideoFrameWidth}`}
           >
             <video
               key={heroVideo}
