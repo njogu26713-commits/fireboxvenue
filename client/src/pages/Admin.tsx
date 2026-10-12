@@ -6,6 +6,8 @@ import {
   Check,
   Database,
   HelpCircle,
+  LogIn,
+  LogOut,
   Pencil,
   Plus,
   Trash2,
@@ -185,6 +187,39 @@ const adminNavItems = [
   ["directory-archive", "RESOURCE ARCHIVE"],
   ["support-inbox", "SUPPORT INBOX"],
 ] as const;
+
+function AdminPasscodeControls() {
+  const session = trpc.auth.adminPasscodeStatus.useQuery();
+  const logout = trpc.auth.adminPasscodeLogout.useMutation({
+    onSuccess: () => window.location.assign("/admin/login"),
+    onError: error => toast.error(error.message),
+  });
+
+  if (session.data?.passcodeAuthenticated) {
+    return (
+      <button
+        type="button"
+        onClick={() => logout.mutate()}
+        disabled={logout.isPending}
+        className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white"
+      >
+        <LogOut className="h-3.5 w-3.5" />
+        {logout.isPending ? "SIGNING OUT…" : "SIGN OUT"}
+      </button>
+    );
+  }
+
+  if (session.data?.isAdmin) return null;
+
+  return (
+    <Link
+      href="/admin/login"
+      className="inline-flex items-center gap-2 font-sans text-[10px] tracking-[0.14em] text-[#9da9b8] transition hover:text-white"
+    >
+      <LogIn className="h-3.5 w-3.5" /> ADMIN LOGIN
+    </Link>
+  );
+}
 
 export default function Admin() {
   const utils = trpc.useUtils();
@@ -511,6 +546,7 @@ export default function Admin() {
             >
               <ArrowLeft className="h-3.5 w-3.5" /> BACK TO HOME
             </Link>
+            <AdminPasscodeControls />
             <ThemeToggle />
           </div>
         </div>

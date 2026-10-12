@@ -53,6 +53,16 @@ import {
   updateTeamMember,
 } from "./db";
 import { storagePut } from "./storage";
+import {
+  ADMIN_PASSCODE_MIN_LENGTH,
+  adminPasscodeRetryAfterMs,
+  clearAdminPasscodeAttempts,
+  clearAdminPasscodeSessionCookie,
+  isAdminPasscodeConfigured,
+  recordFailedAdminPasscodeAttempt,
+  setAdminPasscodeSessionCookie,
+  verifyAdminPasscode,
+} from "./_core/adminPasscode";
 
 const heroVideoUrlInput = z.object({
   url: z
@@ -295,6 +305,47 @@ export const appRouter = router({
   system: systemRouter,
   auth: router({
     me: publicProcedure.query(opts => opts.ctx.user),
+    adminPasscodeStatus: publicProcedure.query(({ ctx }) => ({
+      configured: isAdminPasscodeConfigured(),
+      isAdmin: ctx.user?.role === "admin" || ctx.isAdminPasscode === true,
+      passcodeAuthenticated: ctx.isAdminPasscode === true,
+      minPasscodeLength: ADMIN_PASSCODE_MIN_LENGTH,
+    })),
+    adminPasscodeLogin: publicProcedure
+      .input(z.object({ passcode: z.string().min(1).max(256) }))
+      .mutation(({ ctx, input }) => {
+        if (!isAdminPasscodeConfigured()) {
+          throw new TRPCError({
+            code: "PRECONDITION_FAILED",
+            message: `Passcode login is not configured. Set ADMIN_PASSCODE to at least ${ADMIN_PASSCODE_MIN_LENGTH} characters in your hosting variables.`,
+          });
+        }
+
+        const clientIp = ctx.req.ip || ctx.req.socket.remoteAddress || "unknown";
+        const retryAfterMs = adminPasscodeRetryAfterMs(clientIp);
+        if (retryAfterMs > 0) {
+          throw new TRPCError({
+            code: "TOO_MANY_REQUESTS",
+            message: `Too many incorrect attempts. Try again in ${Math.ceil(retryAfterMs / 60_000)} minutes.`,
+          });
+        }
+
+        if (!verifyAdminPasscode(input.passcode)) {
+          recordFailedAdminPasscodeAttempt(clientIp);
+          throw new TRPCError({
+            code: "UNAUTHORIZED",
+            message: "Passcode not accepted.",
+          });
+        }
+
+        clearAdminPasscodeAttempts(clientIp);
+        setAdminPasscodeSessionCookie(ctx.req, ctx.res);
+        return { success: true } as const;
+      }),
+    adminPasscodeLogout: publicProcedure.mutation(({ ctx }) => {
+      clearAdminPasscodeSessionCookie(ctx.req, ctx.res);
+      return { success: true } as const;
+    }),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });

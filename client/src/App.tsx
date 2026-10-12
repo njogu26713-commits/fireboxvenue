@@ -11,6 +11,7 @@ import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Solutions from "./pages/Solutions";
 import Admin from "@/pages/Admin";
+import AdminLogin from "@/pages/AdminLogin";
 import AskAIPage from "@/pages/AskAIPage";
 import Team from "@/pages/Team";
 import Support from "@/pages/Support";
@@ -27,6 +28,7 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/solutions" component={Solutions} />
+      <Route path="/admin/login" component={AdminLogin} />
       <Route path="/admin" component={Admin} />
       <Route path="/ask-ai" component={AskAIPage} />
       <Route path="/team" component={Team} />

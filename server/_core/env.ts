@@ -5,6 +5,7 @@ export const ENV = {
   mongoDbName: process.env.MONGODB_DB_NAME ?? "fireboxvenue",
   oAuthServerUrl: process.env.OAUTH_SERVER_URL ?? "",
   ownerOpenId: process.env.OWNER_OPEN_ID ?? "",
+  adminPasscode: process.env.ADMIN_PASSCODE ?? "",
   isProduction: process.env.NODE_ENV === "production",
   forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
   forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",

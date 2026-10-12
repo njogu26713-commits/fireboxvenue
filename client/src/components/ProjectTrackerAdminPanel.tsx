@@ -10,6 +10,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
+import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import type {
   ProjectTrackerStatus,
@@ -381,6 +382,14 @@ export default function ProjectTrackerAdminPanel() {
         ) : projects.isError ? (
           <p role="alert" className="py-8 font-sans text-xs text-[#ff8a70]">
             Could not load project records. {projects.error.message}
+            {projects.error.data?.code === "FORBIDDEN" && (
+              <Link
+                href="/admin/login"
+                className="ml-2 text-[#6ae4ff] underline underline-offset-4 hover:text-white"
+              >
+                Sign in with admin passcode
+              </Link>
+            )}
           </p>
         ) : projects.data?.length ? (
           <div className="mt-5 divide-y divide-white/10">
