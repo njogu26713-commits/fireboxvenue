@@ -24,9 +24,6 @@ export default function AdminLogin() {
     login.mutate({ passcode });
   };
 
-  const alreadyAdmin =
-    status.data?.isAdmin && !status.data.passcodeAuthenticated;
-
   return (
     <main className="flex min-h-screen flex-col bg-[#06080d] text-[#f5f1eb]">
       <header className="border-b border-white/10 bg-[#080b11] px-5 py-5 sm:px-8 lg:px-12">
@@ -47,7 +44,7 @@ export default function AdminLogin() {
       <div className="flex flex-1 items-center justify-center px-5 py-14">
         <section className="w-full max-w-md border border-white/10 bg-[#0a0e15] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.32)] sm:p-9">
           <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#6ae4ff]/25 bg-[#6ae4ff]/5 text-[#6ae4ff]">
-            {alreadyAdmin ? (
+            {status.data?.passcodeAuthenticated ? (
               <ShieldCheck className="h-5 w-5" />
             ) : (
               <KeyRound className="h-5 w-5" />
@@ -57,25 +54,16 @@ export default function AdminLogin() {
             FIREBOX / ADMIN ACCESS
           </p>
           <h1 className="mt-2 font-sans text-3xl font-semibold tracking-[-0.04em]">
-            {alreadyAdmin ? "ACCESS READY." : "ENTER PASSCODE."}
+            {status.data?.passcodeAuthenticated ? "ACCESS READY." : "ENTER PASSCODE."}
           </h1>
           <p className="mt-3 font-sans text-xs leading-6 text-[#99a6b7]">
-            {alreadyAdmin
-              ? "This signed-in account already has administrator access."
-              : "Use the administrator passcode configured for this site to manage projects and homepage media."}
+            "Enter the administrator passcode configured for this site to access the admin workspace."
           </p>
 
           {status.isLoading ? (
             <div className="mt-7 border border-white/10 bg-[#0d141d] p-4 font-sans text-xs text-[#99a6b7]">
               Checking admin access…
             </div>
-          ) : alreadyAdmin ? (
-            <Link
-              href="/admin#project-tracker"
-              className="action-button mt-7 inline-flex"
-            >
-              <ShieldCheck className="h-4 w-4" /> OPEN ADMIN
-            </Link>
           ) : status.data?.passcodeAuthenticated ? (
             <button
               type="button"

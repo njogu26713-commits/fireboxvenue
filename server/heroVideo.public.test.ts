@@ -20,19 +20,10 @@ const anonymousCaller = () =>
 
 const adminCaller = () =>
   appRouter.createCaller({
-    user: {
-      id: 1,
-      openId: "test-admin",
-      name: "Test Admin",
-      email: "admin@example.test",
-      loginMethod: "test",
-      role: "admin",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      lastSignedIn: new Date(),
-    },
+    user: null,
     req: {} as never,
     res: {} as never,
+    isAdminPasscode: true,
   });
 
 describe("homepage loop video settings", () => {

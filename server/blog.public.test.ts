@@ -11,15 +11,21 @@ const dbMocks = vi.hoisted(() => ({
 
 vi.mock("./db", () => dbMocks);
 
+const anonymousCaller = () =>
+  appRouter.createCaller({ user: null, req: {} as never, res: {} as never });
+const adminCaller = () =>
+  appRouter.createCaller({
+    user: null,
+    req: {} as never,
+    res: {} as never,
+    isAdminPasscode: true,
+  });
+
 describe("blog procedures", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("lists published posts and resolves an article by slug", async () => {
-    const caller = appRouter.createCaller({
-      user: null,
-      req: {} as never,
-      res: {} as never,
-    });
+    const caller = anonymousCaller();
     await caller.blog.list();
     await caller.blog.getBySlug({ slug: "signal-to-system" });
 
@@ -27,12 +33,28 @@ describe("blog procedures", () => {
     expect(dbMocks.getBlogPostBySlug).toHaveBeenCalledWith("signal-to-system");
   });
 
+  it("rejects anonymous access to drafts and blog management", async () => {
+    const caller = anonymousCaller();
+    await expect(caller.blog.adminList()).rejects.toMatchObject({ code: "FORBIDDEN" });
+    await expect(
+      caller.blog.add({
+        title: "Blocked",
+        slug: "blocked",
+        excerpt: "Blocked.",
+        category: "article",
+        content: "Blocked.",
+        imageUrl: "",
+        videoUrl: "",
+        author: "Firebox Studios",
+        status: "draft",
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(dbMocks.getBlogPosts).not.toHaveBeenCalled();
+    expect(dbMocks.addBlogPost).not.toHaveBeenCalled();
+  });
+
   it("creates, updates, and deletes a real blog post", async () => {
-    const caller = appRouter.createCaller({
-      user: null,
-      req: {} as never,
-      res: {} as never,
-    });
+    const caller = adminCaller();
     const input = {
       title: "Signal to system",
       slug: "signal-to-system",

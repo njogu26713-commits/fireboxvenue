@@ -10,26 +10,72 @@ const dbMocks = vi.hoisted(() => ({
 
 vi.mock("./db", () => dbMocks);
 
+const anonymousCaller = () =>
+  appRouter.createCaller({ user: null, req: {} as never, res: {} as never });
+const adminCaller = () =>
+  appRouter.createCaller({
+    user: null,
+    req: {} as never,
+    res: {} as never,
+    isAdminPasscode: true,
+  });
+
 describe("directory procedures", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("allows public readers to list a directory section", async () => {
-    const caller = appRouter.createCaller({ user: null, req: {} as never, res: {} as never });
-    const result = await caller.directory.list({ section: "products" });
-
+    const result = await anonymousCaller().directory.list({ section: "products" });
     expect(result).toEqual([]);
     expect(dbMocks.getDirectoryItems).toHaveBeenCalledWith("products");
   });
 
-  it("allows the open prototype admin flow to manage directory entries", async () => {
-    const caller = appRouter.createCaller({ user: null, req: {} as never, res: {} as never });
+  it("rejects anonymous directory changes", async () => {
+    await expect(
+      anonymousCaller().directory.add({
+        section: "developers",
+        title: "Blocked",
+        description: "Blocked.",
+        href: "",
+        sortOrder: 0,
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(dbMocks.addDirectoryItem).not.toHaveBeenCalled();
+  });
 
-    await caller.directory.add({ section: "developers", title: "SDK", description: "Developer tools.", href: "", sortOrder: 1 });
-    await caller.directory.update({ id: 7, section: "docs", title: "API Reference", description: "Technical reference.", href: "https://docs.example.com", sortOrder: 2 });
+  it("allows a passcode-authenticated admin to manage directory entries", async () => {
+    const caller = adminCaller();
+
+    await caller.directory.add({
+      section: "developers",
+      title: "SDK",
+      description: "Developer tools.",
+      href: "",
+      sortOrder: 1,
+    });
+    await caller.directory.update({
+      id: 7,
+      section: "docs",
+      title: "API Reference",
+      description: "Technical reference.",
+      href: "https://docs.example.com",
+      sortOrder: 2,
+    });
     await caller.directory.delete({ id: 7 });
 
-    expect(dbMocks.addDirectoryItem).toHaveBeenCalledWith({ section: "developers", title: "SDK", description: "Developer tools.", href: null, sortOrder: 1 });
-    expect(dbMocks.updateDirectoryItem).toHaveBeenCalledWith(7, { section: "docs", title: "API Reference", description: "Technical reference.", href: "https://docs.example.com", sortOrder: 2 });
+    expect(dbMocks.addDirectoryItem).toHaveBeenCalledWith({
+      section: "developers",
+      title: "SDK",
+      description: "Developer tools.",
+      href: null,
+      sortOrder: 1,
+    });
+    expect(dbMocks.updateDirectoryItem).toHaveBeenCalledWith(7, {
+      section: "docs",
+      title: "API Reference",
+      description: "Technical reference.",
+      href: "https://docs.example.com",
+      sortOrder: 2,
+    });
     expect(dbMocks.deleteDirectoryItem).toHaveBeenCalledWith(7);
   });
 });

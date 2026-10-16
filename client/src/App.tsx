@@ -5,9 +5,10 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Redirect, Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider, useTheme } from "./contexts/ThemeContext";
+import { trpc } from "@/lib/trpc";
 import Home from "./pages/Home";
 import Solutions from "./pages/Solutions";
 import Admin from "@/pages/Admin";
@@ -22,6 +23,26 @@ import Blog, { BlogPost } from "@/pages/Blog";
 import Reviews from "@/pages/Reviews";
 import Projects from "@/pages/Projects";
 
+function PasscodeProtectedAdmin() {
+  const session = trpc.auth.adminPasscodeStatus.useQuery(undefined, {
+    retry: false,
+  });
+
+  if (session.isLoading) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-[#06080d] text-xs tracking-[0.14em] text-[#9da9b8]">
+        VERIFYING ADMIN SESSION…
+      </main>
+    );
+  }
+
+  if (!session.data?.passcodeAuthenticated) {
+    return <Redirect to="/admin/login" />;
+  }
+
+  return <Admin />;
+}
+
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
@@ -29,7 +50,7 @@ function Router() {
       <Route path="/" component={Home} />
       <Route path="/solutions" component={Solutions} />
       <Route path="/admin/login" component={AdminLogin} />
-      <Route path="/admin" component={Admin} />
+      <Route path="/admin" component={PasscodeProtectedAdmin} />
       <Route path="/ask-ai" component={AskAIPage} />
       <Route path="/team" component={Team} />
       <Route path="/reviews" component={Reviews} />

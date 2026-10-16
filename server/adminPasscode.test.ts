@@ -116,6 +116,30 @@ describe("admin passcode authentication", () => {
     await expect(gatedCaller.whoami()).resolves.toBe("admin");
   });
 
+  it("requires the passcode even when the account role is admin", async () => {
+    const adminGate = router({
+      whoami: adminProcedure.query(({ ctx }) => ctx.user.role),
+    });
+    const caller = adminGate.createCaller({
+      user: {
+        id: 1,
+        openId: "oauth-admin",
+        name: "OAuth Admin",
+        email: "admin@example.test",
+        loginMethod: "oauth",
+        role: "admin",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        lastSignedIn: new Date(),
+      },
+      req: fakeRequest() as never,
+      res: fakeResponse().response as never,
+      isAdminPasscode: false,
+    });
+
+    await expect(caller.whoami()).rejects.toMatchObject({ code: "FORBIDDEN" });
+  });
+
   it("does not grant access for an incorrect passcode and rate-limits repeated failures", async () => {
     ENV.adminPasscode = TEST_PASSCODE;
     const ip = "198.51.100.31";

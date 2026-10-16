@@ -10,28 +10,38 @@ const dbMocks = vi.hoisted(() => ({
 
 vi.mock("./db", () => dbMocks);
 
+const anonymousCaller = () =>
+  appRouter.createCaller({ user: null, req: {} as never, res: {} as never });
+const adminCaller = () =>
+  appRouter.createCaller({
+    user: null,
+    req: {} as never,
+    res: {} as never,
+    isAdminPasscode: true,
+  });
+
 describe("faq procedures", () => {
   beforeEach(() => vi.clearAllMocks());
 
   it("allows public readers to list FAQ records", async () => {
-    const caller = appRouter.createCaller({
-      user: null,
-      req: {} as never,
-      res: {} as never,
-    });
-
-    const result = await caller.faq.list();
-
+    const result = await anonymousCaller().faq.list();
     expect(result).toEqual([]);
     expect(dbMocks.getFaqs).toHaveBeenCalledOnce();
   });
 
-  it("allows the open prototype admin flow to manage FAQ records", async () => {
-    const caller = appRouter.createCaller({
-      user: null,
-      req: {} as never,
-      res: {} as never,
-    });
+  it("rejects anonymous FAQ management", async () => {
+    await expect(
+      anonymousCaller().faq.add({
+        question: "Blocked?",
+        answer: "Blocked.",
+        sortOrder: 0,
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(dbMocks.addFaq).not.toHaveBeenCalled();
+  });
+
+  it("allows a passcode-authenticated admin to manage FAQs", async () => {
+    const caller = adminCaller();
 
     await caller.faq.add({
       question: "What does Firebox build?",

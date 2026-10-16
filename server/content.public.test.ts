@@ -14,6 +14,16 @@ const dbMocks = vi.hoisted(() => ({
 
 vi.mock("./db", () => dbMocks);
 
+const anonymousCaller = () =>
+  appRouter.createCaller({ user: null, req: {} as never, res: {} as never });
+const adminCaller = () =>
+  appRouter.createCaller({
+    user: null,
+    req: {} as never,
+    res: {} as never,
+    isAdminPasscode: true,
+  });
+
 describe("content procedures", () => {
   beforeEach(() => vi.clearAllMocks());
 
@@ -31,12 +41,19 @@ describe("content procedures", () => {
     expect(dbMocks.getProjects).toHaveBeenCalledOnce();
   });
 
-  it("allows the open prototype admin flow to create and update content", async () => {
-    const caller = appRouter.createCaller({
-      user: null,
-      req: {} as never,
-      res: {} as never,
-    });
+  it("rejects anonymous content management", async () => {
+    await expect(
+      anonymousCaller().content.addService({
+        title: "Unauthorized",
+        description: "Should not be written.",
+        sortOrder: 0,
+      })
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
+    expect(dbMocks.addService).not.toHaveBeenCalled();
+  });
+
+  it("allows a passcode-authenticated admin to manage content", async () => {
+    const caller = adminCaller();
 
     await caller.content.addService({
       title: "Signal Design",

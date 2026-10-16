@@ -562,8 +562,8 @@ ${JSON.stringify(knowledge)}`,
     getBySlug: publicProcedure
       .input(z.object({ slug: z.string().min(1) }))
       .query(({ input }) => getBlogPostBySlug(input.slug)),
-    adminList: publicProcedure.query(() => getBlogPosts(true)),
-    add: publicProcedure.input(blogPostInput).mutation(({ input }) =>
+    adminList: adminProcedure.query(() => getBlogPosts(true)),
+    add: adminProcedure.input(blogPostInput).mutation(({ input }) =>
       addBlogPost({
         ...input,
         imageUrl: input.imageUrl || null,
@@ -574,7 +574,7 @@ ${JSON.stringify(knowledge)}`,
             : null,
       })
     ),
-    update: publicProcedure
+    update: adminProcedure
       .input(blogPostInput.extend({ id: z.number().int().positive() }))
       .mutation(({ input }) => {
         const { id, ...values } = input;
@@ -588,7 +588,7 @@ ${JSON.stringify(knowledge)}`,
               : null,
         });
       }),
-    delete: publicProcedure
+    delete: adminProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteBlogPost(input.id)),
   }),
@@ -601,7 +601,7 @@ ${JSON.stringify(knowledge)}`,
       .query(({ input }) =>
         getDirectoryItems(input?.section as DirectorySection | undefined)
       ),
-    add: publicProcedure.input(directoryInput).mutation(({ input }) => {
+    add: adminProcedure.input(directoryInput).mutation(({ input }) => {
       const { content, ...values } = input;
       return addDirectoryItem({
         ...values,
@@ -609,7 +609,7 @@ ${JSON.stringify(knowledge)}`,
         href: input.href || null,
       });
     }),
-    update: publicProcedure
+    update: adminProcedure
       .input(directoryInput.extend({ id: z.number().int().positive() }))
       .mutation(({ input }) => {
         const { id, content, ...values } = input;
@@ -619,64 +619,64 @@ ${JSON.stringify(knowledge)}`,
           href: values.href || null,
         });
       }),
-    delete: publicProcedure
+    delete: adminProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteDirectoryItem(input.id)),
   }),
   faq: router({
     list: publicProcedure.query(() => getFaqs()),
-    add: publicProcedure.input(faqInput).mutation(({ input }) => addFaq(input)),
-    update: publicProcedure
+    add: adminProcedure.input(faqInput).mutation(({ input }) => addFaq(input)),
+    update: adminProcedure
       .input(faqInput.extend({ id: z.number().int().positive() }))
       .mutation(({ input }) => {
         const { id, ...values } = input;
         return updateFaq(id, values);
       }),
-    delete: publicProcedure
+    delete: adminProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteFaq(input.id)),
   }),
   supportContent: router({
     quickHelp: publicProcedure.query(() => getQuickHelp()),
-    addQuickHelp: publicProcedure.input(quickHelpInput).mutation(({ input }) =>
+    addQuickHelp: adminProcedure.input(quickHelpInput).mutation(({ input }) =>
       addQuickHelp({ ...input, href: input.href || null })
     ),
-    updateQuickHelp: publicProcedure
+    updateQuickHelp: adminProcedure
       .input(quickHelpInput.extend({ id: z.number().int().positive() }))
       .mutation(({ input }) => {
         const { id, ...values } = input;
         return updateQuickHelp(id, { ...values, href: values.href || null });
       }),
-    deleteQuickHelp: publicProcedure
+    deleteQuickHelp: adminProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteQuickHelp(input.id)),
     categories: publicProcedure.query(() => getSupportCategories()),
-    addCategory: publicProcedure
+    addCategory: adminProcedure
       .input(supportContentInput)
       .mutation(({ input }) => addSupportCategory(input)),
-    updateCategory: publicProcedure
+    updateCategory: adminProcedure
       .input(supportContentInput.extend({ id: z.number().int().positive() }))
       .mutation(({ input }) => {
         const { id, ...values } = input;
         return updateSupportCategory(id, values);
       }),
-    deleteCategory: publicProcedure
+    deleteCategory: adminProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteSupportCategory(input.id)),
   }),
   support: router({
     channels: publicProcedure.query(() => getSupportChannels()),
-    messages: publicProcedure.query(() => getSupportMessages()),
+    messages: adminProcedure.query(() => getSupportMessages()),
     submitMessage: publicProcedure
       .input(supportMessageInput)
       .mutation(({ input }) => addSupportMessage(input)),
-    saveChannel: publicProcedure
+    saveChannel: adminProcedure
       .input(supportChannelInput)
       .mutation(({ input }) => upsertSupportChannel(input)),
   }),
   team: router({
     list: publicProcedure.query(() => getTeamMembers()),
-    add: publicProcedure
+    add: adminProcedure
       .input(
         z.object({
           name: z.string().trim().min(1).max(120),
@@ -694,7 +694,7 @@ ${JSON.stringify(knowledge)}`,
           linkedinUrl: input.linkedinUrl || null,
         })
       ),
-    update: publicProcedure
+    update: adminProcedure
       .input(
         z.object({
           id: z.number().int().positive(),
@@ -714,7 +714,7 @@ ${JSON.stringify(knowledge)}`,
           linkedinUrl: values.linkedinUrl || null,
         });
       }),
-    delete: publicProcedure
+    delete: adminProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteTeamMember(input.id)),
   }),
@@ -773,31 +773,31 @@ ${JSON.stringify(knowledge)}`,
   }),
   content: router({
     list: publicProcedure.query(async () => ({
-      products: await getServices(),
-      services: await getProjects(),
+      products: await getProjects(),
+      services: await getServices(),
     })),
-    addService: publicProcedure
+    addService: adminProcedure
       .input(serviceInput)
       .mutation(({ input }) => addService(input)),
-    addProject: publicProcedure
+    addProject: adminProcedure
       .input(projectInput)
       .mutation(({ input }) => addProject(input)),
-    updateService: publicProcedure
+    updateService: adminProcedure
       .input(serviceInput.extend({ id: z.number().int().positive() }))
       .mutation(({ input }) => {
         const { id, ...values } = input;
         return updateService(id, values);
       }),
-    updateProject: publicProcedure
+    updateProject: adminProcedure
       .input(projectInput.extend({ id: z.number().int().positive() }))
       .mutation(({ input }) => {
         const { id, ...values } = input;
         return updateProject(id, values);
       }),
-    deleteService: publicProcedure
+    deleteService: adminProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteService(input.id)),
-    deleteProject: publicProcedure
+    deleteProject: adminProcedure
       .input(z.object({ id: z.number().int().positive() }))
       .mutation(({ input }) => deleteProject(input.id)),
   }),

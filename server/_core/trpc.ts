@@ -31,13 +31,12 @@ export const adminProcedure = t.procedure.use(
   t.middleware(async opts => {
     const { ctx, next } = opts;
 
-    const oauthAdmin = ctx.user?.role === 'admin';
     const passcodeAdmin = ctx.isAdminPasscode === true;
-    if (!oauthAdmin && !passcodeAdmin) {
+    if (!passcodeAdmin) {
       throw new TRPCError({ code: "FORBIDDEN", message: NOT_ADMIN_ERR_MSG });
     }
 
-    const adminUser = ctx.user?.role === 'admin' ? ctx.user : {
+    const adminUser = {
       id: 0,
       openId: "admin-passcode-session",
       name: "Passcode Admin",
